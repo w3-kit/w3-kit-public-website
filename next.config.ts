@@ -8,6 +8,10 @@ const nextConfig = {
     unoptimized: true 
   },
   distDir: 'out',
+  experimental: {
+    appDir: true,
+  },
+  trailingSlash: true,
 };
 
 module.exports = nextConfig;
