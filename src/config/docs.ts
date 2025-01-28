@@ -13,6 +13,11 @@ const pages: DocPage[] = [
     section: "components"
   },
   {
+    title: "Bridge",
+    href: "/docs/components/bridge",
+    section: "components"
+  },
+  {
     title: "Input",
     href: "/docs/components/input",
     section: "components"
