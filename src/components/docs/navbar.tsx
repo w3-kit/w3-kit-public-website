@@ -15,7 +15,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-      <div className="flex h-16 items-center px-4 sm:px-6">
+      <div className="flex h-16 items-center px-4 sm:px-6 lg:px-20">
         <div className="flex items-center space-x-8">
           <Link href="/docs" className="font-semibold text-xl">
             w3-kit
