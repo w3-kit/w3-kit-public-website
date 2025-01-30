@@ -11,7 +11,7 @@ export default function BridgeComponent() {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4">
+    <div className="w-full  mx-auto px-4">
       <div className="space-y-6 py-4 sm:py-6">
         <div className="space-y-2">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -51,11 +51,11 @@ export default function BridgeComponent() {
             </div>
           </div>
 
-          <div className="rounded-lg overflow-hidden">
+          <div className="flex items-center rounded-lg overflow-hidden w-full">
             {activeTab === "preview" ? (
               <BridgeWidget />
             ) : (
-              <CodeBlock code={codeString} id="component" />
+              <CodeBlock code={codeString} id="component"/>
             )}
           </div>
         </div>

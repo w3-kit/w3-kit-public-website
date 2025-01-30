@@ -26,8 +26,8 @@ const links = [
 
 export function RightSidebar({ className }: RightSidebarProps) {
   return (
-    <div className={`${className} w-full lg:sticky lg:top-14 lg:h-[calc(100vh-3.5rem)]`}>
-      <div className="h-full py-6">
+    <div className={`fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto border-l border-gray-200 dark:border-gray-800 md:sticky md:block`}>
+      <div className="h-full py-6 px-4">
         {links.map((section) => (
           <div key={section.title} className="mb-6">
             <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">

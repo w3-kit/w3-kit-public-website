@@ -1,23 +1,47 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { Search, Github, Moon, Sun } from 'lucide-react'
 
 export function Navbar() {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('light')
 
+  useEffect(() => {
+    // Check if theme is stored in localStorage
+    const storedTheme = localStorage.getItem('theme')
+    
+    // Check system preference if no stored theme
+    if (!storedTheme) {
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      setTheme(systemTheme)
+      updateTheme(systemTheme)
+    } else {
+      setTheme(storedTheme as 'light' | 'dark')
+      updateTheme(storedTheme as 'light' | 'dark')
+    }
+  }, [])
+
+  const updateTheme = (newTheme: 'light' | 'dark') => {
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+    localStorage.setItem('theme', newTheme)
+  }
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
-    document.documentElement.classList.toggle('dark')
+    updateTheme(newTheme)
   }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
       <div className="flex h-16 items-center px-4 sm:px-6 lg:px-20">
         <div className="flex items-center space-x-8">
-          <Link href="/docs" className="font-semibold text-xl">
+          <Link href="/docs" className="font-semibold text-xl dark:text-white">
             w3-kit
           </Link>
           <nav className="hidden md:flex items-center space-x-6">

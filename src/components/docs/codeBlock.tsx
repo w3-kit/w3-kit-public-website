@@ -16,8 +16,8 @@ export const CodeBlock = ({ code, id }: CodeBlockProps) => {
   };
 
   return (
-    <div className="relative group ">
-      <pre className="rounded-lg border max-h-[600px] max-w-full border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-800 p-3 sm:p-4 overflow-y-auto">
+    <div className="relative group w-full">
+      <pre className="rounded-lg border max-h-[600px] border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-800 p-3 sm:p-4 overflow-y-auto">
         <code className="text-sm sm:text-base text-gray-800 dark:text-gray-200 whitespace-pre">
           {code}
         </code>
