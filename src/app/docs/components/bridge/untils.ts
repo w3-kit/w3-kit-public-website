@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// Add at the top of the file, after the imports
+export const codeString = `import React, { useState } from "react";
 import { ArrowUpDown } from "lucide-react";
 
 export interface Network {
@@ -54,7 +55,7 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl shadow-lg p-4 sm:p-6 max-w-2xl w-full mx-auto ${className}`}
+      className={\`bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl shadow-lg p-4 sm:p-6 max-w-2xl w-full mx-auto \${className}\`}
     >
       <div className="space-y-4 sm:space-y-6">
         <h2 className="text-xl sm:text-2xl font-semibold text-center">
@@ -71,12 +72,12 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
               <button
                 key={network.id}
                 onClick={() => setFromNetwork(network)}
-                className={`p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 transition-transform duration-200 active:scale-95
-                  ${
+                className={\`p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 transition-transform duration-200 active:scale-95
+                  \${
                     fromNetwork?.id === network.id
                       ? "bg-blue-500 text-white shadow-lg"
                       : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                  }`}
+                  }\`}
               >
                 <img
                   src={network.icon}
@@ -96,20 +97,20 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
           <button
             onClick={handleSwitchClick}
             disabled={!fromNetwork || !toNetwork}
-            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full shadow-lg backdrop-blur-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out
-              ${
+            className={\`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full shadow-lg backdrop-blur-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out
+              \${
                 !fromNetwork || !toNetwork
                   ? "opacity-50 cursor-not-allowed"
                   : "cursor-pointer"
-              }`}
+              }\`}
             style={{
-              transform: `translate(-50%, -50%) rotate(${rotationDegrees}deg)`,
+              transform: \`translate(-50%, -50%) rotate(\${rotationDegrees}deg)\`,
             }}
           >
             <ArrowUpDown
-              className={`w-5 h-5 sm:w-6 sm:h-6 ${
+              className={\`w-5 h-5 sm:w-6 sm:h-6 \${
                 !fromNetwork || !toNetwork ? "opacity-50" : ""
-              }`}
+              }\`}
             />
           </button>
         </div>
@@ -124,12 +125,12 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
               <button
                 key={network.id}
                 onClick={() => setToNetwork(network)}
-                className={`p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 transition-transform duration-200 active:scale-95
-                  ${
+                className={\`p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 transition-transform duration-200 active:scale-95
+                  \${
                     toNetwork?.id === network.id
                       ? "bg-blue-500 text-white shadow-lg"
                       : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                  }`}
+                  }\`}
               >
                 <img
                   src={network.icon}
@@ -182,4 +183,6 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
       </div>
     </div>
   );
-}
+}`;
+
+export const codeUsage = `<BridgeWidget />`;
