@@ -44,7 +44,7 @@ export function Navbar() {
             <span className="sr-only">Search documentation</span>
           </button>
           <a
-            href="https://github.com/w3-kit/w3-kit"
+            href="https://github.com/w3-kit"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"

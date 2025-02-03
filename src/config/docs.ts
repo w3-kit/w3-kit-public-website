@@ -17,6 +17,11 @@ const pages: DocPage[] = [
     href: "/docs/components/connect-wallet",
     section: "components",
   },
+  {
+    title: "Contract Interaction",
+    href: "/docs/components/contract-interaction",
+    section: "components",
+  },
 ];
 
 export const docsConfig = { pages };
