@@ -3,10 +3,9 @@
 import React, { useState } from "react";
 import { ConnectWalletButton } from "./component";
 import { Code, Eye } from "lucide-react";
-import { codeString, codeUsage } from "./untils";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
-export default function BridgeComponent() {
+export default function ConnectWalletPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
@@ -15,13 +14,13 @@ export default function BridgeComponent() {
       <div className="space-y-6 py-4 sm:py-6">
         <div className="space-y-2">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Bridge
+            Connect Wallet
           </h1>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
-            A component that enables users to transfer tokens between different
-            blockchain networks.
+            A customizable button component that handles wallet connections with built-in support for multiple providers.
           </p>
         </div>
+
         {/* Preview/Code Section */}
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between overflow-x-auto">
@@ -55,7 +54,7 @@ export default function BridgeComponent() {
             {activeTab === "preview" ? (
               <ConnectWalletButton />
             ) : (
-              <CodeBlock code={codeString} id="component" />
+              <CodeBlock code={`// Component code will be here`} id="component" />
             )}
           </div>
         </div>
@@ -104,43 +103,30 @@ export default function BridgeComponent() {
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import the component:
+                      2. Import and use the component:
                     </p>
                     <CodeBlock
-                      code='import { ConnectWalletButton } from "@w3-kit/connect-wallet";'
-                      id="import"
-                    />
-                  </div>
+                      code={`import { ConnectWalletButton } from "@w3-kit/connect-wallet";
 
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      3. Add the component to your page:
-                    </p>
-                    <CodeBlock
-                      code={`export default function Page() {
+export default function Page() {
   return (
-    <ConnectWalletButton />
+    <ConnectWalletButton
+      onConnect={(provider) => {
+        console.log('Connected:', provider);
+      }}
+      customProviders={[
+        // Add your custom providers here
+      ]}
+    />
   );
 }`}
-                      id="usage-example"
+                      id="usage"
                     />
                   </div>
                 </div>
               )}
             </div>
           </div>
-        </div>
-
-        {/* Usage Section */}
-        <div className="space-y-4">
-          <h2 className="text-xl sm:text-2xl font-semibold border-b border-gray-200 dark:border-gray-800 pb-2 text-gray-900 dark:text-white">
-            Usage
-          </h2>
-          <CodeBlock
-            code='import { ConnectWalletButton } from "@/components/connect-wallet";'
-            id="usage-import"
-          />
-          <CodeBlock code={codeUsage} id="usage-full" />
         </div>
       </div>
     </div>

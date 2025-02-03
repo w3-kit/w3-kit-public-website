@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { ContractInteraction } from "./component";
+import { GasCalculator } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
-export default function ContractInteractionPage() {
+export default function GasCalculatorPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
@@ -14,10 +14,10 @@ export default function ContractInteractionPage() {
       <div className="space-y-6 py-4 sm:py-6">
         <div className="space-y-2">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Contract Interaction
+            Gas Calculator
           </h1>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
-            A component that enables users to interact with smart contracts through a simple interface.
+            A component that helps users estimate transaction costs based on current network gas prices.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function ContractInteractionPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <ContractInteraction />
+              <GasCalculator />
             ) : (
               <CodeBlock code={`// Component code will be here`} id="component" />
             )}
@@ -91,14 +91,14 @@ export default function ContractInteractionPage() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add contract-interaction" id="cli" />
+                <CodeBlock code="npx w3-kit@latest add gas-calculator" id="cli" />
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       1. Install the package using npm:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/contract-interaction" id="npm" />
+                    <CodeBlock code="npm install @w3-kit/gas-calculator" id="npm" />
                   </div>
 
                   <div className="space-y-2">
@@ -106,13 +106,16 @@ export default function ContractInteractionPage() {
                       2. Import and use the component:
                     </p>
                     <CodeBlock
-                      code={`import { ContractInteraction } from "@w3-kit/contract-interaction";
+                      code={`import { GasCalculator } from "@w3-kit/gas-calculator";
 
 export default function Page() {
   return (
-    <ContractInteraction
-      abi={yourContractABI}
-      contractAddress="0x..."
+    <GasCalculator
+      chainId={1}
+      refreshInterval={15000}
+      onGasSelect={(gasLimit, price) => {
+        console.log('Selected gas:', { gasLimit, price });
+      }}
     />
   );
 }`}

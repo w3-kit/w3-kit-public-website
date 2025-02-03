@@ -22,6 +22,11 @@ const pages: DocPage[] = [
     href: "/docs/components/contract-interaction",
     section: "components",
   },
+  {
+    title: "Gas Calculator",
+    href: "/docs/components/gas-calculator",
+    section: "components",
+  },
 ];
 
 export const docsConfig = { pages };
