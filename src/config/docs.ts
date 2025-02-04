@@ -32,6 +32,11 @@ const pages: DocPage[] = [
     href: "/docs/components/multisig-wallet",
     section: "components",
   },
+  {
+    title: "Network Switcher",
+    href: "/docs/components/network-switcher",
+    section: "components",
+  },
 ];
 
 export const docsConfig = { pages };
