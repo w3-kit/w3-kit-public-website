@@ -52,6 +52,16 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
     switchNetworks();
   };
 
+  const handleFromNetworkSelect = (network: Network) => {
+    if (toNetwork?.id === network.id) return;
+    setFromNetwork(network);
+  };
+
+  const handleToNetworkSelect = (network: Network) => {
+    if (fromNetwork?.id === network.id) return;
+    setToNetwork(network);
+  };
+
   return (
     <div
       className={`bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl shadow-lg p-4 sm:p-6 max-w-2xl w-full mx-auto ${className}`}
@@ -70,12 +80,13 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
             {SUPPORTED_NETWORKS.map((network) => (
               <button
                 key={network.id}
-                onClick={() => setFromNetwork(network)}
+                onClick={() => handleFromNetworkSelect(network)}
+                disabled={toNetwork?.id === network.id}
                 className={`p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 transition-transform duration-200 active:scale-95
-                  ${
-                    fromNetwork?.id === network.id
-                      ? "bg-blue-500 text-white shadow-lg"
-                      : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                  ${toNetwork?.id === network.id ? 'opacity-50 cursor-not-allowed' : ''}
+                  ${fromNetwork?.id === network.id
+                    ? "bg-blue-500 text-white shadow-lg"
+                    : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                   }`}
               >
                 <img
@@ -123,12 +134,13 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
             {SUPPORTED_NETWORKS.map((network) => (
               <button
                 key={network.id}
-                onClick={() => setToNetwork(network)}
+                onClick={() => handleToNetworkSelect(network)}
+                disabled={fromNetwork?.id === network.id}
                 className={`p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 transition-transform duration-200 active:scale-95
-                  ${
-                    toNetwork?.id === network.id
-                      ? "bg-blue-500 text-white shadow-lg"
-                      : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+                  ${fromNetwork?.id === network.id ? 'opacity-50 cursor-not-allowed' : ''}
+                  ${toNetwork?.id === network.id
+                    ? "bg-blue-500 text-white shadow-lg"
+                    : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                   }`}
               >
                 <img
