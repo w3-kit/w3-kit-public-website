@@ -67,6 +67,21 @@ const pages: DocPage[] = [
     href: "/docs/components/transaction-history",
     section: "components",
   },
+  {
+    title: "Wallet Balance",
+    href: "/docs/components/wallet-balance",
+    section: "components",
+  },
+  {
+    title: "ENS Resolver",
+    href: "/docs/components/ens-resolver",
+    section: "components",
+  },
+  {
+    title: "Address Book",
+    href: "/docs/components/address-book",
+    section: "components",
+  },
 ];
 
 
