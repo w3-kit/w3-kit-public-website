@@ -81,7 +81,13 @@ const pages: DocPage[] = [
     href: "/docs/components/wallet-balance",
     section: "components",
   },
+  {
+    title: "Staking Interface",
+    href: "/docs/components/staking-interface",
+    section: "components",
+  },
 ];
+
 
 
 export const docsConfig = { pages };
