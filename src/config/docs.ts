@@ -91,11 +91,18 @@ const pages: DocPage[] = [
     href: "/docs/components/asset-portfolio",
     section: "components",
   },
+  {
+    title: "Smart Contract Scanner",
+    href: "/docs/components/smart-contract-scanner",
+    section: "components",
+  },
+
 ];
 
 
 
 export const docsConfig = { pages };
+
 
 export function getPageNavigation(currentPath: string) {
   const currentIndex = pages.findIndex((page) => page.href === currentPath);
