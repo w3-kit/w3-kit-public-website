@@ -96,7 +96,11 @@ const pages: DocPage[] = [
     href: "/docs/components/smart-contract-scanner",
     section: "components",
   },
-
+  {
+    title: "NFT Collection Grid",
+    href: "/docs/components/nft-collection-grid",
+    section: "components",
+  },
 ];
 
 
