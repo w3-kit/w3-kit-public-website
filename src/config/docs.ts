@@ -101,6 +101,11 @@ const pages: DocPage[] = [
     href: "/docs/components/nft-collection-grid",
     section: "components",
   },
+  {
+    title: "Liquidity Pool Stats",
+    href: "/docs/components/liquidity-pool-stats",
+    section: "components",
+  },
 ];
 
 
