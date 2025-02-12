@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Navbar } from "@/components/docs/navbar";
+import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/docs/sidebar";
 import { Breadcrumbs } from "@/components/docs/breadcrumbs";
-import { Footer } from "@/components/docs/footer";
+import { Footer } from "@/components/footer";
 import { RightSidebar } from "@/components/docs/right-sidebar";
 import { Menu } from "lucide-react";
 
@@ -17,8 +17,6 @@ export default function DocsLayout({
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto bg-white dark:bg-gray-950">
-      <Navbar />
-      
       {/* Mobile Menu Button */}
       <button
         className="md:hidden fixed top-20 right-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-md shadow-lg"
@@ -30,14 +28,12 @@ export default function DocsLayout({
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <>
-          <div 
+          <div
             className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div className="md:hidden fixed right-0 top-0 h-full w-[280px] bg-white dark:bg-gray-950 z-50 overflow-y-auto">
-            <div className="pt-20 px-4">
-            
-            </div>
+            <div className="pt-20 px-4"></div>
           </div>
         </>
       )}
@@ -63,8 +59,6 @@ export default function DocsLayout({
           </aside>
         </div>
       </div>
-      
-      <Footer />
     </div>
   );
 }

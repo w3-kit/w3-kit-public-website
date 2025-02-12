@@ -1,6 +1,7 @@
 import React from "react";
-import Link from "next/link";
+import Link from "next/link";   
 import { Github, Twitter } from "lucide-react";
+import Image from "next/image";
 
 const footerLinks = {
   docs: [
@@ -27,10 +28,12 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
+
             <Link
               href="/"
-              className="font-semibold text-xl text-gray-900 dark:text-white"
+              className="flex items-center gap-2 font-semibold text-xl text-gray-900 dark:text-white"
             >
+                <Image src="/w3-kit-logo.svg" alt="w3-kit" width={30} height={30} />
               w3-kit
             </Link>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">

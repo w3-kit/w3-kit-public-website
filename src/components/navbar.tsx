@@ -4,6 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { Search, Github, Moon, Sun } from 'lucide-react'
 import { useThemeContext } from '@/providers/ThemeProvider'
+import Image from 'next/image'
 
 export function Navbar() {
   const { theme, toggleTheme, mounted } = useThemeContext()
@@ -23,7 +24,8 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
       <div className="flex h-16 items-center px-4 sm:px-6 lg:px-20">
         <div className="flex items-center space-x-8">
-          <Link href="/docs" className="font-semibold text-xl dark:text-white">
+          <Link href="/" className="font-semibold text-xl dark:text-white flex items-center gap-2">
+          <Image src="/w3-kit-logo.svg" alt="w3-kit" width={30} height={30} />
             w3-kit
           </Link>
           <nav className="hidden md:flex items-center space-x-6">
