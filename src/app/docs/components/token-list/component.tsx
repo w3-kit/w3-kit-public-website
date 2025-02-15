@@ -1,9 +1,8 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { TokenListProps, SortField, SortDirection } from "./types";
 import { formatBalance, formatCurrency } from "./utils";
-import { TokenCard } from "../token-card/component";
 import { TOKEN_CONFIGS } from "../../../../config/tokens";
-import { Check } from "lucide-react";
+
 
 export const TokenList: React.FC<TokenListProps> = ({
   tokens,

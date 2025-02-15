@@ -179,7 +179,7 @@ const previewComponents = [
 interface Position {
   x: number;
   y: number;
-  placement: 'top' | 'bottom';
+  placement: "top" | "bottom";
   maxHeight: number;
 }
 
@@ -192,8 +192,8 @@ function PreviewCard({
   const [position, setPosition] = useState<Position>({
     x: 0,
     y: 0,
-    placement: 'top',
-    maxHeight: 0
+    placement: "top",
+    maxHeight: 0,
   });
   const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
 
@@ -202,13 +202,13 @@ function PreviewCard({
 
   const calculatePosition = (mouseX: number, mouseY: number): Position => {
     const windowHeight = window.innerHeight;
-    const availableHeight = windowHeight - (PADDING * 2);
+    const availableHeight = windowHeight - PADDING * 2;
     const previewHeight = Math.min(availableHeight * 0.8, 600);
     const spaceAbove = mouseY;
     const spaceBelow = windowHeight - mouseY;
 
     // Choose placement based on which side has more space
-    const placement = spaceAbove > spaceBelow ? 'top' : 'bottom';
+    const placement = spaceAbove > spaceBelow ? "top" : "bottom";
 
     return {
       x: mouseX,
@@ -239,14 +239,16 @@ function PreviewCard({
 
   const getPreviewStyles = () => ({
     left: `${position.x}px`,
-    top: position.placement === 'top' 
-      ? `${position.y - PADDING}px` 
-      : `${position.y + PADDING}px`,
-    transform: position.placement === 'top' 
-      ? 'translate(-50%, -100%)' 
-      : 'translate(-50%, 0)',
+    top:
+      position.placement === "top"
+        ? `${position.y - PADDING}px`
+        : `${position.y + PADDING}px`,
+    transform:
+      position.placement === "top"
+        ? "translate(-50%, -100%)"
+        : "translate(-50%, 0)",
     maxHeight: `${position.maxHeight}px`,
-    maxWidth: 'calc(100vw - 40px)',
+    maxWidth: "calc(100vw - 40px)",
   });
 
   return (
@@ -258,7 +260,8 @@ function PreviewCard({
     >
       {/* Component Card */}
       <Link href={component.path} className="block">
-        <div className="flex items-center justify-center h-32 w-48 rounded-xl 
+        <div
+          className="flex items-center justify-center h-32 w-48 rounded-xl 
           border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 
           transition-all duration-300 group-hover:border-gray-300 dark:group-hover:border-gray-700"
         >
@@ -284,7 +287,8 @@ function PreviewCard({
           <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
             {component.description}
           </p>
-          <div className="rounded-lg border border-gray-200 dark:border-gray-800 
+          <div
+            className="rounded-lg border border-gray-200 dark:border-gray-800 
             p-3 sm:p-4 bg-gray-50 dark:bg-gray-950"
           >
             {component.preview}
@@ -300,6 +304,91 @@ export default function Home() {
     <div className="min-h-screen mx-auto bg-white dark:bg-gray-950">
       {/* Hero Section */}
       <section className="relative px-6 pt-14 lg:px-8">
+        {/* Floating Components */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Top Left */}
+          <div className="absolute left-24 top-32 transform -rotate-12 opacity-40 animate-float-slow">
+            <NFTCard
+              nft={{
+                id: "1",
+                name: "Floating NFT",
+                image:
+                  "https://ipfs.io/ipfs/QmRRPWG96cmgTn2qSzjwr2qvfNEuhunv6FNeMFGa9bx6mQ",
+                owner: "0x1234...",
+                tokenId: "1234",
+                contractAddress: "0x1234...",
+                chainId: 1,
+              }}
+              variant="expanded"
+              className="scale-[0.6] sm:scale-[0.8]"
+            />
+          </div>
+
+          {/* Top Right */}
+          <div className="absolute right-8 top-28 transform rotate-12 opacity-40 animate-float-delayed">
+            <LiquidityPoolStats
+              poolData={{
+                token: {
+                  symbol: "ETH",
+                  logoURI:
+                    "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=025",
+                  liquidity: 156.78,
+                },
+                fee: 500,
+                tvl: 548000,
+                tvlChange24h: 2.5,
+                volume24h: 1250000,
+                volumeChange24h: -1.2,
+                apr: 12.5,
+                feesEarned24h: 1890,
+              }}
+              variant="compact"
+              className="scale-[0.6] sm:scale-[0.8]"
+            />
+          </div>
+
+          {/* Center Right */}
+          <div className="absolute right-44 top-1/2 transform -translate-y-1/2 rotate-6 opacity-40 animate-float-reverse">
+            <SmartContractScanner
+              variant="compact"
+              className="scale-[0.5] sm:scale-[0.7]"
+            />
+          </div>
+
+          {/* Bottom Left */}
+          <div className="absolute left-24 bottom-32 transform -rotate-6 opacity-40 animate-float-reverse">
+            <NetworkSwitcher
+              networks={[NETWORKS[0]]}
+              testNetworks={[]}
+              onSwitch={() => {}}
+              className="scale-[0.6] sm:scale-[0.8]"
+            />
+          </div>
+
+          {/* Bottom Right */}
+          <div className="absolute right-24 bottom-28 transform rotate-6 opacity-40 animate-float">
+            <AssetPortfolio
+              variant="compact"
+              assets={[
+                {
+                  ...TOKEN_CONFIGS.ETH,
+                  balance: "2.5",
+                  price: 3500,
+                  value: 8750,
+                  change24h: 4.2,
+                  color: "#627EEA",
+                },
+              ]}
+              totalValue={8750}
+              totalChange24h={4.2}
+              className="scale-[0.6] sm:scale-[0.8]"
+            />
+          </div>
+
+          {/* Add subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white dark:from-gray-950 dark:via-transparent dark:to-gray-950 opacity-85" />
+        </div>
+
         <div className="mx-auto max-w-2xl py-28 sm:py-32">
           <div className="text-center">
             <div className="relative z-10">
