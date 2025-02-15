@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/docs/sidebar";
 import { Breadcrumbs } from "@/components/docs/breadcrumbs";
-import { Footer } from "@/components/footer";
 import { RightSidebar } from "@/components/docs/right-sidebar";
 import { Menu } from "lucide-react";
 
