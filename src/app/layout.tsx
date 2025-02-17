@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import GoogleAnalytics from '@/components/GoogleAnalytics'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -28,6 +29,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning className="light">
+      <head>
+        <title>Web3 React Components | W3-Kit</title>
+        <meta name="description" content="A comprehensive library of accessible React components for building high-quality Web3 applications and dApps" />
+      </head>
       <body
         className={`${inter.className} antialiased bg-white dark:bg-gray-950`}
       >
@@ -36,6 +41,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </ThemeProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   );
