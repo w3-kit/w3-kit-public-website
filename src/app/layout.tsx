@@ -37,9 +37,9 @@ export default function RootLayout({
         className={`${inter.className} antialiased bg-white dark:bg-gray-950`}
       >
         <ThemeProvider>
-          <Navbar />
+          {/* <Navbar /> */}
           {children}
-          <Footer />
+          {/* <Footer /> */}
         </ThemeProvider>
         <GoogleAnalytics />
       </body>
