@@ -5,35 +5,71 @@ import { AddressBook } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
+// Define the AddressEntry type
+interface AddressEntry {
+  id: string;
+  name: string;
+  address: string;
+  ensName?: string;
+  avatar?: string;
+  notes?: string;
+}
+
 export default function AddressBookPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [selectedVariant, setSelectedVariant] = useState<'default' | 'compact'>('default');
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
-
-  // Mock data for the address book
-  const mockEntries = [
+  
+  // Add state management for addresses
+  const [addresses, setAddresses] = useState<AddressEntry[]>([
     {
       id: '1',
       name: 'Vitalik Buterin',
       address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
       ensName: 'vitalik.eth',
-      avatar: 'https://avatars.githubusercontent.com/u/2911?v=4'
+      avatar: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fobserver.com%2Fwp-content%2Fuploads%2Fsites%2F2%2F2021%2F05%2FGettyImages-500445690.jpeg%3Fquality%3D80%26w%3D970&f=1&nofb=1&ipt=1a48351457acfce00ed5d5a7d1db721fe4b633160e13f97ce5bc513dc27a9010&ipo=images',
+      notes: 'Ethereum Co-founder'
     },
     {
       id: '2',
-      name: 'Ethereum Foundation',
-      address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
-      ensName: 'ethereum.eth',
-      notes: 'Main donation address'
+      name: 'Changpeng Zhao (CZ)',
+      address: '0x89012765432abcdef89012765432abcdef890127',
+      ensName: 'cz.bnb',
+      avatar: 'https://watcher.guru/news/wp-content/uploads/2021/09/ChangPeng-CZ-Zhao.png',
+      notes: 'Binance CEO'
     },
     {
       id: '3',
-      name: 'Uniswap',
-      address: '0x1a9C8182C09F50C8318d769245beA52c32BE35BC',
-      ensName: 'uniswap.eth',
-      notes: 'DEX protocol'
+      name: 'Charles Hoskinson',
+      address: '0xabcdef89012765432abcdef89012765432abcdef',
+      ensName: 'charles.ada',
+      avatar: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.cryptopolitan.com%2Fwp-content%2Fuploads%2F2024%2F07%2FCardano-founder-Charles-Hoskinson-shares-thoughts-on-Donald-Trumps-assassination-attempt.jpg&f=1&nofb=1&ipt=ebef5b4ecdc6e5a80cba530815181de6b33f2d8e58b912a75421ad64c6c7680b&ipo=images',
+      notes: 'Cardano Founder'
     }
-  ];
+  ]);
+
+  // Handle adding new address
+  const handleAdd = (entry: Omit<AddressEntry, 'id'>) => {
+    const newEntry = {
+      ...entry,
+      id: Date.now().toString(), // Generate unique ID
+    };
+    setAddresses(prev => [...prev, newEntry]);
+  };
+
+  // Handle editing address
+  const handleEdit = (updatedEntry: AddressEntry) => {
+    setAddresses(prev => 
+      prev.map(entry => 
+        entry.id === updatedEntry.id ? updatedEntry : entry
+      )
+    );
+  };
+
+  // Handle deleting address
+  const handleDelete = (id: string) => {
+    setAddresses(prev => prev.filter(entry => entry.id !== id));
+  };
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
@@ -95,18 +131,18 @@ export default function AddressBookPage() {
             {activeTab === "preview" ? (
               <div className="p-4 bg-gray-50 dark:bg-gray-900">
                 <AddressBook
-                  entries={mockEntries}
+                  entries={addresses}
+                  onAdd={handleAdd}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
                   variant={selectedVariant}
-                  onAdd={(entry) => console.log("Added:", entry)}
-                  onEdit={(entry) => console.log("Edited:", entry)}
-                  onDelete={(id) => console.log("Deleted:", id)}
                 />
               </div>
             ) : (
               <CodeBlock
                 code={`import { AddressBook } from "@w3-kit/address-book";
 
-const entries = ${JSON.stringify(mockEntries.slice(0, 1), null, 2)};
+const entries = ${JSON.stringify(addresses.slice(0, 1), null, 2)};
 
 export default function Page() {
   return (
