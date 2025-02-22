@@ -123,6 +123,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
 
   // Preloaded popular components
   const popularComponents = [
@@ -204,6 +205,12 @@ export function Navbar() {
         dropdown.classList.remove("pointer-events-none");
       }, 100);
     });
+  };
+
+  const handleThemeSwitch = () => {
+    setIsThemeTransitioning(true);
+    toggleTheme();
+    setTimeout(() => setIsThemeTransitioning(false), 300); // Match transition duration
   };
 
   if (!mounted) return null;
@@ -429,14 +436,23 @@ export function Navbar() {
             <span className="sr-only">GitHub</span>
           </a>
           <button
-            onClick={toggleTheme}
+            onClick={handleThemeSwitch}
             className="inline-flex items-center justify-center rounded-md text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            disabled={isThemeTransitioning}
           >
-            {theme === "light" ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Sun className="h-5 w-5" />
-            )}
+            <div className="relative w-5 h-5">
+              {theme === "light" ? (
+                <Moon 
+                  className={`h-5 w-5 absolute transition-all duration-300 
+                    ${isThemeTransitioning ? 'scale-50 opacity-0' : 'scale-100 opacity-100'}`} 
+                />
+              ) : (
+                <Sun 
+                  className={`h-5 w-5 absolute transition-all duration-300 
+                    ${isThemeTransitioning ? 'scale-50 opacity-0' : 'scale-100 opacity-100'}`} 
+                />
+              )}
+            </div>
             <span className="sr-only">Toggle theme</span>
           </button>
         </div>

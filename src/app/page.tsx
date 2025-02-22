@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Code } from "lucide-react";
+import { Code, Check, Sparkles } from "lucide-react";
 import { SmartContractScanner } from "@/app/docs/components/smart-contract-scanner/component";
 import { AssetPortfolio } from "@/app/docs/components/asset-portfolio/component";
 import { TOKEN_CONFIGS } from "@/config/tokens";
@@ -14,6 +14,23 @@ import { previewComponents } from "@/constants/preview-components";
 import { features } from "@/constants/home-page-features";
 
 export default function Home() {
+  const [copied, setCopied] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText("npm i @w3-kit/ui");
+      setIsAnimating(true);
+      setTimeout(() => {
+        setCopied(true);
+        setIsAnimating(false);
+      }, 400); // Sparkle animation duration
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
   return (
     <div className="min-h-screen mx-auto bg-white dark:bg-gray-950">
       {/* Hero Section */}
@@ -148,13 +165,27 @@ export default function Home() {
                 <pre className="hidden md:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 px-4 py-2 rounded-full">
                   <code>npm i @w3-kit/ui</code>
                   <button
-                    className="hover:text-gray-900 dark:hover:text-white transition-colors"
-                    onClick={() =>
-                      navigator.clipboard.writeText("npm i @w3-kit/react")
-                    }
+                    className="relative hover:text-gray-900 dark:hover:text-white transition-all duration-300"
+                    onClick={handleCopy}
                   >
                     <span className="sr-only">Copy to clipboard</span>
-                    <Code className="h-4 w-4" />
+                    <div className="relative">
+                      {isAnimating && (
+                        <Sparkles 
+                          className="absolute inset-0 h-4 w-4 text-yellow-400 animate-sparkle" 
+                          style={{ 
+                            transform: 'scale(1.5)',
+                            opacity: 0,
+                            animation: 'sparkle 0.4s ease-in-out'
+                          }} 
+                        />
+                      )}
+                      {copied ? (
+                        <Check className="h-4 w-4 text-green-500 transition-all duration-300 animate-success" />
+                      ) : (
+                        <Code className="h-4 w-4 transition-all duration-300" />
+                      )}
+                    </div>
                   </button>
                 </pre>
               </div>
