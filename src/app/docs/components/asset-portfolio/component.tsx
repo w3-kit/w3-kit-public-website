@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Doughnut } from 'react-chartjs-2';
-import { ArrowUp, ArrowDown, TrendingUp, DollarSign, Percent } from 'lucide-react';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -97,9 +97,9 @@ export const AssetPortfolio: React.FC<AssetPortfolioProps> = ({
                 <Image
                   src={asset.logoURI}
                   alt={asset.symbol}
-                  width={24}
-                  height={24}
-                  className="rounded-full"
+                  width={40}
+                  height={40}
+                  className="rounded-full w-10 h-10 object-contain"
                 />
                 <span className="font-medium text-gray-900 dark:text-white">
                   {asset.symbol}
@@ -178,7 +178,7 @@ export const AssetPortfolio: React.FC<AssetPortfolioProps> = ({
                   alt={asset.symbol}
                   width={40}
                   height={40}
-                  className="rounded-full"
+                  className="rounded-full w-10 h-10 object-fit"
                 />
                 <div>
                   <div className="font-medium text-gray-900 dark:text-white">{asset.name}</div>
