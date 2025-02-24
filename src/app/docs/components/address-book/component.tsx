@@ -28,11 +28,13 @@ interface AddressBookProps {
 }
 
 // Update the animation constants
-const formAnimation = "animate-in slide-in-from-top-2 duration-300";
+const formAnimation = "transition-all duration-300 ease-in-out";
 const listItemAnimation = "animate-in fade-in duration-200";
 const iconButtonAnimation = "hover:scale-110 active:scale-95 transition-transform duration-200";
 const deleteIconAnimation = "hover:scale-110 active:scale-95 transition-all duration-200 hover:rotate-12";
 const textButtonAnimation = "transition-colors duration-200"; // New animation for text buttons
+const dropdownAnimation = "transition-all duration-300 ease-in-out";
+const searchBarAnimation = "transition-all duration-300 ease-in-out";
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -277,10 +279,12 @@ export const AddressBook: React.FC<AddressBookProps> = ({
           setNewEntry({ ...newEntry, name });
         }}
         placeholder="Name"
-        className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg
+        className="w-full px-3 py-2 text-sm rounded-lg
           bg-white dark:bg-gray-800 text-gray-900 dark:text-white
           placeholder-gray-500 dark:placeholder-gray-400
-          focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+          border border-gray-200 dark:border-gray-700
+          focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+          focus:border-transparent ring-offset-0"
       />
       <div className="flex justify-end">
         <span className={`text-xs ${
@@ -300,11 +304,12 @@ export const AddressBook: React.FC<AddressBookProps> = ({
         value={newEntry.address}
         onChange={handleAddressChange}
         placeholder="Address or ENS name"
-        className={`w-full px-3 py-2 text-sm border rounded-lg
+        className={`w-full px-3 py-2 text-sm rounded-lg
           bg-white dark:bg-gray-800 text-gray-900 dark:text-white
           placeholder-gray-500 dark:placeholder-gray-400
+          border focus:border-transparent ring-offset-0
           focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-          ${addressError ? 'border-red-500 dark:border-red-500' : 'border-gray-200 dark:border-gray-700'}`}
+          ${addressError ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'}`}
       />
       {addressError && (
         <p className="text-xs text-red-500">{addressError}</p>
@@ -335,92 +340,114 @@ export const AddressBook: React.FC<AddressBookProps> = ({
             </button>
           </div>
 
-          <div className="relative mb-4">
+          <div 
+            className={`relative ${searchBarAnimation}`}
+            style={{
+              maxHeight: isAdding ? '0' : '40px',
+              opacity: isAdding ? 0 : 1,
+              visibility: isAdding ? 'hidden' : 'visible',
+              marginBottom: isAdding ? '0' : '1rem',
+              overflow: 'hidden'
+            }}
+          >
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search addresses..."
-              className="w-full px-3 py-2 pl-9 text-sm border border-gray-200 dark:border-gray-700 rounded-lg
+              className="w-full px-3 py-2 pl-9 text-sm rounded-lg
                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                 placeholder-gray-500 dark:placeholder-gray-400
-                focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                border border-gray-200 dark:border-gray-700
+                focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                focus:border-transparent ring-offset-0"
             />
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400 dark:text-gray-500" />
           </div>
 
-          {isAdding && (
-            <div className={`mb-4 space-y-3 ${formAnimation}`}>
-              <div className="flex items-center space-x-3">
-                {newEntry.avatar ? (
-                  <div className="relative">
-                    <Image
-                      src={newEntry.avatar}
-                      alt="Avatar preview"
-                      width={48}
-                      height={48}
-                      className="rounded-full object-cover w-12 h-12"
-                    />
-                    <button
-                      onClick={() => setNewEntry(prev => ({ ...prev, avatar: '' }))}
-                      className="absolute -top-1 -right-1 p-0.5 bg-red-500 text-white rounded-full 
-                        hover:bg-red-600 transition-colors"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                ) : (
-                  <label className="cursor-pointer group">
-                    <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 
-                      flex items-center justify-center group-hover:bg-gray-200 
-                      dark:group-hover:bg-gray-600 transition-colors">
-                      <ImageIcon className="w-6 h-6 text-gray-400 dark:text-gray-500" />
-                    </div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageUpload}
-                    />
-                  </label>
-                )}
-                <div className="flex-1">
-                  {renderNameInput()}
+          {/* Add Address Form */}
+          <div 
+            className={`space-y-4 ${formAnimation}`}
+            style={{
+              maxHeight: isAdding ? '500px' : '0',
+              opacity: isAdding ? 1 : 0,
+              visibility: isAdding ? 'visible' : 'hidden',
+              marginBottom: isAdding ? '1rem' : '0',
+              overflow: 'hidden',
+              padding: isAdding ? '1rem' : '0'
+            }}
+          >
+            <div className="flex items-center space-x-3">
+              {newEntry.avatar ? (
+                <div className="relative">
+                  <Image
+                    src={newEntry.avatar}
+                    alt="Avatar preview"
+                    width={48}
+                    height={48}
+                    className="rounded-full object-cover w-12 h-12"
+                  />
+                  <button
+                    onClick={() => setNewEntry(prev => ({ ...prev, avatar: '' }))}
+                    className="absolute -top-1 -right-1 p-0.5 bg-red-500 text-white rounded-full 
+                      hover:bg-red-600 transition-colors"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
                 </div>
-              </div>
-
-              {renderAddressInput()}
-
-              <textarea
-                value={newEntry.notes}
-                onChange={(e) => setNewEntry({ ...newEntry, notes: e.target.value })}
-                placeholder="Notes (optional)"
-                className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg
-                  bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                  placeholder-gray-500 dark:placeholder-gray-400
-                  focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-                rows={3}
-              />
-
-              <div className="flex justify-end space-x-2">
-                <button
-                  onClick={handleCancel}
-                  className={`px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 
-                    dark:hover:text-white ${textButtonAnimation}`}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  disabled={!newEntry.name || !newEntry.address}
-                  className={`px-3 py-1.5 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 
-                    transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${textButtonAnimation}`}
-                >
-                  {editingId ? 'Save' : 'Add'}
-                </button>
+              ) : (
+                <label className="cursor-pointer group">
+                  <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 
+                    flex items-center justify-center group-hover:bg-gray-200 
+                    dark:group-hover:bg-gray-600 transition-colors">
+                    <ImageIcon className="w-6 h-6 text-gray-400 dark:text-gray-500" />
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </label>
+              )}
+              <div className="flex-1">
+                {renderNameInput()}
               </div>
             </div>
-          )}
+
+            {renderAddressInput()}
+
+            <textarea
+              value={newEntry.notes}
+              onChange={(e) => setNewEntry({ ...newEntry, notes: e.target.value })}
+              placeholder="Notes (optional)"
+              className="w-full px-3 py-2 text-sm rounded-lg
+                bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                placeholder-gray-500 dark:placeholder-gray-400
+                border border-gray-200 dark:border-gray-700
+                focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                focus:border-transparent ring-offset-0"
+              rows={3}
+            />
+
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={handleCancel}
+                className={`px-3 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 
+                  dark:hover:text-white ${textButtonAnimation}`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={!newEntry.name || !newEntry.address}
+                className={`px-3 py-1.5 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 
+                  transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${textButtonAnimation}`}
+              >
+                {editingId ? 'Save' : 'Add'}
+              </button>
+            </div>
+          </div>
 
           <div className="space-y-2">
             {filteredEntries.slice(0, 5).map((entry, index) => (
@@ -486,39 +513,44 @@ export const AddressBook: React.FC<AddressBookProps> = ({
                 </div>
 
                 {/* Expanded Details */}
-                {expandedId === entry.id && (
-                  <div className={`p-3 border-t border-gray-100 dark:border-gray-700 space-y-2 
-                    animate-in slide-in-from-top-2 duration-200`}>
-                    <div className="flex flex-col space-y-1">
-                      <label className="text-xs text-gray-500 dark:text-gray-400">Address</label>
-                      <div className="flex items-center space-x-2">
-                        <p className="text-sm text-gray-900 dark:text-white font-mono">{entry.address}</p>
-                        <a
-                          href={`https://etherscan.io/address/${entry.address}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`text-blue-500 hover:text-blue-600 ${iconButtonAnimation}`}
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      </div>
+                <div className={`p-3 border-t border-gray-100 dark:border-gray-700 space-y-2 
+                  ${dropdownAnimation}`}
+                  style={{
+                    maxHeight: expandedId === entry.id ? '500px' : '0',
+                    opacity: expandedId === entry.id ? 1 : 0,
+                    visibility: expandedId === entry.id ? 'visible' : 'hidden',
+                    marginTop: expandedId === entry.id ? '0.75rem' : '0',
+                  }}
+                >
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-xs text-gray-500 dark:text-gray-400">Address</label>
+                    <div className="flex items-center space-x-2">
+                      <p className="text-sm text-gray-900 dark:text-white font-mono">{entry.address}</p>
+                      <a
+                        href={`https://etherscan.io/address/${entry.address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`text-blue-500 hover:text-blue-600 ${iconButtonAnimation}`}
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
                     </div>
-
-                    {entry.ensName && (
-                      <div className="flex flex-col space-y-1">
-                        <label className="text-xs text-gray-500 dark:text-gray-400">ENS Name</label>
-                        <p className="text-sm text-gray-900 dark:text-white">{entry.ensName}</p>
-                      </div>
-                    )}
-
-                    {entry.notes && (
-                      <div className="flex flex-col space-y-1">
-                        <label className="text-xs text-gray-500 dark:text-gray-400">Notes</label>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{entry.notes}</p>
-                      </div>
-                    )}
                   </div>
-                )}
+
+                  {entry.ensName && (
+                    <div className="flex flex-col space-y-1">
+                      <label className="text-xs text-gray-500 dark:text-gray-400">ENS Name</label>
+                      <p className="text-sm text-gray-900 dark:text-white">{entry.ensName}</p>
+                    </div>
+                  )}
+
+                  {entry.notes && (
+                    <div className="flex flex-col space-y-1">
+                      <label className="text-xs text-gray-500 dark:text-gray-400">Notes</label>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{entry.notes}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -556,93 +588,115 @@ export const AddressBook: React.FC<AddressBookProps> = ({
           </button>
         </div>
 
-        <div className="relative mb-4">
+        <div 
+          className={`relative ${searchBarAnimation}`}
+          style={{
+            maxHeight: isAdding ? '0' : '40px',
+            opacity: isAdding ? 0 : 1,
+            visibility: isAdding ? 'hidden' : 'visible',
+            marginBottom: isAdding ? '0' : '1rem',
+            overflow: 'hidden'
+          }}
+        >
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search addresses..."
-            className="w-full px-4 py-2 pl-10 text-sm border border-gray-200 dark:border-gray-700 rounded-lg
+            className="w-full px-3 py-2 pl-9 text-sm rounded-lg
               bg-white dark:bg-gray-800 text-gray-900 dark:text-white
               placeholder-gray-500 dark:placeholder-gray-400
-              focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+              border border-gray-200 dark:border-gray-700
+              focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+              focus:border-transparent ring-offset-0"
           />
           <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400 dark:text-gray-500" />
         </div>
 
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {isAdding && (
-            <div className={`py-4 space-y-4 ${formAnimation}`}>
-              <div className="flex items-center space-x-4">
-                {newEntry.avatar ? (
-                  <div className="relative">
-                    <Image
-                      src={newEntry.avatar}
-                      alt="Avatar preview"
-                      width={48}
-                      height={48}
-                      className="rounded-full object-cover w-12 h-12"
-                    />
-                    <button
-                      onClick={() => setNewEntry(prev => ({ ...prev, avatar: '' }))}
-                      className="absolute -top-1 -right-1 p-0.5 bg-red-500 text-white rounded-full 
-                        hover:bg-red-600 transition-colors"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                ) : (
-                  <label className="cursor-pointer group">
-                    <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 
-                      flex items-center justify-center group-hover:bg-gray-200 
-                      dark:group-hover:bg-gray-600 transition-colors">
-                      <ImageIcon className="w-6 h-6 text-gray-400 dark:text-gray-500" />
-                    </div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageUpload}
-                    />
-                  </label>
-                )}
-                <div className="flex-1">
-                  {renderNameInput()}
+          {/* Add Address Form */}
+          <div 
+            className={`space-y-4 ${formAnimation}`}
+            style={{
+              maxHeight: isAdding ? '500px' : '0',
+              opacity: isAdding ? 1 : 0,
+              visibility: isAdding ? 'visible' : 'hidden',
+              marginBottom: isAdding ? '1rem' : '0',
+              overflow: 'hidden',
+              padding: isAdding ? '1rem' : '0'
+            }}
+          >
+            <div className="flex items-center space-x-4">
+              {newEntry.avatar ? (
+                <div className="relative">
+                  <Image
+                    src={newEntry.avatar}
+                    alt="Avatar preview"
+                    width={48}
+                    height={48}
+                    className="rounded-full object-cover w-12 h-12"
+                  />
+                  <button
+                    onClick={() => setNewEntry(prev => ({ ...prev, avatar: '' }))}
+                    className="absolute -top-1 -right-1 p-0.5 bg-red-500 text-white rounded-full 
+                      hover:bg-red-600 transition-colors"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
                 </div>
-              </div>
-
-              {renderAddressInput()}
-
-              <textarea
-                value={newEntry.notes}
-                onChange={(e) => setNewEntry({ ...newEntry, notes: e.target.value })}
-                placeholder="Notes (optional)"
-                className="w-full px-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg
-                  bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                  placeholder-gray-500 dark:placeholder-gray-400
-                  focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-                rows={3}
-              />
-
-              <div className="flex justify-end space-x-2">
-                <button
-                  onClick={handleCancel}
-                  className={`px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 
-                    dark:hover:text-white ${textButtonAnimation}`}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  disabled={!newEntry.name || !newEntry.address}
-                  className={`px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 
-                    transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${textButtonAnimation}`}
-                >
-                  {editingId ? 'Save' : 'Add'}
-                </button>
+              ) : (
+                <label className="cursor-pointer group">
+                  <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 
+                    flex items-center justify-center group-hover:bg-gray-200 
+                    dark:group-hover:bg-gray-600 transition-colors">
+                    <ImageIcon className="w-6 h-6 text-gray-400 dark:text-gray-500" />
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                  />
+                </label>
+              )}
+              <div className="flex-1">
+                {renderNameInput()}
               </div>
             </div>
-          )}
+
+            {renderAddressInput()}
+
+            <textarea
+              value={newEntry.notes}
+              onChange={(e) => setNewEntry({ ...newEntry, notes: e.target.value })}
+              placeholder="Notes (optional)"
+              className="w-full px-3 py-2 text-sm rounded-lg
+                bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                placeholder-gray-500 dark:placeholder-gray-400
+                border border-gray-200 dark:border-gray-700
+                focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
+                focus:border-transparent ring-offset-0"
+              rows={3}
+            />
+
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={handleCancel}
+                className={`px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 
+                  dark:hover:text-white ${textButtonAnimation}`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={!newEntry.name || !newEntry.address}
+                className={`px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 
+                  transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${textButtonAnimation}`}
+              >
+                {editingId ? 'Save' : 'Add'}
+              </button>
+            </div>
+          </div>
 
           {filteredEntries.map((entry, index) => (
             <div
@@ -703,38 +757,43 @@ export const AddressBook: React.FC<AddressBookProps> = ({
               </div>
 
               {/* Expanded Details */}
-              {expandedId === entry.id && (
-                <div className={`mt-4 pl-14 space-y-3 animate-in slide-in-from-top-2 duration-200`}>
-                  <div className="flex flex-col space-y-1">
-                    <label className="text-sm text-gray-500 dark:text-gray-400">Address</label>
-                    <div className="flex items-center space-x-2">
-                      <p className="text-gray-900 dark:text-white font-mono">{entry.address}</p>
-                      <a
-                        href={`https://etherscan.io/address/${entry.address}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`text-blue-500 hover:text-blue-600 ${iconButtonAnimation}`}
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    </div>
+              <div className={`pl-14 space-y-3 ${dropdownAnimation}`}
+                style={{
+                  maxHeight: expandedId === entry.id ? '500px' : '0',
+                  opacity: expandedId === entry.id ? 1 : 0,
+                  visibility: expandedId === entry.id ? 'visible' : 'hidden',
+                  marginTop: expandedId === entry.id ? '1rem' : '0',
+                }}
+              >
+                <div className="flex flex-col space-y-1">
+                  <label className="text-sm text-gray-500 dark:text-gray-400">Address</label>
+                  <div className="flex items-center space-x-2">
+                    <p className="text-gray-900 dark:text-white font-mono">{entry.address}</p>
+                    <a
+                      href={`https://etherscan.io/address/${entry.address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`text-blue-500 hover:text-blue-600 ${iconButtonAnimation}`}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
                   </div>
-
-                  {entry.ensName && (
-                    <div className="flex flex-col space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400">ENS Name</label>
-                      <p className="text-gray-900 dark:text-white">{entry.ensName}</p>
-                    </div>
-                  )}
-
-                  {entry.notes && (
-                    <div className="flex flex-col space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400">Notes</label>
-                      <p className="text-gray-600 dark:text-gray-300">{entry.notes}</p>
-                    </div>
-                  )}
                 </div>
-              )}
+
+                {entry.ensName && (
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm text-gray-500 dark:text-gray-400">ENS Name</label>
+                    <p className="text-gray-900 dark:text-white">{entry.ensName}</p>
+                  </div>
+                )}
+
+                {entry.notes && (
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-sm text-gray-500 dark:text-gray-400">Notes</label>
+                    <p className="text-gray-600 dark:text-gray-300">{entry.notes}</p>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>
