@@ -6,12 +6,46 @@ import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 import { TOKEN_CONFIGS } from "@/config/tokens";
 
+// Add the CandleData type
+interface CandleData {
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+// Helper function to generate mock candle data
+const generateCandleData = (basePrice: number, timeframe: '24h' | '7d' | '30d'): CandleData[] => {
+  const length = timeframe === '24h' ? 24 : timeframe === '7d' ? 7 : 30;
+  const now = new Date();
+  
+  return Array.from({ length }, (_, i) => {
+    const time = new Date(now.getTime() - (length - i) * 3600000).toISOString();
+    const volatility = basePrice * 0.02;
+    const open = basePrice + (Math.random() - 0.5) * volatility;
+    const close = basePrice + (Math.random() - 0.5) * volatility;
+    const high = Math.max(open, close) + Math.random() * volatility;
+    const low = Math.min(open, close) - Math.random() * volatility;
+    
+    return {
+      time,
+      open,
+      high,
+      low,
+      close,
+      volume: Math.random() * 1000000
+    };
+  });
+};
+
 export default function AssetPortfolioPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [selectedVariant, setSelectedVariant] = useState<'default' | 'compact'>('default');
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
-  // Mock data for portfolio assets
+  // Update mockAssets
   const mockAssets = [
     {
       ...TOKEN_CONFIGS.ETH,
@@ -19,7 +53,17 @@ export default function AssetPortfolioPage() {
       price: 3500,
       value: 8750,
       change24h: 4.2,
-      color: '#627EEA'
+      color: '#627EEA',
+      priceHistory: {
+        '24h': Array.from({ length: 24 }, () => Math.random() * 100 + 3400),
+        '7d': Array.from({ length: 7 }, () => Math.random() * 200 + 3300),
+        '30d': Array.from({ length: 30 }, () => Math.random() * 300 + 3200)
+      },
+      candleData: {
+        '24h': generateCandleData(3500, '24h'),
+        '7d': generateCandleData(3500, '7d'),
+        '30d': generateCandleData(3500, '30d')
+      }
     },
     {
       ...TOKEN_CONFIGS.BTC,
@@ -27,7 +71,17 @@ export default function AssetPortfolioPage() {
       price: 45000,
       value: 6750,
       change24h: -2.1,
-      color: '#F7931A'
+      color: '#F7931A',
+      priceHistory: {
+        '24h': Array.from({ length: 24 }, () => Math.random() * 1000 + 44000),
+        '7d': Array.from({ length: 7 }, () => Math.random() * 2000 + 43000),
+        '30d': Array.from({ length: 30 }, () => Math.random() * 3000 + 42000)
+      },
+      candleData: {
+        '24h': generateCandleData(45000, '24h'),
+        '7d': generateCandleData(45000, '7d'),
+        '30d': generateCandleData(45000, '30d')
+      }
     },
     {
       ...TOKEN_CONFIGS.USDC,
@@ -35,15 +89,35 @@ export default function AssetPortfolioPage() {
       price: 1,
       value: 5000,
       change24h: 0.01,
-      color: '#2775CA'
+      color: '#2775CA',
+      priceHistory: {
+        '24h': Array.from({ length: 24 }, () => 1 + Math.random() * 0.001),
+        '7d': Array.from({ length: 7 }, () => 1 + Math.random() * 0.002),
+        '30d': Array.from({ length: 30 }, () => 1 + Math.random() * 0.003)
+      },
+      candleData: {
+        '24h': generateCandleData(1, '24h'),
+        '7d': generateCandleData(1, '7d'),
+        '30d': generateCandleData(1, '30d')
+      }
     },
     {
-      ...TOKEN_CONFIGS.SOL,
-      balance: '45',
-      price: 110,
-      value: 4950,
-      change24h: 8.5,
-      color: '#00FFA3'
+      ...TOKEN_CONFIGS.USDT,
+      balance: '4500',
+      price: 1,
+      value: 4500,
+      change24h: 0.02,
+      color: '#26A17B',
+      priceHistory: {
+        '24h': Array.from({ length: 24 }, () => 1 + Math.random() * 0.001),
+        '7d': Array.from({ length: 7 }, () => 1 + Math.random() * 0.002),
+        '30d': Array.from({ length: 30 }, () => 1 + Math.random() * 0.003)
+      },
+      candleData: {
+        '24h': generateCandleData(1, '24h'),
+        '7d': generateCandleData(1, '7d'),
+        '30d': generateCandleData(1, '30d')
+      }
     }
   ];
 
