@@ -5,8 +5,11 @@ import { ConnectWalletButton } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
+type WalletTab = "metamask" | "walletconnect" | "coinbase";
+
 export default function ConnectWalletPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
+  const [walletTab, setWalletTab] = useState<WalletTab>("metamask");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
   return (
@@ -21,38 +24,99 @@ export default function ConnectWalletPage() {
           </p>
         </div>
 
-        {/* Preview/Code Section */}
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between overflow-x-auto">
-            <div className="flex items-center space-x-2 min-w-full sm:min-w-0">
+        <div className="border rounded-lg overflow-hidden dark:border-gray-800">
+          <div className="border-b dark:border-gray-800">
+            <div className="flex">
               <button
                 onClick={() => setActiveTab("preview")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                className={`px-4 py-2 flex items-center gap-2 ${
                   activeTab === "preview"
-                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    ? "text-blue-500 border-b-2 border-blue-500"
+                    : "text-gray-500 dark:text-gray-400"
                 }`}
               >
-                <Eye className="mr-2 h-4 w-4" />
+                <Eye size={20} />
                 Preview
               </button>
               <button
                 onClick={() => setActiveTab("code")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                className={`px-4 py-2 flex items-center gap-2 ${
                   activeTab === "code"
-                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    ? "text-blue-500 border-b-2 border-blue-500"
+                    : "text-gray-500 dark:text-gray-400"
                 }`}
               >
-                <Code className="mr-2 h-4 w-4" />
+                <Code size={20} />
                 Code
               </button>
             </div>
           </div>
 
-          <div className="rounded-lg overflow-hidden">
+          <div className="p-4">
             {activeTab === "preview" ? (
-              <ConnectWalletButton />
+              <div className="space-y-6">
+                {/* Wallet Type Tabs */}
+                <div className="flex gap-2 border-b dark:border-gray-800">
+                  <button
+                    onClick={() => setWalletTab("metamask")}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      walletTab === "metamask"
+                        ? "text-blue-500 border-b-2 border-blue-500"
+                        : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
+                    }`}
+                  >
+                    MetaMask
+                  </button>
+                  <button
+                    onClick={() => setWalletTab("walletconnect")}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      walletTab === "walletconnect"
+                        ? "text-blue-500 border-b-2 border-blue-500"
+                        : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
+                    }`}
+                  >
+                    WalletConnect
+                  </button>
+                  <button
+                    onClick={() => setWalletTab("coinbase")}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      walletTab === "coinbase"
+                        ? "text-blue-500 border-b-2 border-blue-500"
+                        : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
+                    }`}
+                  >
+                    Coinbase
+                  </button>
+                </div>
+
+                {/* Button Variants */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                    {walletTab === "metamask" 
+                      ? "MetaMask" 
+                      : walletTab === "walletconnect" 
+                        ? "WalletConnect" 
+                        : "Coinbase"} Variants
+                  </h3>
+                  <div className="grid gap-4">
+                    <ConnectWalletButton
+                      variant="ghost"
+                      walletType={walletTab}
+                      onConnect={(address) => console.log('Connected:', address)}
+                    />
+                    <ConnectWalletButton
+                      variant="light"
+                      walletType={walletTab}
+                      onConnect={(address) => console.log('Connected:', address)}
+                    />
+                    <ConnectWalletButton
+                      variant="dark"
+                      walletType={walletTab}
+                      onConnect={(address) => console.log('Connected:', address)}
+                    />
+                  </div>
+                </div>
+              </div>
             ) : (
               <CodeBlock code={`// Component code will be here`} id="component" />
             )}

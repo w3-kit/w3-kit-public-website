@@ -66,12 +66,17 @@ const AVAILABLE_TOKENS: Token[] = [
   }
 ];
 
+const TOKEN_FEES = {
+  'ETH': '0.001',
+  'USDC': '5',
+  'USDT': '5'
+} as const;
+
 export function BridgeWidget({ className = "" }: BridgeProps) {
   const [fromNetwork, setFromNetwork] = useState<Network | null>(null);
   const [toNetwork, setToNetwork] = useState<Network | null>(null);
   const [amount, setAmount] = useState<string>("");
   const [estimatedTime, setEstimatedTime] = useState("15-30");
-  const [estimatedFee, setEstimatedFee] = useState("0.001");
   const [rotationDegrees, setRotationDegrees] = useState(0);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -130,6 +135,11 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
   };
 
   const isValid = fromNetwork && toNetwork && selectedToken && amount && Number(amount) > 0;
+
+  const getEstimatedFee = () => {
+    if (!selectedToken) return '---';
+    return `${TOKEN_FEES[selectedToken.symbol as keyof typeof TOKEN_FEES]} ${selectedToken.symbol}`;
+  };
 
   return (
     <div className={`bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl shadow-lg 
@@ -336,7 +346,7 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
           </div>
           <div className="flex justify-between items-center">
             <span className="text-gray-600 dark:text-gray-300">Bridge Fee</span>
-            <span className="font-medium">{estimatedFee} ETH</span>
+            <span className="font-medium">{getEstimatedFee()}</span>
           </div>
         </div>
 
