@@ -10,6 +10,7 @@ export default function LiquidityPoolStatsPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [selectedVariant, setSelectedVariant] = useState<'default' | 'compact'>('default');
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [showLoading, setShowLoading] = useState(false);
 
   // Mock data for preview
   const mockPool: PoolData = {
@@ -64,37 +65,48 @@ export default function LiquidityPoolStatsPage() {
 
         {/* Preview/Code Section */}
         <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setActiveTab("preview")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
-                activeTab === "preview"
-                  ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-              }`}
-            >
-              <Eye className="mr-2 h-4 w-4" />
-              Preview
-            </button>
-            <button
-              onClick={() => setActiveTab("code")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
-                activeTab === "code"
-                  ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-              }`}
-            >
-              <Code className="mr-2 h-4 w-4" />
-              Code
-            </button>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setActiveTab("preview")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                  activeTab === "preview"
+                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
+                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                Preview
+              </button>
+              <button
+                onClick={() => setActiveTab("code")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                  activeTab === "code"
+                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
+                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+              >
+                <Code className="mr-2 h-4 w-4" />
+                Code
+              </button>
+            </div>
+            {activeTab === "preview" && (
+              <button
+                onClick={() => setShowLoading(!showLoading)}
+                className="text-sm font-medium text-blue-500 hover:text-blue-600"
+              >
+                {showLoading ? "Show Data" : "Show Loading"}
+              </button>
+            )}
           </div>
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <div className="p-4 bg-gray-50 dark:bg-gray-900">
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
                 <LiquidityPoolStats
                   poolData={mockPool}
                   variant={selectedVariant}
+                  isLoading={showLoading}
                   onTokenClick={(pairId) => console.log("Token pair clicked:", pairId)}
                 />
               </div>

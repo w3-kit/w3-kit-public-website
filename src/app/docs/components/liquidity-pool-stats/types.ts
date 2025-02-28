@@ -26,4 +26,5 @@ export interface LiquidityPoolStatsProps {
   className?: string;
   onTokenClick?: (symbol: string) => void;
   variant?: 'default' | 'compact';
+  isLoading?: boolean;
 } 
