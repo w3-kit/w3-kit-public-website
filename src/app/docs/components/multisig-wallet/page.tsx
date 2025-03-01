@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { MultisigWallet } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
+import { Transaction } from './types';
 
 export default function MultisigWalletPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   // Mock data for preview
   const mockData = {
@@ -17,8 +19,18 @@ export default function MultisigWalletPage() {
       { address: "0x5678...9012", name: "Bob", hasApproved: false },
       { address: "0x9012...3456", name: "Charlie", hasApproved: false },
     ],
-    transactions: [],
+    transactions: transactions,
     requiredApprovals: 2,
+    onPropose: (tx: Omit<Transaction, "id" | "status" | "timestamp">) => {
+      console.log('New transaction created:', tx);
+      setTransactions(prev => [tx as Transaction, ...prev]);
+    },
+    onApprove: (txId: string) => {
+      console.log('Transaction approved:', txId);
+    },
+    onReject: (txId: string) => {
+      console.log('Transaction rejected:', txId);
+    }
   };
 
   return (
