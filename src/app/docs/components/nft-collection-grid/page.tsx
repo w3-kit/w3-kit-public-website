@@ -11,102 +11,83 @@ export default function NFTCollectionGridPage() {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
   // Mock data for preview
-  const mockNFTs: NFT[] = [
+  const mockData: NFT[] = [
     {
       id: "1",
-      name: "Bored Ape #1234",
-      description: "A unique Bored Ape NFT with laser eyes",
-      image: "https://i.seadn.io/gae/i5dYZRkVCUK97bfprQ3WXyrT9BnLSZtVKGJlKQ7TtZ_oWyYgISQcF9Ov2f3A4mRk5k9enzV6Dqa3xNfGUkK_hqFnQt4Qly1P4WYw?auto=format&w=1000",
+      name: "Azuki #9839",
+      description:
+        "Azuki starts with a collection of 10,000 avatars that give you membership access to The Garden.",
+      image:
+        "https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?auto=format&dpr=1&w=1000",
       owner: "0x1234567890abcdef1234567890abcdef12345678",
-      collection: "Bored Ape Yacht Club",
-      tokenId: "1234",
-      contractAddress: "0x123456789abcdef123456789abcdef1234567890",
+      collection: "Azuki",
       chainId: 1,
-      attributes: [
-        { trait_type: "Background", value: "Blue" },
-        { trait_type: "Fur", value: "Golden" },
-        { trait_type: "Eyes", value: "Laser" },
-      ],
+      tokenId: "9839",
+      contractAddress: "",
     },
     {
       id: "2",
-      name: "Azuki #5678",
-      description: "A mysterious Azuki warrior",
-      image: "https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?auto=format&w=1000",
+      name: "Bored Ape #7329",
+      description:
+        "The Bored Ape Yacht Club is a collection of 10,000 unique Bored Ape NFTs.",
+      image:
+        "https://i.seadn.io/gae/i5dYZRkVCUK97bfprQ3WXyrT9BnLSZtVKGJlKQ919uaUB0sxbngVCioaiyu9r6snqfi2aaTyIvv6DHm4m2R3y7hMajbsv14pSZK8mhs?auto=format&dpr=1&w=1000",
       owner: "0x9876543210fedcba9876543210fedcba98765432",
-      collection: "Azuki",
-      tokenId: "5678",
-      contractAddress: "0x123456789abcdef123456789abcdef1234567890",
+      collection: "Bored Ape Yacht Club",
       chainId: 1,
-      attributes: [
-        { trait_type: "Background", value: "Red" },
-        { trait_type: "Type", value: "Human" },
-        { trait_type: "Clothing", value: "Kimono" },
-      ],
+      tokenId: "7329",
+      contractAddress: "",
     },
     {
       id: "3",
-      name: "Doodle #9012",
-      description: "A colorful Doodle character",
-      image: "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&w=1000",
+      name: "Doodle #8147",
+      description:
+        "A community-driven collectibles project featuring art by Burnt Toast.",
+      image:
+        "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=1000",
       owner: "0xabcdef1234567890abcdef1234567890abcdef12",
       collection: "Doodles",
-      tokenId: "9012",
-      contractAddress: "0x123456789abcdef123456789abcdef1234567890",
       chainId: 1,
-      attributes: [
-        { trait_type: "Background", value: "Yellow" },
-        { trait_type: "Face", value: "Happy" },
-        { trait_type: "Body", value: "Rainbow" },
-      ],
+      tokenId: "8147",
+      contractAddress: "",
     },
     {
       id: "4",
-      name: "Moonbird #3456",
-      description: "A mystical Moonbird in flight",
-      image: "https://i.seadn.io/gae/H-eyNE1MwL5ohL-tCfn_Xa1Sl9M9B4612tLYeUlQubzt4ewhr4huJIR5OLuyO3Z5PpJFSwdm7rq-TikAh7f5eUw338A2GxODupqm?auto=format&w=1000",
-      owner: "0x567890abcdef1234567890abcdef1234567890ab",
-      collection: "Moonbirds",
-      tokenId: "3456",
-      contractAddress: "0x123456789abcdef123456789abcdef1234567890",
+      name: "Cool Cat #1490",
+      description:
+        "Cool Cats are a collection of 9,999 randomly generated NFTs on the Ethereum blockchain.",
+      image:
+        "https://i.seadn.io/gae/LIov33kogXOK4XZd2ESj29sqm_Hww5JSdO7AFn5wjt8xgnJJ0UpNV9yITqxra3s_LMEW1AnnrgOVB_hDpjJRA1uF4skI5Sdi_9rULi8?auto=format&dpr=1&w=1000",
+      owner: "0x123456789abcdef0123456789abcdef012345678",
+      collection: "Cool Cats",
       chainId: 1,
-      attributes: [
-        { trait_type: "Background", value: "Night" },
-        { trait_type: "Feathers", value: "Cosmic" },
-        { trait_type: "Eyes", value: "Glowing" },
-      ],
+      tokenId: "1490",
+      contractAddress: "",
     },
     {
       id: "5",
-      name: "CloneX #7890",
-      description: "A futuristic CloneX avatar",
-      image: "https://i.seadn.io/gae/XN0XuD8Uh3jyRWGtfunGqWpBWuz2Zqqer4rqAfhAuxJ4s0iBqeC8tq12CMeVDyqtw4E6y4ATxV1MpwOAvsVB-tsYGB5VgWLbQyYrYs0?auto=format&w=1000",
-      owner: "0x234567890abcdef1234567890abcdef1234567890",
-      collection: "CloneX",
-      tokenId: "7890",
-      contractAddress: "0x123456789abcdef123456789abcdef1234567890",
+      name: "Moonbird #7816",
+      description:
+        "A collection of 10,000 utility-enabled PFPs that feature a richly diverse and unique pool of rarity-powered traits.",
+      image:
+        "https://i.seadn.io/gae/H-eyNE1MwL5ohL-tCfn_Xa1Sl9M9B4612tLYeUlQubzt4ewhr4huJIR5OLuyO3Z5PpJFSwdm7rq-TikAh7f5eUw338A2cy6HRH75?auto=format&dpr=1&w=1000",
+      owner: "0xfedcba9876543210fedcba9876543210fedcba98",
+      collection: "Moonbirds",
       chainId: 1,
-      attributes: [
-        { trait_type: "Background", value: "Cyber" },
-        { trait_type: "Skin", value: "Robot" },
-        { trait_type: "Outfit", value: "Future Tech" },
-      ],
+      tokenId: "7816",
+      contractAddress: "",
     },
     {
-      id: "6",
-      name: "Pudgy Penguin #2345",
-      description: "An adorable Pudgy Penguin",
-      image: "https://i.seadn.io/gae/yNi-XdGxsgQCPpqSio4o31ygAV6wURdIdInWRcFIl46UjUQ1eV7BEndGe8L661OoG-clRi7EgInLX4LPu9Jfw4fq0bnVYHqg7RFi?auto=format&w=1000",
-      owner: "0x890abcdef1234567890abcdef1234567890abcdef",
-      collection: "Pudgy Penguins",
-      tokenId: "2345",
-      contractAddress: "0x123456789abcdef123456789abcdef1234567890",
+      id: "7",
+      name: "CloneX #18327",
+      description: "20,000 next-gen Avatars, by RTFKT and Takashi Murakami.",
+      image:
+        "https://i.seadn.io/gae/XN0XuD8Uh3jyRWNtPTFeXJg_ht8m5ofDx6aHklOiy4amhFuWUa0JaR6It49AH8tlnYS386Q0TW_-Lmedn0UET_ko1a3CbJGeu5iHMg?auto=format&dpr=1&w=1000",
+      owner: "0x210fedcba9876543210fedcba9876543210fedcb",
+      collection: "CloneX",
       chainId: 1,
-      attributes: [
-        { trait_type: "Background", value: "Ice" },
-        { trait_type: "Outfit", value: "Scarf" },
-        { trait_type: "Face", value: "Happy" },
-      ],
+      tokenId: "18327",
+      contractAddress: "",
     },
   ];
 
@@ -118,7 +99,8 @@ export default function NFTCollectionGridPage() {
             NFT Collection Grid
           </h1>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
-            A responsive grid component for displaying NFT collections with customizable layouts and interactive features.
+            A responsive grid component for displaying NFT collections with
+            customizable layouts and interactive features.
           </p>
         </div>
 
@@ -154,7 +136,7 @@ export default function NFTCollectionGridPage() {
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
               <NFTCollectionGrid
-                nfts={mockNFTs}
+                nfts={mockData}
                 variant="default"
                 columns={{
                   default: 1,
@@ -223,14 +205,20 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add nft-collection-grid" id="cli" />
+                <CodeBlock
+                  code="npx w3-kit@latest add nft-collection-grid"
+                  id="cli"
+                />
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       1. Install the package using npm:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/nft-collection-grid" id="npm" />
+                    <CodeBlock
+                      code="npm install @w3-kit/nft-collection-grid"
+                      id="npm"
+                    />
                   </div>
 
                   <div className="space-y-2">
