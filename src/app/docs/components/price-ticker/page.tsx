@@ -8,9 +8,107 @@ import { CodeBlock } from "@/components/docs/codeBlock";
 export default function PriceTickerPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [tickerVariant, setTickerVariant] = useState<"detailed" | "compact">("detailed");
+  const [refreshInterval, setRefreshInterval] = useState<number>(10000);
 
   // Mock data for preview
-  const tokens = ["ETH", "BTC"]; // Just pass token symbols
+  const mockData = [
+    {
+      name: "Bitcoin",
+      symbol: "BTC",
+      price: 50000,
+      priceChange: {
+        "1h": 0.5,
+        "24h": 2.3,
+        "7d": -1.2,
+        "30d": 15.4
+      },
+      marketCap: 950000000000,
+      volume: {
+        "24h": 25000000000
+      },
+      circulatingSupply: 19000000,
+      maxSupply: 21000000,
+      logoURI: "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+      lastUpdated: new Date().toISOString()
+    },
+    {
+      name: "Ethereum",
+      symbol: "ETH",
+      price: 3000,
+      priceChange: {
+        "1h": -0.2,
+        "24h": 1.5,
+        "7d": 3.2,
+        "30d": 10.1
+      },
+      marketCap: 350000000000,
+      volume: {
+        "24h": 15000000000
+      },
+      circulatingSupply: 120000000,
+      maxSupply: null,
+      logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+      lastUpdated: new Date().toISOString()
+    },
+    {
+      name: "Solana",
+      symbol: "SOL",
+      price: 100,
+      priceChange: {
+        "1h": 1.2,
+        "24h": 5.7,
+        "7d": 15.2,
+        "30d": 45.4
+      },
+      marketCap: 40000000000,
+      volume: {
+        "24h": 3000000000
+      },
+      circulatingSupply: 400000000,
+      maxSupply: 500000000,
+      logoURI: "https://cryptologos.cc/logos/solana-sol-logo.png",
+      lastUpdated: new Date().toISOString()
+    },
+    {
+      name: "Cardano",
+      symbol: "ADA",
+      price: 0.5,
+      priceChange: {
+        "1h": -0.3,
+        "24h": -1.2,
+        "7d": -3.5,
+        "30d": 5.4
+      },
+      marketCap: 18000000000,
+      volume: {
+        "24h": 800000000
+      },
+      circulatingSupply: 35000000000,
+      maxSupply: 45000000000,
+      logoURI: "https://cryptologos.cc/logos/cardano-ada-logo.png",
+      lastUpdated: new Date().toISOString()
+    },
+    {
+      name: "Binance Coin",
+      symbol: "BNB",
+      price: 400,
+      priceChange: {
+        "1h": 0.1,
+        "24h": 0.8,
+        "7d": 2.5,
+        "30d": 8.7
+      },
+      marketCap: 65000000000,
+      volume: {
+        "24h": 2000000000
+      },
+      circulatingSupply: 1000000000,
+      maxSupply: 1500000000,
+      logoURI: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png",
+      lastUpdated: new Date().toISOString()
+    }
+  ];
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
@@ -57,9 +155,10 @@ export default function PriceTickerPage() {
             {activeTab === "preview" ? (
               <div className="space-y-4">
                 <PriceTicker
-                  tokens={tokens}
+                  tokens={mockData}
                   onPriceUpdate={(prices) => console.log("Prices updated:", prices)}
-                  variant="detailed"
+                  variant={tickerVariant}
+                  refreshInterval={refreshInterval}
                 />
               </div>
             ) : (
