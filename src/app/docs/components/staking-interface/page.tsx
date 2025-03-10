@@ -13,19 +13,19 @@ export default function StakingInterfacePage() {
 
   // Mock data for staking pools using TOKEN_CONFIGS
   const mockPools = [
-    {
-      id: '1',
-      name: 'ETH 2.0 Staking',
-      token: {
-        symbol: TOKEN_CONFIGS.ETH.symbol,
-        logoURI: TOKEN_CONFIGS.ETH.logoURI,
-        decimals: TOKEN_CONFIGS.ETH.decimals
-      },
-      apr: 4.5,
-      minStake: '32',
-      lockPeriod: 365,
-      totalStaked: '1250000'
-    },
+    // {
+    //   id: '1',
+    //   name: 'ETH 2.0 Staking',
+    //   token: {
+    //     symbol: TOKEN_CONFIGS.ETH.symbol,
+    //     logoURI: TOKEN_CONFIGS.ETH.logoURI,
+    //     decimals: TOKEN_CONFIGS.ETH.decimals
+    //   },
+    //   apr: 4.5,
+    //   minStake: '32',
+    //   lockPeriod: 365,
+    //   totalStaked: '1250000'
+    // },
     {
       id: '2',
       name: 'USDC Yield Pool',
