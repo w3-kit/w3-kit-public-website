@@ -332,24 +332,24 @@ export const NFTCollectionGrid: React.FC<NFTCollectionGridProps> = ({
           }`}
         >
           {filteredNFTs.map((nft) => (
-            <div 
-              key={nft.id}
+          <div 
+            key={nft.id}
               className={`${gridTransitionClass} ${
                 viewMode === 'list' 
                   ? 'w-full' 
                   : 'w-full aspect-square hover:-translate-y-1 hover:shadow-lg'
-              }`}
-            >
-              <NFTCard
-                nft={nft}
+            }`}
+          >
+            <NFTCard
+              nft={nft}
                 variant={viewMode === 'list' ? 'expanded' : variant}
-                onOwnerClick={onOwnerClick}
+              onOwnerClick={onOwnerClick}
                 onNFTClick={onNFTClick}
                 className={`h-full ${viewMode === 'list' ? 'max-w-full' : ''}`}
-              />
-            </div>
-          ))}
-        </div>
+            />
+          </div>
+        ))}
+      </div>
       )}
     </div>
   );
