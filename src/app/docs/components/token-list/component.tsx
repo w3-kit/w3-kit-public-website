@@ -27,7 +27,7 @@ const TokenImage = memo(({ logoURI, symbol, size = "md" }: { logoURI?: string; s
       <img
         src={logoURI}
         alt={symbol}
-        className="w-full h-full object-fit object-center"
+        className="w-full h-full object-cover object-center"
         onError={() => setHasError(true)}
         loading="lazy"
       />
@@ -52,10 +52,10 @@ const TokenGridCard = memo(({
   return (
     <div
       onClick={onSelect}
-      className={`bg-white dark:bg-gray-800 rounded-lg p-4 cursor-pointer
+      className={`bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 cursor-pointer
         border border-gray-200 dark:border-gray-700 
         hover:shadow-md dark:hover:shadow-gray-800 hover:border-blue-200 dark:hover:border-blue-800
-        transform transition-all duration-200 hover:-translate-y-1
+        transform transition-all duration-200 hover:-translate-y-1 h-full
         ${isSelected ? "ring-2 ring-blue-500 dark:ring-blue-400 shadow-md" : ""}`}
     >
       <div className="flex items-center space-x-3">
@@ -68,6 +68,13 @@ const TokenGridCard = memo(({
             {token.symbol}
           </p>
         </div>
+        {isSelected && (
+          <div className="flex-shrink-0 text-blue-500 dark:text-blue-400">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+          </div>
+        )}
       </div>
       
       <div className="mt-3 space-y-1">
@@ -121,7 +128,7 @@ const TokenListRow = memo(({
   return (
     <div
       onClick={onSelect}
-      className={`flex items-center justify-between p-4 cursor-pointer
+      className={`flex items-center justify-between p-3 sm:p-4 cursor-pointer
         bg-white dark:bg-gray-800 
         hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors
         ${isSelected ? "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 dark:border-blue-400" : "border-l-4 border-transparent"}`}
@@ -136,9 +143,16 @@ const TokenListRow = memo(({
             {token.symbol}
           </div>
         </div>
+        {isSelected && (
+          <div className="flex-shrink-0 text-blue-500 dark:text-blue-400 mr-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+          </div>
+        )}
       </div>
       
-      <div className="flex items-center space-x-6 flex-shrink-0">
+      <div className="flex items-center space-x-4 sm:space-x-6 flex-shrink-0">
         {showBalances && (
           <div className="flex flex-col items-end">
             <span className="text-xs text-gray-500 dark:text-gray-400">Balance</span>
@@ -175,6 +189,7 @@ export const TokenList: React.FC<TokenListProps> = ({
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("name");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [isCompact, setIsCompact] = useState(variant === "grid" && tokens.length > 6);
 
   const handleSort = useCallback(
     (field: SortField) => {
@@ -239,22 +254,66 @@ export const TokenList: React.FC<TokenListProps> = ({
     return result;
   }, [tokenList, search, sortField, sortDirection]);
 
+  // Determine optimal grid columns based on token count
+  const getGridCols = useCallback(() => {
+    const count = filteredAndSortedTokens.length;
+    if (count <= 2) return "grid-cols-1";
+    if (count <= 4) return "grid-cols-1 sm:grid-cols-2";
+    if (count <= 6) return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+    return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+  }, [filteredAndSortedTokens.length]);
+
   const renderVariant = () => {
     switch (variant) {
       case "grid":
         return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredAndSortedTokens.map((token, index) => (
-              <TokenGridCard
-                key={`${token.chainId}-${token.address}-${index}`}
-                token={token}
-                isSelected={selectedToken === token.symbol}
-                onSelect={() => onTokenSelect?.(token)}
-                showBalances={showBalances}
-                showPrices={showPrices}
-              />
-            ))}
-          </div>
+          <>
+            {tokens.length > 6 && (
+              <div className="flex justify-end mb-2">
+                <button
+                  onClick={() => setIsCompact(!isCompact)}
+                  className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                >
+                  {isCompact ? (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                      </svg>
+                      <span>Show All</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v4m0 0h4M4 4l5 5M4 16v4m0 0h4m-4 0l5-5m11-9V4m0 0h-4m4 0l-5 5M20 16v4m0 0h-4m4 0l-5-5" />
+                      </svg>
+                      <span>Compact View</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+            <div className={`grid ${getGridCols()} gap-2 sm:gap-3 md:gap-4`}>
+              {(isCompact ? filteredAndSortedTokens.slice(0, 6) : filteredAndSortedTokens).map((token, index) => (
+                <TokenGridCard
+                  key={`${token.chainId}-${token.address}-${index}`}
+                  token={token}
+                  isSelected={selectedToken === token.symbol}
+                  onSelect={() => onTokenSelect?.(token)}
+                  showBalances={showBalances}
+                  showPrices={showPrices}
+                />
+              ))}
+            </div>
+            {isCompact && filteredAndSortedTokens.length > 6 && (
+              <button
+                onClick={() => setIsCompact(false)}
+                className="w-full mt-3 py-2 text-sm text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 
+                  border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+              >
+                Show {filteredAndSortedTokens.length - 6} more tokens
+              </button>
+            )}
+          </>
         );
 
       case "list":
