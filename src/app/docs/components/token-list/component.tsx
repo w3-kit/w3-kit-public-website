@@ -6,6 +6,7 @@ import { TOKEN_CONFIGS } from "../../../../config/tokens";
 // Memoized token image component with fallback
 const TokenImage = memo(({ logoURI, symbol, size = "md" }: { logoURI?: string; symbol: string; size?: "sm" | "md" | "lg" }) => {
   const [hasError, setHasError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   const sizeClasses = {
     sm: "w-6 h-6 min-w-[1.5rem]",
@@ -16,21 +17,27 @@ const TokenImage = memo(({ logoURI, symbol, size = "md" }: { logoURI?: string; s
   if (!logoURI || hasError) {
     // Fallback to initials if no image or error loading
     return (
-      <div className={`${sizeClasses[size]} rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 font-medium overflow-hidden flex-shrink-0`}>
+      <div className={`${sizeClasses[size]} rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 font-medium overflow-hidden flex-shrink-0 animate-fadeIn`}>
         <span className="text-xs sm:text-sm">{symbol.substring(0, 2).toUpperCase()}</span>
       </div>
     );
   }
   
   return (
-    <div className={`${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600`}>
+    <div className={`${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 relative`}>
       <img
         src={logoURI}
         alt={symbol}
-        className="w-full h-full object-cover object-center"
+        className={`w-full h-full object-contain transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         onError={() => setHasError(true)}
+        onLoad={() => setIsLoaded(true)}
         loading="lazy"
       />
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700 animate-pulse">
+          <span className="text-xs text-gray-400 dark:text-gray-500">{symbol.substring(0, 1)}</span>
+        </div>
+      )}
     </div>
   );
 });
