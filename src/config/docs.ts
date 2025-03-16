@@ -81,6 +81,13 @@ const pages: DocPage[] = [
     description: "Grid layout for displaying and managing NFT collections",
   },
   {
+    title: "NFT Marketplace Aggregator",
+    href: "/docs/components/nft-marketplace-aggregator",
+    section: "components",
+    description: "Compare and aggregate NFT listings across multiple marketplaces with price tracking",
+    isNew: true,
+  },
+  {
     title: "Price Ticker",
     href: "/docs/components/price-ticker",
     section: "components",
