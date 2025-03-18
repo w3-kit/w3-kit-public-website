@@ -13,8 +13,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 // Animation constants
 const cardAnimation = "transition-all duration-300 ease-in-out";
 const itemAnimation = "animate-in fade-in-50 duration-300";
-const buttonAnimation = "transition-all duration-200";
-const expandAnimation = "transition-all duration-300 ease-in-out";
 
 // Add interface for candlestick data
 interface CandleData {
@@ -407,17 +405,6 @@ export const AssetPortfolio: React.FC<AssetPortfolioProps> = ({
 
   const formatPercent = (value: number) => {
     return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
-  };
-
-  const chartData = {
-    labels: assets.map(asset => asset.symbol),
-    datasets: [
-      {
-        data: assets.map(asset => asset.value),
-        backgroundColor: assets.map(asset => asset.color),
-        borderWidth: 0,
-      },
-    ],
   };
 
   const activeIndex = selectedIndex ?? hoveredIndex;
