@@ -140,18 +140,18 @@ export const StakingInterface: React.FC<StakingInterfaceProps> = ({
         setSuccess(`Successfully staked ${formatNumber(amount)} ${selectedPool.token.symbol}`);
         
         // Update the pool to show it's staked (in a real app, this would come from the backend)
-        const updatedPools = pools.map(p => 
-          p.id === selectedPool.id ? { ...p, isStaked: true } : p
-        );
+        // const updatedPools = pools.map(p => 
+        //   p.id === selectedPool.id ? { ...p, isStaked: true } : p
+        // );
         // In a real app, you would update the pools state here
       } else {
         onUnstake?.(selectedPool.id, amount);
         setSuccess(`Successfully unstaked ${formatNumber(amount)} ${selectedPool.token.symbol}`);
         
         // Update the pool to show it's unstaked (in a real app, this would come from the backend)
-        const updatedPools = pools.map(p => 
-          p.id === selectedPool.id ? { ...p, isStaked: false } : p
-        );
+        // const updatedPools = pools.map(p => 
+        //   p.id === selectedPool.id ? { ...p, isStaked: false } : p
+        // );
         // In a real app, you would update the pools state here
       }
       setAmount('');
@@ -160,7 +160,7 @@ export const StakingInterface: React.FC<StakingInterfaceProps> = ({
       setTimeout(() => {
         setSuccess(null);
       }, 3000);
-    } catch (err) {
+    } catch {
       setError('Transaction failed. Please try again.');
     } finally {
       setIsLoading(false);

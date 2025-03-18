@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { TokenList } from "../token-list/component";
 import { ArrowUpDown } from "lucide-react";
 import { TokenSymbol } from "../../../../config/tokens";
@@ -93,13 +94,14 @@ const TokenIcon = ({ symbol, size = "md" }: { symbol: string; size?: "sm" | "md"
   
   return (
     <div className={`${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 relative`}>
-      <img
+      <Image
         src={logoURI}
         alt={symbol}
+        width={32}
+        height={32}
         className={`w-full h-full object-contain transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         onError={() => setHasError(true)}
         onLoad={() => setIsLoaded(true)}
-        loading="lazy"
       />
       {!isLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-700 animate-pulse">

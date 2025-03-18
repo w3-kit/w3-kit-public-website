@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TransactionHistoryProps } from "./types";
+import { TransactionHistoryProps, Transaction } from "./types";
 import {
   formatAddress,
   formatTimestamp,
@@ -67,7 +67,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({
     dateTo: "",
   });
 
-  const applyFilters = (tx: any) => {
+  const applyFilters = (tx: Transaction) => {
     // Status filter
     if (filters.status && tx.status.toLowerCase() !== filters.status.toLowerCase()) {
       return false;
