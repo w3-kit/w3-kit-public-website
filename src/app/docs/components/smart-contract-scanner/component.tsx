@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Search, Shield, AlertTriangle, Check, X, ExternalLink, Code, Copy, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Search, Shield, AlertTriangle, Check, X, ExternalLink, Copy, ChevronDown, ChevronUp } from 'lucide-react';
 
 // Define error types for better error handling
 export enum ContractError {
@@ -46,7 +46,6 @@ interface SmartContractScannerProps {
   className?: string;
   variant?: 'default' | 'compact';
   onScan?: (address: string) => void;
-  onFunctionCall?: (functionName: string, inputs: any[]) => void;
   onError?: (error: ContractError) => void; // Add error callback
 }
 
@@ -54,7 +53,6 @@ export const SmartContractScanner: React.FC<SmartContractScannerProps> = ({
   className = '',
   variant = 'default',
   onScan,
-  onFunctionCall,
   onError
 }) => {
   const [address, setAddress] = useState('');

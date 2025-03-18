@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { PriceTickerProps } from './types';
+import { PriceTickerProps, TokenPrice } from './types';
+import Image from 'next/image';
 
 // Define Token type since it's missing from the imports
 interface Token {
@@ -20,14 +21,6 @@ interface Token {
   maxSupply: number | null;
   logoURI: string;
   lastUpdated: string;
-}
-
-// Define TokenPrice type to match what onPriceUpdate expects
-interface TokenPrice {
-  symbol: string;
-  price: number;
-  change24h: number;
-  // Add other required fields
 }
 
 export const PriceTicker: React.FC<PriceTickerProps> = ({
@@ -74,12 +67,12 @@ export const PriceTicker: React.FC<PriceTickerProps> = ({
         
         if (onPriceUpdate) {
           // Convert to TokenPrice format
-          const tokenPrices = updatedPrices.map(token => ({
+          const tokenPrices: TokenPrice[] = updatedPrices.map(token => ({
             symbol: token.symbol,
             price: token.price,
             change24h: token.priceChange['24h'],
-            // Add other required fields
-          })) as any;
+            logoURI: token.logoURI
+          }));
           
           onPriceUpdate(tokenPrices);
         }
@@ -133,12 +126,12 @@ export const PriceTicker: React.FC<PriceTickerProps> = ({
       
       if (onPriceUpdate) {
         // Convert to TokenPrice format
-        const tokenPrices = updatedPrices.map(token => ({
+        const tokenPrices: TokenPrice[] = updatedPrices.map(token => ({
           symbol: token.symbol,
           price: token.price,
           change24h: token.priceChange['24h'],
-          // Add other required fields
-        })) as any;
+          logoURI: token.logoURI
+        }));
         
         onPriceUpdate(tokenPrices);
       }
@@ -168,12 +161,12 @@ export const PriceTicker: React.FC<PriceTickerProps> = ({
         
         if (onPriceUpdate) {
           // Convert to TokenPrice format
-          const tokenPrices = updatedPrices.map(token => ({
+          const tokenPrices: TokenPrice[] = updatedPrices.map(token => ({
             symbol: token.symbol,
             price: token.price,
             change24h: token.priceChange['24h'],
-            // Add other required fields
-          })) as any;
+            logoURI: token.logoURI
+          }));
           
           onPriceUpdate(tokenPrices);
         }
@@ -265,7 +258,7 @@ export const PriceTicker: React.FC<PriceTickerProps> = ({
                   onClick={() => handleTokenClick(token.symbol)}
                 >
                   {token.logoURI && (
-                    <img src={token.logoURI} alt={token.name} className="w-4 h-4 rounded-full" />
+                    <Image src={token.logoURI} alt={token.name} width={16} height={16} className="rounded-full" />
                   )}
                   <span className="text-xs font-medium text-gray-900 dark:text-white">{token.symbol}</span>
                   <span className={`text-xs font-medium ${
@@ -292,7 +285,7 @@ export const PriceTicker: React.FC<PriceTickerProps> = ({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           {token.logoURI && (
-                            <img src={token.logoURI} alt={token.name} className="w-6 h-6 rounded-full" />
+                            <Image src={token.logoURI} alt={token.name} width={24} height={24} className="rounded-full" />
                           )}
                           <div>
                             <div className="font-medium text-gray-900 dark:text-white">{token.name}</div>
@@ -403,7 +396,7 @@ export const PriceTicker: React.FC<PriceTickerProps> = ({
                     {/* Token Info */}
                     <div className="w-full sm:w-2/5 flex items-center space-x-3 mb-2 sm:mb-0">
             {token.logoURI && (
-                        <img src={token.logoURI} alt={token.name} className="w-8 h-8 rounded-full" />
+                        <Image src={token.logoURI} alt={token.name} width={32} height={32} className="rounded-full" />
             )}
             <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-white flex items-center">
