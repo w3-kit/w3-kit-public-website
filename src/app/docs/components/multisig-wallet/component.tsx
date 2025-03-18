@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MultisigWalletProps } from './types';
-import { formatAddress, formatEther, formatTimestamp } from './untils';
+import { formatAddress, formatTimestamp } from './utils';
 
 
 export const MultisigWallet: React.FC<MultisigWalletProps> = ({
@@ -56,7 +56,7 @@ export const MultisigWallet: React.FC<MultisigWalletProps> = ({
         });
       }
     }
-  }, [transactions]);
+  }, [transactions, newTransactions]);
 
   // Validate Ethereum address
   const isValidAddress = (address: string) => {
@@ -152,10 +152,7 @@ export const MultisigWallet: React.FC<MultisigWalletProps> = ({
     }
   }, [transactions.length]);
 
-  // Add a function to check if transaction should be executed
-  const shouldExecuteTransaction = (tx: typeof transactions[0], newApprovals: number) => {
-    return newApprovals >= tx.requiredApprovals;
-  };
+
 
   // Update the approve handler
   const handleApprove = async (txId: string) => {
@@ -208,8 +205,6 @@ export const MultisigWallet: React.FC<MultisigWalletProps> = ({
       const tx = localTransactions.find(t => t.id === txId);
       if (!tx) return;
 
-      // Check if current signer has already rejected
-      const currentSigner = signers[0]?.address;
       const hasAlreadyRejected = tx.status === 'rejected';
       
       if (hasAlreadyRejected) {
@@ -434,7 +429,7 @@ export const MultisigWallet: React.FC<MultisigWalletProps> = ({
                   text-sm text-gray-500 dark:text-gray-400 gap-2">
                   <div className="flex items-center gap-2">
                     <div className="flex -space-x-2">
-                      {tx.signers.filter(s => s.hasApproved).map((signer, idx) => (
+                      {tx.signers.filter(s => s.hasApproved).map((signer) => (
                         <div
                           key={signer.address}
                           className="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700 
