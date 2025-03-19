@@ -120,6 +120,13 @@ const pages: DocPage[] = [
     description: "Stake and manage token staking positions with rewards tracking",
   },
   {
+    title: "Subscription Payments",
+    href: "/docs/components/subscription-payments",
+    section: "components",
+    description: "Manage recurring crypto payments with flexible subscription plans and automated billing",
+    isNew: true,
+  },
+  {
     title: "Token Airdrop",
     href: "/docs/components/token-airdrop",
     section: "components",
