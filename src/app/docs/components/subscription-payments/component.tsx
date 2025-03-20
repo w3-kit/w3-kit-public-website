@@ -46,14 +46,15 @@ export const SubscriptionPayments: React.FC<SubscriptionPaymentsProps> = ({
     
     setIsSubscribing(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
       await onSubscribe?.(selectedPlan.id);
       
       setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        setSelectedPlan(null);
-      }, 1500);
+      // Keep success state visible for longer
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      setShowSuccess(false);
+      setSelectedPlan(null);
     } finally {
       setIsSubscribing(false);
     }
@@ -76,23 +77,25 @@ export const SubscriptionPayments: React.FC<SubscriptionPaymentsProps> = ({
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 ${className}`}>
       <div className="space-y-6">
         {/* Plan Tabs */}
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex flex-wrap w-full gap-[5px] border-b border-gray-200 dark:border-gray-700 pb-2">
           {plans.map((plan) => (
             <button
               key={plan.id}
               onClick={() => setActiveTab(plan.id)}
-              className={`relative flex items-center space-x-2 px-4 py-2 rounded-t-lg transition-colors ${
+              className={`relative flex-1 min-w-[150px] flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
                 activeTab === plan.id
                   ? plan.isPopular
-                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white"
-                    : "bg-blue-500 text-white"
+                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md"
+                    : "bg-blue-500 text-white shadow-md"
                   : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
-              {getIcon(plan.icon)}
-              <span className="font-medium">{plan.name}</span>
+              <div className="flex items-center space-x-2">
+                {getIcon(plan.icon)}
+                <span className="font-medium">{plan.name}</span>
+              </div>
               {plan.isPopular && (
-                <span className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 text-xs font-semibold px-2 py-0.5 rounded-full flex items-center shadow-sm">
+                <span className="absolute -top-3 -right-22 bg-yellow-400 text-yellow-900 text-xs font-semibold px-2 py-0.5 rounded-full flex items-center shadow-sm z-999">
                   <Star className="w-3 h-3 mr-1" />
                   Popular
                 </span>
@@ -156,29 +159,59 @@ export const SubscriptionPayments: React.FC<SubscriptionPaymentsProps> = ({
             <button
               onClick={handleSubscribe}
               disabled={isSubscribing || showSuccess}
-              className={`relative w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center overflow-hidden ${
-                (isSubscribing || showSuccess) ? "opacity-75 cursor-not-allowed" : ""
+              className={`group relative w-full px-4 py-3 bg-blue-500 text-white rounded-lg transform transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center overflow-hidden ${
+                (isSubscribing || showSuccess) ? "opacity-90 cursor-not-allowed" : "hover:bg-blue-600"
               }`}
             >
+              {/* Loading state background effect */}
               {isSubscribing && (
-                <div className="absolute inset-0 bg-blue-600 animate-subscribe-pulse" />
+                <div className="absolute inset-0 overflow-hidden">
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 bg-[length:200%_100%] animate-loading-shine"
+                    style={{ '--loading-shine': 'rgba(255, 255, 255, 0.1)' } as React.CSSProperties}
+                  />
+                </div>
               )}
-              {isSubscribing ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  <span className="whitespace-nowrap">Subscribing...</span>
-                </>
-              ) : showSuccess ? (
-                <>
-                  <Check className="w-5 h-5 mr-2 animate-scale-in" />
-                  <span className="whitespace-nowrap">Subscribed!</span>
-                </>
-              ) : (
-                <>
-                  <CreditCard className="w-5 h-5 mr-2" />
-                  <span className="whitespace-nowrap">Subscribe Now</span>
-                </>
-              )}
+
+              {/* Button content with animations */}
+              <div className={`relative flex items-center justify-center space-x-2 transition-all duration-300 ${
+                isSubscribing ? "animate-loading-pulse" : ""
+              }`}>
+                {isSubscribing ? (
+                  <>
+                    {/* Loading spinner */}
+                    <div className="relative w-5 h-5">
+                      <div className="absolute inset-0 border-2 border-white/30 rounded-full" />
+                      <div className="absolute inset-0 border-2 border-white border-t-transparent rounded-full animate-loading-spin" />
+                    </div>
+                    
+                    {/* Loading text with dots */}
+                    <div className="flex items-center">
+                      <span className="whitespace-nowrap mr-1">Subscribing</span>
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-1 bg-white rounded-full animate-loading-pulse" style={{ animationDelay: '0s' }} />
+                        <div className="w-1 h-1 bg-white rounded-full animate-loading-pulse" style={{ animationDelay: '0.2s' }} />
+                        <div className="w-1 h-1 bg-white rounded-full animate-loading-pulse" style={{ animationDelay: '0.4s' }} />
+                      </div>
+                    </div>
+                  </>
+                ) : showSuccess ? (
+                  <div className="flex items-center animate-slide-in">
+                    <Check className="w-5 h-5 mr-2 animate-bounce" />
+                    <span className="whitespace-nowrap">Subscribed!</span>
+                  </div>
+                ) : (
+                  <>
+                    <CreditCard className="w-5 h-5 transition-transform duration-200 group-hover:rotate-3" />
+                    <span className="whitespace-nowrap">Subscribe Now</span>
+                  </>
+                )}
+              </div>
+
+              {/* Hover effect */}
+              <div className="absolute inset-0 w-full h-full transition-opacity group-hover:opacity-100 opacity-0">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-loading-shine" />
+              </div>
             </button>
 
             {/* Warning Message */}
