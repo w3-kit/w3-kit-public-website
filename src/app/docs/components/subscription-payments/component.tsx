@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CreditCard, Check, Loader2, AlertCircle, Sparkles, Zap, Shield, Star } from "lucide-react";
+import { CreditCard, Check, AlertCircle, Sparkles, Zap, Shield, Star } from "lucide-react";
 import Image from "next/image";
 
 export interface SubscriptionPlan {
@@ -77,12 +77,12 @@ export const SubscriptionPayments: React.FC<SubscriptionPaymentsProps> = ({
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 ${className}`}>
       <div className="space-y-6">
         {/* Plan Tabs */}
-        <div className="flex flex-wrap w-full gap-[5px] border-b border-gray-200 dark:border-gray-700 pb-2">
+        <div className="flex flex-wrap w-full gap-2 border-b border-gray-200 dark:border-gray-700 pb-2">
           {plans.map((plan) => (
             <button
               key={plan.id}
               onClick={() => setActiveTab(plan.id)}
-              className={`relative flex-1 min-w-[150px] flex items-center justify-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
+              className={`relative flex-1 min-w-[140px] sm:min-w-[150px] flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
                 activeTab === plan.id
                   ? plan.isPopular
                     ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md"
@@ -92,10 +92,10 @@ export const SubscriptionPayments: React.FC<SubscriptionPaymentsProps> = ({
             >
               <div className="flex items-center space-x-2">
                 {getIcon(plan.icon)}
-                <span className="font-medium">{plan.name}</span>
+                <span className="font-medium text-sm sm:text-base">{plan.name}</span>
               </div>
               {plan.isPopular && (
-                <span className="absolute -top-3 -right-22 bg-yellow-400 text-yellow-900 text-xs font-semibold px-2 py-0.5 rounded-full flex items-center shadow-sm z-999">
+                <span className="absolute -top-3 -right-2 bg-yellow-400 text-yellow-900 text-xs font-semibold px-2 py-0.5 rounded-full flex items-center shadow-sm">
                   <Star className="w-3 h-3 mr-1" />
                   Popular
                 </span>
@@ -112,8 +112,8 @@ export const SubscriptionPayments: React.FC<SubscriptionPaymentsProps> = ({
               <div className="flex items-center space-x-3">
                 {getIcon(currentPlan.icon)}
                 <div>
-                  <div className="flex items-center space-x-2">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                       {currentPlan.name}
                     </h3>
                     {currentPlan.isPopular && (
@@ -123,7 +123,7 @@ export const SubscriptionPayments: React.FC<SubscriptionPaymentsProps> = ({
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-500 dark:text-gray-400">
+                  <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
                     {currentPlan.description}
                   </p>
                 </div>
@@ -136,17 +136,17 @@ export const SubscriptionPayments: React.FC<SubscriptionPaymentsProps> = ({
                   height={24}
                   className="rounded-full"
                 />
-                <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                <span className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                   {currentPlan.price}
                 </span>
-                <span className="text-gray-500 dark:text-gray-400">
+                <span className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
                   /{currentPlan.interval}
                 </span>
               </div>
             </div>
 
             {/* Features */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {currentPlan.features.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
                   <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />

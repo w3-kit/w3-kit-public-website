@@ -39,6 +39,13 @@ const pages: DocPage[] = [
     description: "Interface for interacting with smart contracts and ABIs",
   },
   {
+    title: "DeFi Position Manager",
+    href: "/docs/components/defi-position-manager",
+    section: "components",
+    description: "Unified dashboard for managing DeFi positions across lending, borrowing, and yield farming protocols",
+    isNew: true,
+  },
+  {
     title: "ENS Resolver",
     href: "/docs/components/ens-resolver",
     section: "components",
