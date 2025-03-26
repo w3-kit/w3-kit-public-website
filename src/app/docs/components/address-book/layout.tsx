@@ -10,6 +10,14 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "W3-Kit",
     locale: "en_US",
+    images: [
+      {
+        url: "/w3-kit-logo.svg",
+        width: 600,
+        height: 600,
+        alt: "W3-Kit Logo"
+      }
+    ]
   },
 };
 
