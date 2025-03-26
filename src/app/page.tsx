@@ -181,7 +181,7 @@ export default function Home() {
                   Get Started
                 </Link>
                 <pre className="hidden md:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 px-4 py-2 rounded-full">
-                  <code>npm i @w3-kit/ui</code>
+                  <code>npx w3-kit@latest init</code>
                   <button
                     className="relative hover:text-gray-900 dark:hover:text-white transition-all duration-300"
                     onClick={handleCopy}
@@ -279,17 +279,10 @@ export default function Home() {
                 </div>
               ))}
             </dl>
-
-
-
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="pt-12 text-sm text-gray-600 dark:text-gray-400">
-          © {new Date().getFullYear()} w3-kit. All rights reserved.
-        </div>
-      </div>
+      </section>
     </div>
   );
 }
