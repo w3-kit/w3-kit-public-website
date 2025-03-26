@@ -32,7 +32,7 @@ export default function DocsPage() {
         </p>
 
         <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-          <code className="text-gray-800 dark:text-gray-200">npm install your-ui-library</code>
+          <code className="text-gray-800 dark:text-gray-200">npx w3-kit@latest init</code>
         </pre>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-white">Features</h2>

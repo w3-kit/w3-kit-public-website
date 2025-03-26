@@ -7,7 +7,6 @@ const footerLinks = {
   docs: [
     { title: "Getting Started", href: "/docs" },
     { title: "Components", href: "/docs/components" },
-    { title: "Examples", href: "/docs/examples" },
   ],
   community: [
     { title: "GitHub", href: "https://github.com/w3-kit/w3-kit" },
