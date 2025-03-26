@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { MultisigWallet } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
+import { Transaction } from './types';
 
 export default function MultisigWalletPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   // Mock data for preview
   const mockData = {
@@ -17,8 +19,31 @@ export default function MultisigWalletPage() {
       { address: "0x5678...9012", name: "Bob", hasApproved: false },
       { address: "0x9012...3456", name: "Charlie", hasApproved: false },
     ],
-    transactions: [],
+    transactions: transactions,
     requiredApprovals: 2,
+    onPropose: (tx: Omit<Transaction, "id" | "status" | "timestamp">) => {
+      const newTx: Transaction = {
+        ...tx,
+        id: Math.random().toString(36).substr(2, 9),
+        status: "pending",
+        timestamp: Date.now(),
+      };
+      setTransactions(prev => [newTx, ...prev]);
+    },
+    onApprove: (txId: string) => {
+      setTransactions(prev => prev.map(tx => 
+        tx.id === txId 
+          ? { ...tx, approvals: tx.approvals + 1 }
+          : tx
+      ));
+    },
+    onReject: (txId: string) => {
+      setTransactions(prev => prev.map(tx => 
+        tx.id === txId 
+          ? { ...tx, status: "rejected" }
+          : tx
+      ));
+    }
   };
 
   return (
@@ -64,9 +89,61 @@ export default function MultisigWalletPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <MultisigWallet {...mockData} />
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <MultisigWallet {...mockData} />
+              </div>
             ) : (
-              <CodeBlock code={`// Component code will be here`} id="component" />
+              <CodeBlock
+                code={`import { MultisigWallet } from "@/components/ui/multisig-wallet"
+import { useState } from "react"
+
+export default function Page() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  const handlePropose = (tx: Omit<Transaction, "id" | "status" | "timestamp">) => {
+    const newTx: Transaction = {
+      ...tx,
+      id: Math.random().toString(36).substr(2, 9),
+      status: "pending",
+      timestamp: Date.now(),
+    };
+    setTransactions(prev => [newTx, ...prev]);
+  };
+
+  const handleApprove = (txId: string) => {
+    setTransactions(prev => prev.map(tx => 
+      tx.id === txId 
+        ? { ...tx, approvals: tx.approvals + 1 }
+        : tx
+    ));
+  };
+
+  const handleReject = (txId: string) => {
+    setTransactions(prev => prev.map(tx => 
+      tx.id === txId 
+        ? { ...tx, status: "rejected" }
+        : tx
+    ));
+  };
+
+  return (
+    <MultisigWallet
+      walletAddress="0x1234567890123456789012345678901234567890"
+      signers={[
+        { address: "0x1234...5678", name: "Alice", hasApproved: false },
+        { address: "0x5678...9012", name: "Bob", hasApproved: false },
+        { address: "0x9012...3456", name: "Charlie", hasApproved: false },
+      ]}
+      transactions={transactions}
+      requiredApprovals={2}
+      onPropose={handlePropose}
+      onApprove={handleApprove}
+      onReject={handleReject}
+    />
+  );
+}`}
+                id="component"
+              />
             )}
           </div>
         </div>
@@ -103,35 +180,121 @@ export default function MultisigWalletPage() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add multisig-wallet" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Multi-Signature Wallet component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add multisig-wallet" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add multisig wallet utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/multisig-wallet" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { MultisigWallet } from "@w3-kit/multisig-wallet";
+                      code={`// components/ui/multisig-wallet/index.tsx
+import { MultisigWallet } from "@/components/ui/multisig-wallet/component"
+
+export interface Signer {
+  address: string;
+  name: string;
+  hasApproved: boolean;
+}
+
+export interface Transaction {
+  id: string;
+  type: "transfer" | "contract" | "token";
+  to: string;
+  value: string;
+  data?: string;
+  status: "pending" | "approved" | "rejected" | "executed";
+  approvals: number;
+  timestamp: number;
+}
+
+export interface MultisigWalletProps {
+  walletAddress: string;
+  signers: Signer[];
+  transactions: Transaction[];
+  requiredApprovals: number;
+  onPropose?: (tx: Omit<Transaction, "id" | "status" | "timestamp">) => void;
+  onApprove?: (txId: string) => void;
+  onReject?: (txId: string) => void;
+  className?: string;
+}
+
+export { MultisigWallet };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { MultisigWallet } from "@/components/ui/multisig-wallet"
+import { useState } from "react"
 
 export default function Page() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  const handlePropose = (tx: Omit<Transaction, "id" | "status" | "timestamp">) => {
+    const newTx: Transaction = {
+      ...tx,
+      id: Math.random().toString(36).substr(2, 9),
+      status: "pending",
+      timestamp: Date.now(),
+    };
+    setTransactions(prev => [newTx, ...prev]);
+  };
+
+  const handleApprove = (txId: string) => {
+    setTransactions(prev => prev.map(tx => 
+      tx.id === txId 
+        ? { ...tx, approvals: tx.approvals + 1 }
+        : tx
+    ));
+  };
+
+  const handleReject = (txId: string) => {
+    setTransactions(prev => prev.map(tx => 
+      tx.id === txId 
+        ? { ...tx, status: "rejected" }
+        : tx
+    ));
+  };
+
   return (
     <MultisigWallet
-      walletAddress="0x1234..."
+      walletAddress="0x1234567890123456789012345678901234567890"
       signers={[
-        { address: "0x1234...", name: "Alice" },
-        { address: "0x5678...", name: "Bob" }
+        { address: "0x1234...5678", name: "Alice", hasApproved: false },
+        { address: "0x5678...9012", name: "Bob", hasApproved: false },
+        { address: "0x9012...3456", name: "Charlie", hasApproved: false },
       ]}
+      transactions={transactions}
       requiredApprovals={2}
-      onPropose={(tx) => console.log('New transaction:', tx)}
-      onApprove={(txId) => console.log('Approved:', txId)}
-      onReject={(txId) => console.log('Rejected:', txId)}
+      onPropose={handlePropose}
+      onApprove={handleApprove}
+      onReject={handleReject}
     />
   );
 }`}

@@ -1,81 +1,281 @@
 "use client";
 
-import Image from "next/image";
-import {
-  Github,
-  Instagram,
-} from "lucide-react";
+import React, { useState } from "react";
+import Link from "next/link";
+import { Code, Check, Sparkles } from "lucide-react";
+import { SmartContractScanner } from "@/app/docs/components/smart-contract-scanner/component";
+import { AssetPortfolio } from "@/app/docs/components/asset-portfolio/component";
+import { TOKEN_CONFIGS } from "@/config/tokens";
+import { LiquidityPoolStats } from "@/app/docs/components/liquidity-pool-stats/component";
+import { NetworkSwitcher } from "@/app/docs/components/network-switcher/component";
+import { NFTCard } from "@/app/docs/components/nft-card/component";
+import { NETWORKS } from "./docs/components/network-switcher/networks";
+import { PreviewCard } from "@/components/PreviewCard";
+import { previewComponents } from "@/constants/preview-components";
+import { features } from "@/constants/home-page-features";
 
+// Helper function at the top of the file
+const mockAssetData = {
+  ...TOKEN_CONFIGS.ETH,
+  balance: "2.5",
+  price: 3500,
+  value: 8750,
+  change24h: 4.2,
+  color: "#627EEA",
+  priceHistory: {
+    '24h': Array.from({ length: 24 }, (_, i) => 3500 + Math.sin(i / 4) * 100),
+    '7d': Array.from({ length: 7 }, (_, i) => 3500 + Math.sin(i / 2) * 200),
+    '30d': Array.from({ length: 30 }, (_, i) => 3500 + Math.sin(i) * 300)
+  },
+  candleData: {
+    '24h': [],
+    '7d': [],
+    '30d': []
+  }
+};
 
+export default function Home() {
+  const [copied, setCopied] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText("npm i @w3-kit/ui");
+      setIsAnimating(true);
+      setTimeout(() => {
+        setCopied(true);
+        setIsAnimating(false);
+      }, 400); // Sparkle animation duration
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
-
-export default function ComingSoonPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col items-center justify-center p-4">
-      <div className="text-center space-y-6 max-w-2xl mx-auto">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <Image src="/w3-kit-logo.svg" alt="w3-kit" width={60} height={60} priority />
+    <div className="min-h-screen mx-auto bg-white dark:bg-gray-950">
+      {/* Hero Section */}
+      <section className="relative px-6 pt-14 lg:px-8">
+        {/* Floating Components */}
+        <div className="absolute inset-2 overflow-hidden pointer-events-none">
+          {/* Top Left */}
+          <div
+            className="absolute 
+            -left-20 xs:-left-16 sm:left-16 md:left-24 
+            -top-4 xs:top-0 sm:top-24 md:top-32 
+            transform -rotate-12 opacity-90 animate-float-slow"
+          >
+            <NFTCard
+              nft={{
+                id: "1",
+                name: "Floating NFT",
+                image:
+                  "https://ipfs.io/ipfs/QmRRPWG96cmgTn2qSzjwr2qvfNEuhunv6FNeMFGa9bx6mQ",
+                owner: "0x1234...",
+                tokenId: "1234",
+                contractAddress: "0x1234...",
+                chainId: 1,
+              }}
+              variant="expanded"
+              className="scale-[0.35] xs:scale-[0.4] sm:scale-[0.45] md:scale-[0.55] lg:scale-[0.65]"
+            />
+          </div>
+
+          {/* Top Right */}
+          <div
+            className="absolute 
+            -right-20 xs:-right-16 sm:right-16 md:right-24
+            -top-4 xs:top-0 sm:top-24 md:top-32
+            transform rotate-12 opacity-90 animate-float-delayed"
+          >
+            <LiquidityPoolStats
+              poolData={{
+                token: {
+                  symbol: "ETH",
+                  logoURI:
+                    "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=025",
+                  liquidity: 156.78,
+                },
+                fee: 500,
+                tvl: 548000,
+                tvlChange24h: 2.5,
+                volume24h: 1250000,
+                volumeChange24h: -1.2,
+                apr: 12.5,
+                feesEarned24h: 1890,
+              }}
+              variant="compact"
+              className="scale-[0.35] xs:scale-[0.4] sm:scale-[0.45] md:scale-[0.55] lg:scale-[0.65]"
+            />
+          </div>
+
+          {/* Center Right */}
+          <div
+            className="absolute 
+            -right-24 xs:-right-20 sm:right-16 md:right-32
+            top-1/2 transform -translate-y-1/2 rotate-6 
+            opacity-90 animate-float-reverse"
+          >
+            <SmartContractScanner
+              variant="compact"
+              className="scale-[0.3] xs:scale-[0.35] sm:scale-[0.4] md:scale-[0.45] lg:scale-[0.55]"
+            />
+          </div>
+
+          {/* Bottom Left */}
+          <div
+            className="absolute 
+            -left-20 xs:-left-16 sm:left-16 md:left-24
+            -bottom-4 xs:bottom-0 sm:bottom-24 md:bottom-32
+            transform -rotate-6 opacity-90 animate-float-reverse"
+          >
+            <NetworkSwitcher
+              networks={[NETWORKS[0]]}
+              testNetworks={[]}
+              onSwitch={() => {}}
+              className="scale-[0.35] xs:scale-[0.4] sm:scale-[0.45] md:scale-[0.55] lg:scale-[0.65]"
+            />
+          </div>
+
+          {/* Bottom Right */}
+          <div
+            className="absolute 
+            -right-20 xs:-right-16 sm:right-16 md:right-24
+            -bottom-4 xs:bottom-0 sm:bottom-24 md:bottom-32
+            transform rotate-6 opacity-90 animate-float"
+          >
+            <AssetPortfolio
+              variant="compact"
+              assets={[mockAssetData]}
+              totalValue={8750}
+              totalChange24h={4.2}
+              className="scale-[0.35] xs:scale-[0.4] sm:scale-[0.45] md:scale-[0.55] lg:scale-[0.65]"
+            />
+          </div>
+
+          {/* Add subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white dark:from-gray-950 dark:via-transparent dark:to-gray-950 opacity-85" />
         </div>
 
-        {/* Title */}
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Coming Soon
-        </h1>
-
-        {/* Description */}
-        <div className="space-y-4">
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
-            We&apos;re building something awesome. A comprehensive library of accessible React components 
-            for Web3 applications and dApps.
-          </p>
-          
-          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-500">
-            Expected Launch: Q2 2025
-          </p>
+        <div className="mx-auto max-w-2xl py-28 sm:py-32">
+          <div className="text-center">
+            <div className="relative z-10">
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
+                Build faster with Web3 Components
+              </h1>
+              <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
+                A comprehensive library of accessible React components for
+                building high-quality Web3 applications and dApps
+              </p>
+              <div className="mt-10 flex items-center justify-center gap-x-6">
+                <Link
+                  href="/docs/components"
+                  className="rounded-full bg-gray-900 dark:bg-white px-6 py-3 text-sm font-semibold text-white dark:text-gray-900 shadow-sm hover:bg-gray-800 dark:hover:bg-gray-100"
+                >
+                  Get Started
+                </Link>
+                <pre className="hidden md:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 px-4 py-2 rounded-full">
+                  <code>npm i @w3-kit/ui</code>
+                  <button
+                    className="relative hover:text-gray-900 dark:hover:text-white transition-all duration-300"
+                    onClick={handleCopy}
+                  >
+                    <span className="sr-only">Copy to clipboard</span>
+                    <div className="relative">
+                      {isAnimating && (
+                        <Sparkles 
+                          className="absolute inset-0 h-4 w-4 text-yellow-400 animate-sparkle" 
+                          style={{ 
+                            transform: 'scale(1.5)',
+                            opacity: 0,
+                            animation: 'sparkle 0.4s ease-in-out'
+                          }} 
+                        />
+                      )}
+                      {copied ? (
+                        <Check className="h-4 w-4 text-green-500 transition-all duration-300 animate-success" />
+                      ) : (
+                        <Code className="h-4 w-4 transition-all duration-300" />
+                      )}
+                    </div>
+                  </button>
+                </pre>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Social Media Call to Action */}
-        <div className="pt-8 space-y-4">
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-            Keep up with our progress on social media
-          </p>
-          
-          {/* Social Links */}
-          <div className="flex justify-center space-x-6">
-            <a
-              href="https://github.com/w3-kit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              <Github className="h-6 w-6" />
-              <span className="sr-only">GitHub</span>
-            </a>
-            <a
-              href="https://www.instagram.com/w3.kit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              <Instagram className="h-6 w-6" />
-              <span className="sr-only">Instagram</span>
-            </a>
-            <a
-              href="https://www.threads.net/@w3.kit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              <svg 
-                viewBox="0 0 192 192" 
-                className="h-6 w-6 fill-current"
+        {/* Component Preview Grid */}
+        <div className="relative z-10">
+          <div
+            className="absolute inset-0 flex items-center"
+            aria-hidden="true"
+          >
+            <div className="w-full border-t border-gray-200 dark:border-gray-800" />
+          </div>
+          <div className="relative flex justify-center">
+            <div className="w-full overflow-x-auto pb-6 hide-scrollbar">
+              <div
+                className="inline-flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 py-8 min-w-full md:min-w-0 
+                animate-scroll md:animate-none whitespace-nowrap md:whitespace-normal"
               >
-                <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 174.89 56.9538 167.575 45.7381 153.317C35.2355 139.966 29.8077 120.682 29.6052 96C29.8077 71.3178 35.2355 52.0336 45.7381 38.6827C56.9538 24.4249 74.2039 17.11 97.0132 16.9405C119.988 17.1113 137.539 24.4614 149.184 38.788C154.894 45.8136 159.199 54.6488 162.037 64.9503L178.184 60.6422C174.744 47.9622 169.331 37.0357 161.965 27.974C147.036 9.60668 125.202 0.195148 97.0695 0H96.9569C68.8816 0.19447 47.2921 9.6418 32.7883 28.0793C19.8819 44.4864 13.2244 67.3157 13.0007 95.9325L13 96L13.0007 96.0675C13.2244 124.684 19.8819 147.514 32.7883 163.921C47.2921 182.358 68.8816 191.806 96.9569 192H97.0695C122.03 191.827 139.624 185.292 154.118 170.811C173.081 151.866 172.51 128.119 166.26 113.541C161.776 103.087 153.227 94.5962 141.537 88.9883ZM98.4405 129.507C88.0005 130.095 77.1544 125.409 76.6196 115.372C76.2232 107.93 81.9158 99.626 99.0812 98.6368C101.047 98.5234 102.976 98.468 104.871 98.468C111.106 98.468 116.939 99.0737 122.242 100.233C120.264 124.935 108.662 128.946 98.4405 129.507Z"/>
-              </svg>
-              <span className="sr-only">Threads</span>
-            </a>
+                {previewComponents.map((component, index) => (
+                  <React.Fragment key={component.name}>
+                    <div className="flex justify-center shrink-0">
+                      <PreviewCard component={component} />
+                    </div>
+                    {/* Clone components for infinite scroll on mobile */}
+                    {index === previewComponents.length - 1 && (
+                      <div className="flex md:hidden">
+                        {previewComponents.map((c) => (
+                          <div
+                            key={`clone-${c.name}`}
+                            className="flex justify-center shrink-0"
+                          >
+                            <PreviewCard component={c} />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 px-6 sm:py-32 bg-gray-50 dark:bg-gray-900/50">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl lg:text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+              Built for modern dApps
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
+              From next-gen startups to established enterprises, W3-Kit provides
+              the building blocks for your Web3 applications
+            </p>
+          </div>
+          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+              {features.map((feature) => (
+                <div key={feature.title} className="flex flex-col">
+                  <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900 dark:text-white">
+                    <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800">
+                      {feature.icon}
+                    </div>
+                    {feature.title}
+                  </dt>
+                  <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600 dark:text-gray-400">
+                    <p className="flex-auto">{feature.description}</p>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+
+
           </div>
         </div>
 

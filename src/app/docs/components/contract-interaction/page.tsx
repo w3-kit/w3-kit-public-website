@@ -54,7 +54,109 @@ export default function ContractInteractionPage() {
             {activeTab === "preview" ? (
               <ContractInteraction />
             ) : (
-              <CodeBlock code={`// Component code will be here`} id="component" />
+              <CodeBlock
+                code={`import { ContractInteraction } from "@/components/ui/contract-interaction"
+import { useState } from "react"
+
+// Example ERC20 contract ABI
+const ERC20_ABI = [
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "name",
+    "outputs": [{"name": "", "type": "string"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [{"name": "", "type": "string"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [{"name": "", "type": "uint8"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{"name": "_owner", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"name": "balance", "type": "uint256"}],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"name": "_to", "type": "address"},
+      {"name": "_value", "type": "uint256"}
+    ],
+    "name": "transfer",
+    "outputs": [{"name": "", "type": "bool"}],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+// Example configuration
+const config = {
+  contractAddress: "0x1234...5678", // Your contract address
+  abi: ERC20_ABI,
+  methods: {
+    read: [
+      {
+        name: "name",
+        label: "Token Name",
+        inputs: [],
+        outputs: [{ name: "name", type: "string" }]
+      },
+      {
+        name: "balanceOf",
+        label: "Balance Of",
+        inputs: [{ name: "address", type: "address", label: "Address" }],
+        outputs: [{ name: "balance", type: "uint256" }]
+      }
+    ],
+    write: [
+      {
+        name: "transfer",
+        label: "Transfer",
+        inputs: [
+          { name: "to", type: "address", label: "To Address" },
+          { name: "amount", type: "uint256", label: "Amount" }
+        ],
+        outputs: [{ name: "success", type: "bool" }]
+      }
+    ]
+  }
+};
+
+export default function Page() {
+  const [result, setResult] = useState<any>(null);
+
+  return (
+    <ContractInteraction
+      config={config}
+      onExecute={(method, params) => {
+        console.log('Executing method:', method, 'with params:', params);
+        setResult({ method, params });
+      }}
+    />
+  );`}
+                id="component"
+              />
             )}
           </div>
         </div>
@@ -91,28 +193,110 @@ export default function ContractInteractionPage() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add contract-interaction" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Contract Interaction component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add contract-interaction" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add contract interaction utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/contract-interaction" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { ContractInteraction } from "@w3-kit/contract-interaction";
+                      code={`// components/ui/contract-interaction/index.tsx
+import { ContractInteraction } from "@/components/ui/contract-interaction/component"
+
+export interface ContractMethod {
+  name: string;
+  label: string;
+  inputs: {
+    name: string;
+    type: string;
+    label: string;
+  }[];
+  outputs: {
+    name: string;
+    type: string;
+  }[];
+}
+
+export interface ContractConfig {
+  contractAddress: string;
+  abi: any[];
+  methods: {
+    read: ContractMethod[];
+    write: ContractMethod[];
+  };
+}
+
+export { ContractInteraction };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { ContractInteraction } from "@/components/ui/contract-interaction"
+import { useState } from "react"
 
 export default function Page() {
+  const [result, setResult] = useState<any>(null);
+
+  const config = {
+    contractAddress: "0x1234...5678",
+    abi: yourContractABI,
+    methods: {
+      read: [
+        {
+          name: "balanceOf",
+          label: "Balance Of",
+          inputs: [{ name: "address", type: "address", label: "Address" }],
+          outputs: [{ name: "balance", type: "uint256" }]
+        }
+      ],
+      write: [
+        {
+          name: "transfer",
+          label: "Transfer",
+          inputs: [
+            { name: "to", type: "address", label: "To Address" },
+            { name: "amount", type: "uint256", label: "Amount" }
+          ],
+          outputs: [{ name: "success", type: "bool" }]
+        }
+      ]
+    }
+  };
+
   return (
     <ContractInteraction
-      abi={yourContractABI}
-      contractAddress="0x..."
+      config={config}
+      onExecute={(method, params) => {
+        console.log('Executing method:', method, 'with params:', params);
+        setResult({ method, params });
+      }}
     />
   );
 }`}

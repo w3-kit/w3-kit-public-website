@@ -35,6 +35,14 @@ module.exports = {
         scroll: {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'slide-up': {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
         }
       },
       animation: {
@@ -43,6 +51,8 @@ module.exports = {
         'float-slow': 'float-slow 8s ease-in-out infinite',
         'float-delayed': 'float-delayed 9s ease-in-out infinite',
         'scroll': 'scroll 20s linear infinite',
+        'fade-in': 'fade-in 0.2s ease-out',
+        'slide-up': 'slide-up 0.3s ease-out',
       },
     },
   },

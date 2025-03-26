@@ -1,4 +1,19 @@
+import { Metadata } from 'next';
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: "Documentation | W3-Kit",
+  description: "Learn how to build Web3 applications with W3-Kit's accessible and modern component library. Get started with installation, usage guides, and component documentation.",
+  authors: [{ name: "W3-Kit Team" }],
+  openGraph: {
+    title: "Documentation | W3-Kit",
+    description: "Learn how to build Web3 applications with W3-Kit's accessible and modern component library.",
+    type: "website",
+    siteName: "W3-Kit",
+    locale: "en_US",
+  },
+};
+
 
 export default function DocsPage() {
   return (
@@ -17,7 +32,7 @@ export default function DocsPage() {
         </p>
 
         <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4">
-          <code className="text-gray-800 dark:text-gray-200">npm install your-ui-library</code>
+          <code className="text-gray-800 dark:text-gray-200">npx w3-kit@latest init</code>
         </pre>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4 text-gray-900 dark:text-white">Features</h2>

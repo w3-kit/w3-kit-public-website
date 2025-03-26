@@ -13,6 +13,12 @@ export default function DocsLayout({
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const handleCloseMobileMenu = () => setIsMobileMenuOpen(false);
+    document.addEventListener('closeMobileMenu', handleCloseMobileMenu);
+    return () => document.removeEventListener('closeMobileMenu', handleCloseMobileMenu);
+  }, []);
+
   // Handle body scroll lock
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -51,6 +57,7 @@ export default function DocsLayout({
 
       {/* Mobile Menu */}
       <div
+        data-mobile-menu
         className={`md:hidden fixed right-0 top-0 h-screen w-[280px] bg-white dark:bg-gray-950 z-50 
           flex flex-col transform transition-transform duration-300 ease-in-out
           ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}

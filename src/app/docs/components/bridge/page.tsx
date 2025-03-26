@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { BridgeWidget } from "./component";
 import { Code, Eye } from "lucide-react";
-import { codeString, codeUsage } from "./untils";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
 export default function BridgeComponent() {
@@ -55,7 +54,70 @@ export default function BridgeComponent() {
             {activeTab === "preview" ? (
               <BridgeWidget />
             ) : (
-              <CodeBlock code={codeString} id="component"/>
+              <CodeBlock
+                code={`import { BridgeWidget } from "@/components/ui/bridge"
+import { TOKEN_CONFIGS } from "@/config/tokens"
+
+// Example configuration
+const config = {
+  sourceChain: {
+    id: 1,
+    name: "Ethereum",
+    icon: "/chains/ethereum.svg",
+    tokens: [
+      {
+        ...TOKEN_CONFIGS.ETH,
+        balance: "1.5",
+        price: 3500,
+        value: 5250,
+        change24h: 4.2,
+        color: "#627EEA"
+      },
+      {
+        ...TOKEN_CONFIGS.USDC,
+        balance: "1000",
+        price: 1,
+        value: 1000,
+        change24h: 0.01,
+        color: "#2775CA"
+      }
+    ]
+  },
+  targetChain: {
+    id: 56,
+    name: "BSC",
+    icon: "/chains/bsc.svg",
+    tokens: [
+      {
+        ...TOKEN_CONFIGS.WBNB,
+        balance: "5",
+        price: 300,
+        value: 1500,
+        change24h: 2.1,
+        color: "#F3BA2F"
+      },
+      {
+        ...TOKEN_CONFIGS.BUSD,
+        balance: "2000",
+        price: 1,
+        value: 2000,
+        change24h: 0.01,
+        color: "#F0B90B"
+      }
+    ]
+  }
+};
+
+export default function Page() {
+  return (
+    <BridgeWidget
+      config={config}
+      onBridge={(data) => console.log("Bridge transaction:", data)}
+    />
+  );
+}`}
+                id="component"
+              />
             )}
           </div>
         </div>
@@ -92,55 +154,133 @@ export default function BridgeComponent() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add bridge" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Bridge component to
+                    your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add bridge" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>
+                      Create the component in your{" "}
+                      <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                        components/ui
+                      </code>{" "}
+                      directory
+                    </li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add token configurations to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t
+                      already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/bridge" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code='import { BridgeWidget } from "@w3-kit/bridge";'
-                      id="import"
+                      code={`// components/ui/bridge/index.tsx
+import { BridgeWidget } from "@/components/ui/bridge/component"
+
+export interface BridgeConfig {
+  sourceChain: {
+    id: number;
+    name: string;
+    icon: string;
+    tokens: Token[];
+  };
+  targetChain: {
+    id: number;
+    name: string;
+    icon: string;
+    tokens: Token[];
+  };
+}
+
+export interface Token {
+  symbol: string;
+  name: string;
+  icon: string;
+  balance: string;
+  price: number;
+  value: number;
+  change24h: number;
+  color: string;
+}
+
+export { BridgeWidget };`}
+                      id="component"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      3. Add the component to your page:
+                      3. Use the component in your code:
                     </p>
                     <CodeBlock
-                      code={`export default function Page() {
+                      code={`import { BridgeWidget } from "@/components/ui/bridge"
+import { TOKEN_CONFIGS } from "@/config/tokens"
+
+const config = {
+  sourceChain: {
+    id: 1,
+    name: "Ethereum",
+    icon: "/chains/ethereum.svg",
+    tokens: [
+      {
+        ...TOKEN_CONFIGS.ETH,
+        balance: "1.5",
+        price: 3500,
+        value: 5250,
+        change24h: 4.2,
+        color: "#627EEA"
+      }
+    ]
+  },
+  targetChain: {
+    id: 56,
+    name: "BSC",
+    icon: "/chains/bsc.svg",
+    tokens: [
+      {
+        ...TOKEN_CONFIGS.WBNB,
+        balance: "5",
+        price: 300,
+        value: 1500,
+        change24h: 2.1,
+        color: "#F3BA2F"
+      }
+    ]
+  }
+};
+
+export default function Page() {
   return (
-    <BridgeWidget />
+    <BridgeWidget
+      config={config}
+      onBridge={(data) => console.log("Bridge transaction:", data)}
+    />
   );
 }`}
-                      id="usage-example"
+                      id="usage"
                     />
                   </div>
                 </div>
               )}
             </div>
           </div>
-        </div>
-
-        {/* Usage Section */}
-        <div className="space-y-4">
-          <h2 className="text-xl sm:text-2xl font-semibold border-b border-gray-200 dark:border-gray-800 pb-2 text-gray-900 dark:text-white">
-            Usage
-          </h2>
-          <CodeBlock
-            code='import { BridgeWidget } from "@/components/bridge";'
-            id="usage-import"
-          />
-          <CodeBlock code={codeUsage} id="usage-full" />
         </div>
       </div>
     </div>

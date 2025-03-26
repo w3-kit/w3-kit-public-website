@@ -5,8 +5,11 @@ import { ConnectWalletButton } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
+type WalletTab = "metamask" | "walletconnect" | "coinbase";
+
 export default function ConnectWalletPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
+  const [walletTab, setWalletTab] = useState<WalletTab>("metamask");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
 
   return (
@@ -21,40 +24,172 @@ export default function ConnectWalletPage() {
           </p>
         </div>
 
-        {/* Preview/Code Section */}
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between overflow-x-auto">
-            <div className="flex items-center space-x-2 min-w-full sm:min-w-0">
+        <div className="border rounded-lg overflow-hidden dark:border-gray-800">
+          <div className="border-b dark:border-gray-800">
+            <div className="flex">
               <button
                 onClick={() => setActiveTab("preview")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                className={`px-4 py-2 flex items-center gap-2 ${
                   activeTab === "preview"
-                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    ? "text-blue-500 border-b-2 border-blue-500"
+                    : "text-gray-500 dark:text-gray-400"
                 }`}
               >
-                <Eye className="mr-2 h-4 w-4" />
+                <Eye size={20} />
                 Preview
               </button>
               <button
                 onClick={() => setActiveTab("code")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                className={`px-4 py-2 flex items-center gap-2 ${
                   activeTab === "code"
-                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    ? "text-blue-500 border-b-2 border-blue-500"
+                    : "text-gray-500 dark:text-gray-400"
                 }`}
               >
-                <Code className="mr-2 h-4 w-4" />
+                <Code size={20} />
                 Code
               </button>
             </div>
           </div>
 
-          <div className="rounded-lg overflow-hidden">
+          <div className="p-4">
             {activeTab === "preview" ? (
-              <ConnectWalletButton />
+              <div className="space-y-6">
+                {/* Wallet Type Tabs */}
+                <div className="flex gap-2 border-b dark:border-gray-800">
+                  <button
+                    onClick={() => setWalletTab("metamask")}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      walletTab === "metamask"
+                        ? "text-blue-500 border-b-2 border-blue-500"
+                        : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
+                    }`}
+                  >
+                    MetaMask
+                  </button>
+                  <button
+                    onClick={() => setWalletTab("walletconnect")}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      walletTab === "walletconnect"
+                        ? "text-blue-500 border-b-2 border-blue-500"
+                        : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
+                    }`}
+                  >
+                    WalletConnect
+                  </button>
+                  <button
+                    onClick={() => setWalletTab("coinbase")}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      walletTab === "coinbase"
+                        ? "text-blue-500 border-b-2 border-blue-500"
+                        : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
+                    }`}
+                  >
+                    Coinbase
+                  </button>
+                </div>
+
+                {/* Button Variants */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                    {walletTab === "metamask" 
+                      ? "MetaMask" 
+                      : walletTab === "walletconnect" 
+                        ? "WalletConnect" 
+                        : "Coinbase"} Variants
+                  </h3>
+                  <div className="grid gap-4">
+                    <ConnectWalletButton
+                      variant="ghost"
+                      walletType={walletTab}
+                      onConnect={(address) => console.log('Connected:', address)}
+                    />
+                    <ConnectWalletButton
+                      variant="light"
+                      walletType={walletTab}
+                      onConnect={(address) => console.log('Connected:', address)}
+                    />
+                    <ConnectWalletButton
+                      variant="dark"
+                      walletType={walletTab}
+                      onConnect={(address) => console.log('Connected:', address)}
+                    />
+                  </div>
+                </div>
+              </div>
             ) : (
-              <CodeBlock code={`// Component code will be here`} id="component" />
+              <CodeBlock
+                code={`import { ConnectWalletButton } from "@/components/ui/connect-wallet"
+import { useState } from "react"
+
+// Example configuration
+const config = {
+  providers: {
+    metamask: {
+      name: "MetaMask",
+      icon: "/wallets/metamask.svg",
+      color: "#F6851B"
+    },
+    walletconnect: {
+      name: "WalletConnect",
+      icon: "/wallets/walletconnect.svg",
+      color: "#3B99FC"
+    },
+    coinbase: {
+      name: "Coinbase Wallet",
+      icon: "/wallets/coinbase.svg",
+      color: "#0052FF"
+    }
+  },
+  variants: {
+    ghost: {
+      className: "bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800",
+      textColor: "text-gray-900 dark:text-white"
+    },
+    light: {
+      className: "bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700",
+      textColor: "text-gray-900 dark:text-white"
+    },
+    dark: {
+      className: "bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100",
+      textColor: "text-white dark:text-gray-900"
+    }
+  }
+};
+
+export default function Page() {
+  const [address, setAddress] = useState<string | null>(null);
+
+  return (
+    <div className="space-y-4">
+      <ConnectWalletButton
+        variant="ghost"
+        walletType="metamask"
+        onConnect={(address) => {
+          console.log('Connected:', address);
+          setAddress(address);
+        }}
+      />
+      <ConnectWalletButton
+        variant="light"
+        walletType="walletconnect"
+        onConnect={(address) => {
+          console.log('Connected:', address);
+          setAddress(address);
+        }}
+      />
+      <ConnectWalletButton
+        variant="dark"
+        walletType="coinbase"
+        onConnect={(address) => {
+          console.log('Connected:', address);
+          setAddress(address);
+        }}
+      />
+    </div>
+  );`}
+                id="component"
+              />
             )}
           </div>
         </div>
@@ -91,32 +226,82 @@ export default function ConnectWalletPage() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add connect-wallet" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Connect Wallet component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add connect-wallet" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add wallet provider configurations to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/connect-wallet" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { ConnectWalletButton } from "@w3-kit/connect-wallet";
+                      code={`// components/ui/connect-wallet/index.tsx
+import { ConnectWalletButton } from "@/components/ui/connect-wallet/component"
+
+export interface WalletProvider {
+  name: string;
+  icon: string;
+  color: string;
+}
+
+export interface ButtonVariant {
+  className: string;
+  textColor: string;
+}
+
+export interface ConnectWalletConfig {
+  providers: {
+    [key: string]: WalletProvider;
+  };
+  variants: {
+    [key: string]: ButtonVariant;
+  };
+}
+
+export { ConnectWalletButton };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { ConnectWalletButton } from "@/components/ui/connect-wallet"
+import { useState } from "react"
 
 export default function Page() {
+  const [address, setAddress] = useState<string | null>(null);
+
   return (
     <ConnectWalletButton
-      onConnect={(provider) => {
-        console.log('Connected:', provider);
+      variant="ghost"
+      walletType="metamask"
+      onConnect={(address) => {
+        console.log('Connected:', address);
+        setAddress(address);
       }}
-      customProviders={[
-        // Add your custom providers here
-      ]}
     />
   );
 }`}
