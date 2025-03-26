@@ -1,53 +1,84 @@
 "use client";
 
-import React, { useState } from "react";
-import { TokenVesting, VestingSchedule } from "./component";
+import React, { useState, useCallback } from "react";
+import { TokenVesting } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
+
+// Define the VestingSchedule interface
+interface VestingSchedule {
+  id: string;
+  tokenSymbol: string;
+  totalAmount: string;
+  vestedAmount: string;
+  startDate: number;
+  endDate: number;
+  cliffDate: number;
+  lastClaimDate: number | null;
+  beneficiary: string;
+  status: "pending" | "active" | "completed";
+}
+
+// Mock vesting schedules for preview
+const mockVestingSchedules: VestingSchedule[] = [
+  {
+    id: "1",
+    tokenSymbol: "TOKEN",
+    totalAmount: "100000",
+    vestedAmount: "25000",
+    startDate: Date.now() - 90 * 24 * 60 * 60 * 1000, // 90 days ago
+    endDate: Date.now() + 275 * 24 * 60 * 60 * 1000, // 275 days from now
+    cliffDate: Date.now() - 30 * 24 * 60 * 60 * 1000, // Cliff ended 30 days ago
+    lastClaimDate: Date.now() - 15 * 24 * 60 * 60 * 1000, // Last claimed 15 days ago
+    beneficiary: "0x1234...5678",
+    status: "active",
+  },
+  {
+    id: "2",
+    tokenSymbol: "REWARD",
+    totalAmount: "50000",
+    vestedAmount: "50000",
+    startDate: Date.now() - 180 * 24 * 60 * 60 * 1000, // 180 days ago
+    endDate: Date.now() - 30 * 24 * 60 * 60 * 1000, // 30 days ago
+    cliffDate: Date.now() - 150 * 24 * 60 * 60 * 1000, // Cliff ended 150 days ago
+    lastClaimDate: Date.now() - 30 * 24 * 60 * 60 * 1000, // Last claimed 30 days ago
+    beneficiary: "0x8765...4321",
+    status: "completed",
+  },
+  {
+    id: "3",
+    tokenSymbol: "NEW",
+    totalAmount: "75000",
+    vestedAmount: "0",
+    startDate: Date.now() + 30 * 24 * 60 * 60 * 1000, // Starts in 30 days
+    endDate: Date.now() + 395 * 24 * 60 * 60 * 1000, // 395 days from now
+    cliffDate: Date.now() + 90 * 24 * 60 * 60 * 1000, // Cliff in 90 days
+    lastClaimDate: null,
+    beneficiary: "0x4444...9999",
+    status: "pending",
+  },
+];
 
 export default function TokenVestingPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [vestingSchedules, setVestingSchedules] = useState<VestingSchedule[]>(mockVestingSchedules);
 
-  // Mock vesting schedules for preview
-  const mockVestingSchedules: VestingSchedule[] = [
-    {
-      id: "1",
-      tokenSymbol: "TOKEN",
-      totalAmount: "100000",
-      vestedAmount: "25000",
-      startDate: Date.now() - 90 * 24 * 60 * 60 * 1000, // 90 days ago
-      endDate: Date.now() + 275 * 24 * 60 * 60 * 1000, // 275 days from now
-      cliffDate: Date.now() - 30 * 24 * 60 * 60 * 1000, // Cliff ended 30 days ago
-      lastClaimDate: Date.now() - 15 * 24 * 60 * 60 * 1000, // Last claimed 15 days ago
-      beneficiary: "0x1234...5678",
-      status: "active" as const,
-    },
-    {
-      id: "2",
-      tokenSymbol: "REWARD",
-      totalAmount: "50000",
-      vestedAmount: "50000",
-      startDate: Date.now() - 180 * 24 * 60 * 60 * 1000, // 180 days ago
-      endDate: Date.now() - 30 * 24 * 60 * 60 * 1000, // 30 days ago
-      cliffDate: Date.now() - 150 * 24 * 60 * 60 * 1000, // Cliff ended 150 days ago
-      lastClaimDate: Date.now() - 30 * 24 * 60 * 60 * 1000, // Last claimed 30 days ago
-      beneficiary: "0x8765...4321",
-      status: "completed" as const,
-    },
-    {
-      id: "3",
-      tokenSymbol: "NEW",
-      totalAmount: "75000",
-      vestedAmount: "0",
-      startDate: Date.now() + 30 * 24 * 60 * 60 * 1000, // Starts in 30 days
-      endDate: Date.now() + 395 * 24 * 60 * 60 * 1000, // 395 days from now
-      cliffDate: Date.now() + 90 * 24 * 60 * 60 * 1000, // Cliff in 90 days
-      lastClaimDate: null,
-      beneficiary: "0x4444...9999",
-      status: "pending" as const,
-    },
-  ];
+  const handleClaimTokens = useCallback(async (scheduleId: string) => {
+    console.log("Claiming tokens for schedule:", scheduleId);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Update the vesting schedule
+    setVestingSchedules(prev => prev.map(schedule => 
+      schedule.id === scheduleId
+        ? {
+            ...schedule,
+            lastClaimDate: Date.now(),
+            vestedAmount: schedule.totalAmount // For demo purposes, fully vest on claim
+          }
+        : schedule
+    ));
+  }, []);
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
@@ -92,44 +123,64 @@ export default function TokenVestingPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <div className="p-4 bg-gray-50 dark:bg-gray-900">
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                  Total Vested: {vestingSchedules.reduce((sum, s) => sum + Number(s.vestedAmount), 0).toLocaleString()} tokens
+                </div>
                 <TokenVesting
-                  vestingSchedules={mockVestingSchedules}
-                  onClaimTokens={async (scheduleId: string) => {
-                    console.log("Claiming tokens for schedule:", scheduleId);
-                    // Simulate API call
-                    await new Promise((resolve) => setTimeout(resolve, 2000));
-                  }}
+                  vestingSchedules={vestingSchedules}
+                  onClaimTokens={handleClaimTokens}
                 />
               </div>
             ) : (
               <CodeBlock
-                code={`import { TokenVesting } from "@w3-kit/token-vesting";
+                code={`import { TokenVesting } from "@/components/ui/token-vesting"
+import { useState, useCallback } from "react"
 
-const vestingSchedules = [
-  {
-    id: "1",
-    tokenSymbol: "TOKEN",
-    totalAmount: "100000",
-    vestedAmount: "25000",
-    startDate: Date.now(),
-    endDate: Date.now() + 365 * 24 * 60 * 60 * 1000,
-    cliffDate: Date.now() + 90 * 24 * 60 * 60 * 1000,
-    lastClaimDate: null,
-    beneficiary: "0x1234...5678",
-    status: "active"
-  }
-];
+interface VestingSchedule {
+  id: string;
+  tokenSymbol: string;
+  totalAmount: string;
+  vestedAmount: string;
+  startDate: number;
+  endDate: number;
+  cliffDate: number;
+  lastClaimDate: number | null;
+  beneficiary: string;
+  status: "pending" | "active" | "completed";
+}
+
+const vestingSchedules = ${JSON.stringify(mockVestingSchedules, null, 2)};
 
 export default function Page() {
+  const [vestingSchedules, setVestingSchedules] = useState<VestingSchedule[]>(vestingSchedules);
+
+  const handleClaimTokens = useCallback(async (scheduleId: string) => {
+    console.log("Claiming tokens for schedule:", scheduleId);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Update the vesting schedule
+    setVestingSchedules(prev => prev.map(schedule => 
+      schedule.id === scheduleId
+        ? {
+            ...schedule,
+            lastClaimDate: Date.now(),
+            vestedAmount: schedule.totalAmount // For demo purposes, fully vest on claim
+          }
+        : schedule
+    ));
+  }, []);
+
   return (
-    <TokenVesting
-      vestingSchedules={vestingSchedules}
-      onClaimTokens={async (scheduleId) => {
-        // Handle token claiming logic
-        await claimVestedTokens(scheduleId);
-      }}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Total Vested: {vestingSchedules.reduce((sum, s) => sum + Number(s.vestedAmount), 0).toLocaleString()} tokens
+      </div>
+      <TokenVesting
+        vestingSchedules={vestingSchedules}
+        onClaimTokens={handleClaimTokens}
+      />
+    </div>
   );
 }`}
                 id="component"
@@ -170,47 +221,114 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add token-vesting" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Token Vesting component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add token-vesting" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add vesting calculation utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/token-vesting" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { TokenVesting } from "@w3-kit/token-vesting";
+                      code={`// components/ui/token-vesting/index.tsx
+import { TokenVesting } from "@/components/ui/token-vesting/component"
 
-const vestingSchedules = [
-  {
-    id: "1",
-    tokenSymbol: "TOKEN",
-    totalAmount: "100000",
-    vestedAmount: "25000",
-    startDate: Date.now(),
-    endDate: Date.now() + 365 * 24 * 60 * 60 * 1000,
-    cliffDate: Date.now() + 90 * 24 * 60 * 60 * 1000,
-    lastClaimDate: null,
-    beneficiary: "0x1234...5678",
-    status: "active"
-  }
-];
+export interface VestingSchedule {
+  id: string;
+  tokenSymbol: string;
+  totalAmount: string;
+  vestedAmount: string;
+  startDate: number;
+  endDate: number;
+  cliffDate: number;
+  lastClaimDate: number | null;
+  beneficiary: string;
+  status: "pending" | "active" | "completed";
+}
+
+export interface TokenVestingProps {
+  vestingSchedules: VestingSchedule[];
+  onClaimTokens: (scheduleId: string) => Promise<void>;
+  className?: string;
+}
+
+export { TokenVesting };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { TokenVesting } from "@/components/ui/token-vesting"
+import { useState, useCallback } from "react"
+
+interface VestingSchedule {
+  id: string;
+  tokenSymbol: string;
+  totalAmount: string;
+  vestedAmount: string;
+  startDate: number;
+  endDate: number;
+  cliffDate: number;
+  lastClaimDate: number | null;
+  beneficiary: string;
+  status: "pending" | "active" | "completed";
+}
+
+const vestingSchedules = ${JSON.stringify(mockVestingSchedules, null, 2)};
 
 export default function Page() {
+  const [vestingSchedules, setVestingSchedules] = useState<VestingSchedule[]>(vestingSchedules);
+
+  const handleClaimTokens = useCallback(async (scheduleId: string) => {
+    console.log("Claiming tokens for schedule:", scheduleId);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Update the vesting schedule
+    setVestingSchedules(prev => prev.map(schedule => 
+      schedule.id === scheduleId
+        ? {
+            ...schedule,
+            lastClaimDate: Date.now(),
+            vestedAmount: schedule.totalAmount // For demo purposes, fully vest on claim
+          }
+        : schedule
+    ));
+  }, []);
+
   return (
-    <TokenVesting
-      vestingSchedules={vestingSchedules}
-      onClaimTokens={async (scheduleId) => {
-        // Handle token claiming logic
-        await claimVestedTokens(scheduleId);
-      }}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Total Vested: {vestingSchedules.reduce((sum, s) => sum + Number(s.vestedAmount), 0).toLocaleString()} tokens
+      </div>
+      <TokenVesting
+        vestingSchedules={vestingSchedules}
+        onClaimTokens={handleClaimTokens}
+      />
+    </div>
   );
 }`}
                       id="usage"

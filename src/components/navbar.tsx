@@ -112,17 +112,16 @@ const DOCS_MENU = [
     items: [
       { name: "Installation", href: "/docs/installation" },
       { name: "Quick Start", href: "/docs/quick-start" },
-      { name: "Customization", href: "/docs/customization" },
     ],
   },
-  {
-    title: "Core Concepts",
-    items: [
-      { name: "Architecture", href: "/docs/architecture" },
-      { name: "Theming", href: "/docs/theming" },
-      { name: "Web3 Integration", href: "/docs/web3-integration" },
-    ],
-  },
+  // {
+  //   title: "Core Concepts",
+  //   items: [
+  //     { name: "Architecture", href: "/docs/architecture" },
+  //     { name: "Theming", href: "/docs/theming" },
+  //     { name: "Web3 Integration", href: "/docs/web3-integration" },
+  //   ],
+  // },
 ];
 
 interface SearchResult {
@@ -243,41 +242,13 @@ export function Navbar() {
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6">
-            {/* Docs Dropdown */}
-            <div className="relative dropdown-container group">
-              <button className="flex items-center space-x-1 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                <span>Docs</span>
-                <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
-              </button>
-
-              <div className="absolute top-full left-0 mt-2 w-[300px] bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-4 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200">
-                <div className="px-4 pb-3 mb-2 border-b border-gray-200 dark:border-gray-700">
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-                    Documentation
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Learn how to integrate and customize W3-Kit components
-                  </p>
-                </div>
-                {DOCS_MENU.map((section) => (
-                  <div key={section.title} className="px-4 py-2">
-                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-                      {section.title}
-                    </div>
-                    {section.items.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        onClick={handleMenuItemClick}
-                        className="block px-2 py-1 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Docs Link */}
+            <Link
+              href="/docs/installation"
+              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >
+              Docs
+            </Link>
 
             {/* Components Dropdown */}
             <div className="relative dropdown-container group">

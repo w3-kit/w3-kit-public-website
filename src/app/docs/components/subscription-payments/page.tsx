@@ -1,9 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import { SubscriptionPayments, SubscriptionPlan, SubscriptionData } from "./component";
+import React, { useState, useCallback } from "react";
+import { SubscriptionPayments, SubscriptionPlan } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
+
+// Define the SubscriptionData interface
+interface SubscriptionData {
+  id: string;
+  plan: SubscriptionPlan;
+  status: "active" | "cancelled" | "expired";
+  startDate: number;
+  nextBillingDate?: number;
+  lastPaymentDate?: number;
+  lastPaymentAmount?: string;
+}
 
 const mockPlans: SubscriptionPlan[] = [
   {
@@ -85,7 +96,7 @@ export default function SubscriptionPaymentsPage() {
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
   const [subscriptions, setSubscriptions] = useState<SubscriptionData[]>(mockSubscriptions);
 
-  const handleSubscribe = async (planId: string) => {
+  const handleSubscribe = useCallback(async (planId: string) => {
     const plan = mockPlans.find(p => p.id === planId);
     if (!plan) return;
 
@@ -98,9 +109,9 @@ export default function SubscriptionPaymentsPage() {
     };
 
     setSubscriptions(prev => [...prev, newSubscription]);
-  };
+  }, []);
 
-  const handleCancel = (subscriptionId: string) => {
+  const handleCancel = useCallback((subscriptionId: string) => {
     setSubscriptions(prev =>
       prev.map(sub =>
         sub.id === subscriptionId
@@ -108,7 +119,7 @@ export default function SubscriptionPaymentsPage() {
           : sub
       )
     );
-  };
+  }, []);
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
@@ -124,8 +135,8 @@ export default function SubscriptionPaymentsPage() {
 
         {/* Preview/Code Section */}
         <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-between overflow-x-auto">
+            <div className="flex items-center space-x-2 min-w-full sm:min-w-0">
               <button
                 onClick={() => setActiveTab("preview")}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
@@ -154,30 +165,61 @@ export default function SubscriptionPaymentsPage() {
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
               <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                  Active Subscriptions: {subscriptions.filter(s => s.status === "active").length}
+                </div>
                 <SubscriptionPayments
                   plans={mockPlans}
-                  activeSubscriptions={subscriptions}
                   onSubscribe={handleSubscribe}
                   onCancel={handleCancel}
                 />
               </div>
             ) : (
               <CodeBlock
-                code={`import { SubscriptionPayments } from "@w3-kit/subscription-payments";
+                code={`import { SubscriptionPayments } from "@/components/ui/subscription-payments"
+import { useState, useCallback } from "react"
 
 const plans = ${JSON.stringify(mockPlans, null, 2)};
 
-export default function Subscriptions() {
+export default function Page() {
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  const handleSubscribe = useCallback(async (planId: string) => {
+    const plan = plans.find(p => p.id === planId);
+    if (!plan) return;
+
+    const newSubscription = {
+      id: Math.random().toString(36).substr(2, 9),
+      plan,
+      status: "active",
+      startDate: Date.now(),
+      nextBillingDate: Date.now() + 30 * 24 * 60 * 60 * 1000,
+    };
+
+    setSubscriptions(prev => [...prev, newSubscription]);
+  }, []);
+
+  const handleCancel = useCallback((subscriptionId: string) => {
+    setSubscriptions(prev =>
+      prev.map(sub =>
+        sub.id === subscriptionId
+          ? { ...sub, status: "cancelled" }
+          : sub
+      )
+    );
+  }, []);
+
   return (
-    <SubscriptionPayments
-      plans={plans}
-      onSubscribe={(planId) => {
-        console.log("Subscribing to plan:", planId);
-      }}
-      onCancel={(subscriptionId) => {
-        console.log("Cancelling subscription:", subscriptionId);
-      }}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Active Subscriptions: {subscriptions.filter(s => s.status === "active").length}
+      </div>
+      <SubscriptionPayments
+        plans={plans}
+        onSubscribe={handleSubscribe}
+        onCancel={handleCancel}
+      />
+    </div>
   );
 }`}
                 id="component"
@@ -218,34 +260,137 @@ export default function Subscriptions() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add subscription-payments" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Subscription Payments component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add subscription-payments" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add subscription management utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/subscription-payments" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { SubscriptionPayments } from "@w3-kit/subscription-payments";
+                      code={`// components/ui/subscription-payments/index.tsx
+import { SubscriptionPayments } from "@/components/ui/subscription-payments/component"
 
-export default function Subscriptions() {
+export interface Token {
+  symbol: string;
+  logoURI: string;
+  decimals: number;
+}
+
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  price: string;
+  token: Token;
+  interval: "monthly" | "yearly";
+  features: string[];
+  description: string;
+  icon: string;
+  isPopular?: boolean;
+}
+
+export interface SubscriptionPaymentsProps {
+  plans: SubscriptionPlan[];
+  onSubscribe?: (planId: string) => void;
+  onCancel?: (subscriptionId: string) => void;
+  className?: string;
+}
+
+export { SubscriptionPayments };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { SubscriptionPayments } from "@/components/ui/subscription-payments"
+import { useState, useCallback } from "react"
+
+const plans = [
+  {
+    id: "basic",
+    name: "Basic",
+    price: "0.1",
+    token: {
+      symbol: "ETH",
+      logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+      decimals: 18,
+    },
+    interval: "monthly",
+    features: [
+      "Basic features",
+      "Email support",
+      "Community access",
+      "Basic analytics",
+    ],
+    description: "Perfect for getting started with our platform",
+    icon: "sparkles",
+  }
+];
+
+export default function Page() {
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  const handleSubscribe = useCallback(async (planId: string) => {
+    const plan = plans.find(p => p.id === planId);
+    if (!plan) return;
+
+    const newSubscription = {
+      id: Math.random().toString(36).substr(2, 9),
+      plan,
+      status: "active",
+      startDate: Date.now(),
+      nextBillingDate: Date.now() + 30 * 24 * 60 * 60 * 1000,
+    };
+
+    setSubscriptions(prev => [...prev, newSubscription]);
+  }, []);
+
+  const handleCancel = useCallback((subscriptionId: string) => {
+    setSubscriptions(prev =>
+      prev.map(sub =>
+        sub.id === subscriptionId
+          ? { ...sub, status: "cancelled" }
+          : sub
+      )
+    );
+  }, []);
+
   return (
-    <SubscriptionPayments
-      plans={plans}
-      onSubscribe={(planId) => {
-        console.log("Subscribing to plan:", planId);
-      }}
-      onCancel={(subscriptionId) => {
-        console.log("Cancelling subscription:", subscriptionId);
-      }}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Active Subscriptions: {subscriptions.filter(s => s.status === "active").length}
+      </div>
+      <SubscriptionPayments
+        plans={plans}
+        onSubscribe={handleSubscribe}
+        onCancel={handleCancel}
+      />
+    </div>
   );
 }`}
                       id="usage"

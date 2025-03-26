@@ -1,27 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { TokenCard } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
+// Define the Token interface
+interface Token {
+  symbol: string;
+  name: string;
+  balance: string;
+  value: number;
+  price: number;
+  change24h: number;
+  logoURI: string;
+  address: string;
+  decimals: number;
+  chainId: number;
+}
+
+const mockToken: Token = {
+  symbol: "ETH",
+  name: "Ethereum",
+  balance: "1.5",
+  value: 2850.75,
+  price: 1900.50,
+  change24h: 2.5,
+  logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=040",
+  address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+  decimals: 18,
+  chainId: 1
+};
+
 export default function TokenCardPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [token, setToken] = useState<Token>(mockToken);
 
-  // Mock data for preview
-  const mockToken = {
-    symbol: "ETH",
-    name: "Ethereum",
-    balance: "1.5",
-    value: 2850.75,
-    price: 1900.50,
-    change24h: 2.5,
-    logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=040",
-    address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-    decimals: 18,
-    chainId: 1
-  };
+  const handleTokenClick = useCallback((token: Token) => {
+    console.log("Token clicked:", token);
+    // Simulate price update
+    setToken(prev => ({
+      ...prev,
+      price: prev.price * (1 + (Math.random() - 0.5) * 0.01),
+      change24h: prev.change24h + (Math.random() - 0.5) * 0.5
+    }));
+  }, []);
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
@@ -66,35 +90,51 @@ export default function TokenCardPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <div className="p-4 bg-gray-50 dark:bg-gray-900">
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                  Current Price: ${token.price.toFixed(2)} ({token.change24h > 0 ? '+' : ''}{token.change24h.toFixed(2)}%)
+                </div>
                 <TokenCard
-                  token={mockToken}
+                  token={token}
+                  onTokenClick={handleTokenClick}
                   showPrice={true}
+                  showChange={true}
+                  showValue={true}
                 />
               </div>
             ) : (
               <CodeBlock
-                code={`import { TokenCard } from "@w3-kit/token-card";
+                code={`import { TokenCard } from "@/components/ui/token-card"
+import { useState, useCallback } from "react"
 
-const token = {
-  symbol: "ETH",
-  name: "Ethereum",
-  balance: "1.5",
-  value: 2850.75,
-  price: 1900.50,
-  change24h: 2.5,
-  logoURI: "https://ethereum.org/eth-logo.png"
-};
+const token = ${JSON.stringify(mockToken, null, 2)};
 
 export default function Page() {
+  const [token, setToken] = useState(token);
+
+  const handleTokenClick = useCallback((token: Token) => {
+    console.log("Token clicked:", token);
+    // Simulate price update
+    setToken(prev => ({
+      ...prev,
+      price: prev.price * (1 + (Math.random() - 0.5) * 0.01),
+      change24h: prev.change24h + (Math.random() - 0.5) * 0.5
+    }));
+  }, []);
+
   return (
-    <TokenCard
-      token={token}
-      onTokenClick={(token) => console.log("Token clicked:", token)}
-      showPrice={true}
-      showChange={true}
-      showValue={true}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Current Price: ${token.price.toFixed(2)} ({token.change24h > 0 ? '+' : ''}{token.change24h.toFixed(2)}%)
+      </div>
+      <TokenCard
+        token={token}
+        onTokenClick={handleTokenClick}
+        showPrice={true}
+        showChange={true}
+        showValue={true}
+      />
+    </div>
   );
 }`}
                 id="component"
@@ -135,22 +175,72 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add token-card" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Token Card component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add token-card" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add token price fetching utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/token-card" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { TokenCard } from "@w3-kit/token-card";
+                      code={`// components/ui/token-card/index.tsx
+import { TokenCard } from "@/components/ui/token-card/component"
+
+export interface Token {
+  symbol: string;
+  name: string;
+  balance: string;
+  value: number;
+  price: number;
+  change24h: number;
+  logoURI: string;
+  address: string;
+  decimals: number;
+  chainId: number;
+}
+
+export interface TokenCardProps {
+  token: Token;
+  onTokenClick?: (token: Token) => void;
+  showPrice?: boolean;
+  showChange?: boolean;
+  showValue?: boolean;
+  className?: string;
+}
+
+export { TokenCard };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { TokenCard } from "@/components/ui/token-card"
+import { useState, useCallback } from "react"
 
 const token = {
   symbol: "ETH",
@@ -159,18 +249,38 @@ const token = {
   value: 2850.75,
   price: 1900.50,
   change24h: 2.5,
-  logoURI: "https://ethereum.org/eth-logo.png"
+  logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=040",
+  address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+  decimals: 18,
+  chainId: 1
 };
 
 export default function Page() {
+  const [token, setToken] = useState(token);
+
+  const handleTokenClick = useCallback((token: Token) => {
+    console.log("Token clicked:", token);
+    // Simulate price update
+    setToken(prev => ({
+      ...prev,
+      price: prev.price * (1 + (Math.random() - 0.5) * 0.01),
+      change24h: prev.change24h + (Math.random() - 0.5) * 0.5
+    }));
+  }, []);
+
   return (
-    <TokenCard
-      token={token}
-      onTokenClick={(token) => console.log("Token clicked:", token)}
-      showPrice={true}
-      showChange={true}
-      showValue={true}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Current Price: ${token.price.toFixed(2)} ({token.change24h > 0 ? '+' : ''}{token.change24h.toFixed(2)}%)
+      </div>
+      <TokenCard
+        token={token}
+        onTokenClick={handleTokenClick}
+        showPrice={true}
+        showChange={true}
+        showValue={true}
+      />
+    </div>
   );
 }`}
                       id="usage"

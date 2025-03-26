@@ -152,17 +152,83 @@ export default function DeFiPositionManagerPage() {
               </div>
             ) : (
               <CodeBlock
-                code={`import { DeFiPositionManager } from "@w3-kit/defi-position-manager";
+                code={`import { DeFiPositionManager } from "@/components/ui/defi-position-manager"
+import { useState } from "react"
 
-const positions = ${JSON.stringify(mockPositions, null, 2)};
+// Example position data
+const positions = [
+  {
+    id: "1",
+    protocol: {
+      name: "Aave",
+      logoURI: "/protocols/aave.svg",
+      type: "lending"
+    },
+    token: {
+      symbol: "ETH",
+      logoURI: "/tokens/eth.svg",
+      price: 2845.67
+    },
+    amount: "1.5",
+    value: 4268.51,
+    healthFactor: 2.5,
+    apy: 3.2,
+    rewards: [
+      {
+        token: "AAVE",
+        amount: "0.05",
+        value: 2.50
+      }
+    ],
+    risk: "low",
+    lastUpdate: Date.now()
+  },
+  {
+    id: "2",
+    protocol: {
+      name: "Uniswap V3",
+      logoURI: "/protocols/uniswap.svg",
+      type: "farming"
+    },
+    token: {
+      symbol: "USDC-ETH",
+      logoURI: "/tokens/usdc-eth.svg",
+      price: 1.00
+    },
+    amount: "10000",
+    value: 10000,
+    healthFactor: 0,
+    apy: 12.5,
+    rewards: [
+      {
+        token: "UNI",
+        amount: "2.5",
+        value: 15.00
+      },
+      {
+        token: "FEE",
+        amount: "0.1",
+        value: 0.30
+      }
+    ],
+    risk: "high",
+    lastUpdate: Date.now()
+  }
+];
 
-export default function Positions() {
+export default function Page() {
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+
+  const handleAdjustPosition = async (positionId: string, action: "deposit" | "withdraw" | "borrow" | "repay") => {
+    console.log('Adjusting position:', positionId, action);
+    setSelectedPosition(positionId);
+    // Implement your position adjustment logic here
+  };
+
   return (
     <DeFiPositionManager
       positions={positions}
-      onAdjustPosition={(positionId, action) => {
-        console.log("Adjusting position:", positionId, action);
-      }}
+      onAdjustPosition={handleAdjustPosition}
     />
   );
 }`}
@@ -204,30 +270,124 @@ export default function Positions() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add defi-position-manager" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the DeFi Position Manager component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add defi-position-manager" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add DeFi position management utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/defi-position-manager" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { DeFiPositionManager } from "@w3-kit/defi-position-manager";
+                      code={`// components/ui/defi-position-manager/index.tsx
+import { DeFiPositionManager } from "@/components/ui/defi-position-manager/component"
 
-export default function Positions() {
+export interface Protocol {
+  name: string;
+  logoURI: string;
+  type: "lending" | "borrowing" | "farming";
+}
+
+export interface Token {
+  symbol: string;
+  logoURI: string;
+  price: number;
+}
+
+export interface Reward {
+  token: string;
+  amount: string;
+  value: number;
+}
+
+export interface PositionData {
+  id: string;
+  protocol: Protocol;
+  token: Token;
+  amount: string;
+  value: number;
+  healthFactor: number;
+  apy: number;
+  rewards: Reward[];
+  risk: "low" | "medium" | "high";
+  lastUpdate: number;
+}
+
+export { DeFiPositionManager };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { DeFiPositionManager } from "@/components/ui/defi-position-manager"
+import { useState } from "react"
+
+export default function Page() {
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+
+  const positions = [
+    {
+      id: "1",
+      protocol: {
+        name: "Aave",
+        logoURI: "/protocols/aave.svg",
+        type: "lending"
+      },
+      token: {
+        symbol: "ETH",
+        logoURI: "/tokens/eth.svg",
+        price: 2845.67
+      },
+      amount: "1.5",
+      value: 4268.51,
+      healthFactor: 2.5,
+      apy: 3.2,
+      rewards: [
+        {
+          token: "AAVE",
+          amount: "0.05",
+          value: 2.50
+        }
+      ],
+      risk: "low",
+      lastUpdate: Date.now()
+    }
+  ];
+
+  const handleAdjustPosition = async (positionId: string, action: "deposit" | "withdraw" | "borrow" | "repay") => {
+    console.log('Adjusting position:', positionId, action);
+    setSelectedPosition(positionId);
+    // Implement your position adjustment logic here
+  };
+
   return (
     <DeFiPositionManager
       positions={positions}
-      onAdjustPosition={(positionId, action) => {
-        console.log("Adjusting position:", positionId, action);
-      }}
+      onAdjustPosition={handleAdjustPosition}
     />
   );
 }`}

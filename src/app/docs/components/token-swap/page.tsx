@@ -1,18 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { TokenSwapWidget } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 import { TokenSymbol } from '../../../../config/tokens';
 
+// Define the Swap interface
+interface SwapParams {
+  fromToken: TokenSymbol;
+  toToken: TokenSymbol;
+  amount: string;
+  slippage: number;
+}
+
 export default function TokenSwapPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [lastSwap, setLastSwap] = useState<SwapParams | null>(null);
 
-  const handleSwap = async (fromToken: TokenSymbol, toToken: TokenSymbol, amount: string) => {
-    console.log("Swap:", { fromToken, toToken, amount });
-  };
+  const handleSwap = useCallback(async (params: SwapParams) => {
+    console.log("Swap:", params);
+    setLastSwap(params);
+    // Simulate swap delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }, []);
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
@@ -57,7 +69,18 @@ export default function TokenSwapPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <div className="p-4 bg-gray-50 dark:bg-gray-900">
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                {lastSwap && (
+                  <div className="mb-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Last Swap</h3>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      <p>From: {lastSwap.fromToken}</p>
+                      <p>To: {lastSwap.toToken}</p>
+                      <p>Amount: {lastSwap.amount}</p>
+                      <p>Slippage: {lastSwap.slippage}%</p>
+                    </div>
+                  </div>
+                )}
                 <TokenSwapWidget
                   onSwap={handleSwap}
                   defaultSlippage={0.5}
@@ -65,18 +88,45 @@ export default function TokenSwapPage() {
               </div>
             ) : (
               <CodeBlock
-                code={`import { TokenSwapWidget } from "@w3-kit/token-swap";
+                code={`import { TokenSwapWidget } from "@/components/ui/token-swap"
+import { useState, useCallback } from "react"
+import { TokenSymbol } from "@/config/tokens"
+
+interface SwapParams {
+  fromToken: TokenSymbol;
+  toToken: TokenSymbol;
+  amount: string;
+  slippage: number;
+}
 
 export default function Page() {
-  const handleSwap = async (fromToken, toToken, amount) => {
-    console.log("Swap:", { fromToken, toToken, amount });
-  };
+  const [lastSwap, setLastSwap] = useState<SwapParams | null>(null);
+
+  const handleSwap = useCallback(async (params: SwapParams) => {
+    console.log("Swap:", params);
+    setLastSwap(params);
+    // Simulate swap delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }, []);
 
   return (
-    <TokenSwapWidget
-      onSwap={handleSwap}
-      defaultSlippage={0.5}
-    />
+    <div>
+      {lastSwap && (
+        <div className="mb-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Last Swap</h3>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            <p>From: {lastSwap.fromToken}</p>
+            <p>To: {lastSwap.toToken}</p>
+            <p>Amount: {lastSwap.amount}</p>
+            <p>Slippage: {lastSwap.slippage}%</p>
+          </div>
+        </div>
+      )}
+      <TokenSwapWidget
+        onSwap={handleSwap}
+        defaultSlippage={0.5}
+      />
+    </div>
   );
 }`}
                 id="component"
@@ -117,33 +167,101 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add token-swap" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Token Swap component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add token-swap" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add token swap utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/token-swap" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { TokenSwapWidget } from "@w3-kit/token-swap";
+                      code={`// components/ui/token-swap/index.tsx
+import { TokenSwapWidget } from "@/components/ui/token-swap/component"
+import { TokenSymbol } from "@/config/tokens"
+
+export interface SwapParams {
+  fromToken: TokenSymbol;
+  toToken: TokenSymbol;
+  amount: string;
+  slippage: number;
+}
+
+export interface TokenSwapWidgetProps {
+  onSwap: (params: SwapParams) => Promise<void>;
+  defaultSlippage?: number;
+  className?: string;
+}
+
+export { TokenSwapWidget };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { TokenSwapWidget } from "@/components/ui/token-swap"
+import { useState, useCallback } from "react"
+import { TokenSymbol } from "@/config/tokens"
+
+interface SwapParams {
+  fromToken: TokenSymbol;
+  toToken: TokenSymbol;
+  amount: string;
+  slippage: number;
+}
 
 export default function Page() {
-  const handleSwap = async (fromToken, toToken, amount) => {
-    console.log("Swap:", { fromToken, toToken, amount });
-  };
+  const [lastSwap, setLastSwap] = useState<SwapParams | null>(null);
+
+  const handleSwap = useCallback(async (params: SwapParams) => {
+    console.log("Swap:", params);
+    setLastSwap(params);
+    // Simulate swap delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }, []);
 
   return (
-    <TokenSwapWidget
-      onSwap={handleSwap}
-      defaultSlippage={0.5}
-    />
+    <div>
+      {lastSwap && (
+        <div className="mb-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Last Swap</h3>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            <p>From: {lastSwap.fromToken}</p>
+            <p>To: {lastSwap.toToken}</p>
+            <p>Amount: {lastSwap.amount}</p>
+            <p>Slippage: {lastSwap.slippage}%</p>
+          </div>
+        </div>
+      )}
+      <TokenSwapWidget
+        onSwap={handleSwap}
+        defaultSlippage={0.5}
+      />
+    </div>
   );
 }`}
                       id="usage"

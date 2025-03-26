@@ -76,16 +76,30 @@ export default function ENSResolverPage() {
               </div>
             ) : (
               <CodeBlock
-                code={`import { ENSResolver } from "@w3-kit/ens-resolver";
+                code={`import { ENSResolver } from "@/components/ui/ens-resolver"
+import { useState } from "react"
+
+// Example ENS data
+const ensData = {
+  address: "0x1234...5678",
+  ensName: "vitalik.eth",
+  avatar: "https://metadata.ens.domains/mainnet/avatar/vitalik.eth",
+  records: {
+    email: "vitalik@ethereum.org",
+    twitter: "VitalikButerin",
+    github: "vitalikbuterin"
+  }
+};
 
 export default function Page() {
+  const [resolvedData, setResolvedData] = useState<typeof ensData | null>(null);
+
   return (
     <ENSResolver
       variant="${selectedVariant}"
       onResolve={(result) => {
-        console.log("Address:", result.address);
-        console.log("ENS Name:", result.ensName);
-        console.log("Avatar:", result.avatar);
+        console.log("Resolved:", result);
+        setResolvedData(result);
       }}
     />
   );
@@ -128,29 +142,79 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add ens-resolver" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the ENS Resolver component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add ens-resolver" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add ENS resolution utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/ens-resolver" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { ENSResolver } from "@w3-kit/ens-resolver";
+                      code={`// components/ui/ens-resolver/index.tsx
+import { ENSResolver } from "@/components/ui/ens-resolver/component"
+
+export interface ENSRecords {
+  email?: string;
+  twitter?: string;
+  github?: string;
+  [key: string]: string | undefined;
+}
+
+export interface ENSResult {
+  address: string;
+  ensName: string | null;
+  avatar: string | null;
+  records: ENSRecords;
+}
+
+export interface ENSResolverProps {
+  variant?: "default" | "compact";
+  onResolve: (result: ENSResult) => void;
+}
+
+export { ENSResolver };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { ENSResolver } from "@/components/ui/ens-resolver"
+import { useState } from "react"
 
 export default function Page() {
+  const [resolvedData, setResolvedData] = useState<ENSResult | null>(null);
+
   return (
     <ENSResolver
+      variant="default"
       onResolve={(result) => {
-        console.log("Address:", result.address);
-        console.log("ENS Name:", result.ensName);
+        console.log("Resolved:", result);
+        setResolvedData(result);
       }}
     />
   );

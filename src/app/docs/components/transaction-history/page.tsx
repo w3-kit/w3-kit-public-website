@@ -1,67 +1,86 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { TransactionHistory } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
+// Define the Transaction interface
+interface Transaction {
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  timestamp: number;
+  status: "success" | "pending" | "failed";
+  nonce: number;
+  blockNumber: number;
+}
+
+// Mock transactions for preview
+const mockTransactions: Transaction[] = [
+  {
+    hash: "0x113...abc",
+    from: "0xabc...def",
+    to: "0xdef...789",
+    value: "1000000000000000000",
+    timestamp: Math.floor(Date.now() / 1000),
+    status: "success",
+    nonce: 1,
+    blockNumber: 12345678,
+  },
+  {
+    hash: "0x123...abc",
+    from: "0xabc...def",
+    to: "0xdef...789",
+    value: "1000000000000000000",
+    timestamp: Math.floor(Date.now() / 1000),
+    status: "success",
+    nonce: 1,
+    blockNumber: 12345678,
+  },
+  {
+    hash: "0x456...def",
+    from: "0x789...123",
+    to: "0xfed...456",
+    value: "500000000000000000",
+    timestamp: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
+    status: "pending",
+    nonce: 2,
+    blockNumber: 12345679,
+  },
+  {
+    hash: "0x789...ghi",
+    from: "0xabc...def",
+    to: "0x123...456",
+    value: "2500000000000000000",
+    timestamp: Math.floor(Date.now() / 1000) - 7200, // 2 hours ago
+    status: "failed",
+    nonce: 3,
+    blockNumber: 12345680,
+  },
+  {
+    hash: "0xdef...jkl",
+    from: "0xfed...456",
+    to: "0x789...123",
+    value: "750000000000000000",
+    timestamp: Math.floor(Date.now() / 1000) - 10800, // 3 hours ago
+    status: "success",
+    nonce: 4,
+    blockNumber: 12345681,
+  }
+];
+
 export default function TransactionHistoryPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
 
-  // Mock transactions for preview
-  const mockTransactions = [
-    {
-        hash: "0x113...abc",
-        from: "0xabc...def",
-        to: "0xdef...789",
-        value: "1000000000000000000",
-        timestamp: Math.floor(Date.now() / 1000),
-        status: "success" as const,
-        nonce: 1,
-        blockNumber: 12345678,
-    },
-    {
-        hash: "0x123...abc",
-        from: "0xabc...def",
-        to: "0xdef...789",
-        value: "1000000000000000000",
-        timestamp: Math.floor(Date.now() / 1000),
-        status: "success" as const,
-        nonce: 1,
-        blockNumber: 12345678,
-    },
-    {
-        hash: "0x456...def",
-        from: "0x789...123",
-        to: "0xfed...456",
-        value: "500000000000000000",
-        timestamp: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
-        status: "pending" as const,
-        nonce: 2,
-        blockNumber: 12345679,
-    },
-    {
-        hash: "0x789...ghi",
-        from: "0xabc...def",
-        to: "0x123...456",
-        value: "2500000000000000000",
-        timestamp: Math.floor(Date.now() / 1000) - 7200, // 2 hours ago
-        status: "failed" as const,
-        nonce: 3,
-        blockNumber: 12345680,
-    },
-    {
-        hash: "0xdef...jkl",
-        from: "0xfed...456",
-        to: "0x789...123",
-        value: "750000000000000000",
-        timestamp: Math.floor(Date.now() / 1000) - 10800, // 3 hours ago
-        status: "success" as const,
-        nonce: 4,
-        blockNumber: 12345681,
-    }
-  ];
+  const handleTransactionClick = useCallback((tx: Transaction) => {
+    console.log("Clicked transaction:", tx);
+    // Simulate transaction details view
+    window.open(`https://etherscan.io/tx/${tx.hash}`, "_blank");
+  }, []);
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
@@ -106,36 +125,54 @@ export default function TransactionHistoryPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <div className="p-4 bg-gray-50 dark:bg-gray-900">
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                  Total Transactions: {transactions.length}
+                </div>
                 <TransactionHistory
-                transactions={mockTransactions}
-                onTransactionClick={(tx) =>
-                  console.log("Clicked transaction:", tx)
-                }
-                itemsPerPage={5}
-              />
+                  transactions={transactions}
+                  onTransactionClick={handleTransactionClick}
+                  itemsPerPage={5}
+                />
               </div>
             ) : (
               <CodeBlock
-                code={`import { TransactionHistory } from "@w3-kit/transaction-history";
+                code={`import { TransactionHistory } from "@/components/ui/transaction-history"
+import { useState, useCallback } from "react"
 
-const transactions = [
-  {
-    hash: "0x1234...5678",
-    type: "swap",
-    status: "completed",
-    timestamp: Date.now(),
-    from: { symbol: "ETH", amount: "1.5" },
-    to: { symbol: "USDC", amount: "2850.75" },
-  }
-];
+interface Transaction {
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  timestamp: number;
+  status: "success" | "pending" | "failed";
+  nonce: number;
+  blockNumber: number;
+}
+
+const transactions = ${JSON.stringify(mockTransactions, null, 2)};
 
 export default function Page() {
+  const [transactions, setTransactions] = useState<Transaction[]>(transactions);
+
+  const handleTransactionClick = useCallback((tx: Transaction) => {
+    console.log("Clicked transaction:", tx);
+    // Simulate transaction details view
+    window.open(\`https://etherscan.io/tx/\${tx.hash}\`, "_blank");
+  }, []);
+
   return (
-    <TransactionHistory
-      transactions={transactions}
-      onTransactionClick={(tx) => console.log("Transaction clicked:", tx)}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Total Transactions: {transactions.length}
+      </div>
+      <TransactionHistory
+        transactions={transactions}
+        onTransactionClick={handleTransactionClick}
+        itemsPerPage={5}
+      />
+    </div>
   );
 }`}
                 id="component"
@@ -176,40 +213,102 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add transaction-history" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Transaction History component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add transaction-history" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add transaction formatting utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/transaction-history" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { TransactionHistory } from "@w3-kit/transaction-history";
+                      code={`// components/ui/transaction-history/index.tsx
+import { TransactionHistory } from "@/components/ui/transaction-history/component"
 
-const transactions = [
-  {
-    hash: "0x1234...5678",
-    type: "swap",
-    status: "completed",
-    timestamp: Date.now(),
-    from: { symbol: "ETH", amount: "1.5" },
-    to: { symbol: "USDC", amount: "2850.75" },
-  }
-];
+export interface Transaction {
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  timestamp: number;
+  status: "success" | "pending" | "failed";
+  nonce: number;
+  blockNumber: number;
+}
+
+export interface TransactionHistoryProps {
+  transactions: Transaction[];
+  onTransactionClick: (tx: Transaction) => void;
+  itemsPerPage?: number;
+  className?: string;
+}
+
+export { TransactionHistory };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { TransactionHistory } from "@/components/ui/transaction-history"
+import { useState, useCallback } from "react"
+
+interface Transaction {
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  timestamp: number;
+  status: "success" | "pending" | "failed";
+  nonce: number;
+  blockNumber: number;
+}
+
+const transactions = ${JSON.stringify(mockTransactions, null, 2)};
 
 export default function Page() {
+  const [transactions, setTransactions] = useState<Transaction[]>(transactions);
+
+  const handleTransactionClick = useCallback((tx: Transaction) => {
+    console.log("Clicked transaction:", tx);
+    // Simulate transaction details view
+    window.open(\`https://etherscan.io/tx/\${tx.hash}\`, "_blank");
+  }, []);
+
   return (
-    <TransactionHistory
-      transactions={transactions}
-      onTransactionClick={(tx) => console.log("Transaction clicked:", tx)}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Total Transactions: {transactions.length}
+      </div>
+      <TransactionHistory
+        transactions={transactions}
+        onTransactionClick={handleTransactionClick}
+        itemsPerPage={5}
+      />
+    </div>
   );
 }`}
                       id="usage"

@@ -201,17 +201,80 @@ export default function AssetPortfolioPage() {
               </div>
             ) : (
               <CodeBlock
-                code={`import { AssetPortfolio } from "@w3-kit/asset-portfolio";
-import { TOKEN_CONFIGS } from "@/config/tokens";
+                code={`import { AssetPortfolio } from "@/components/ui/asset-portfolio"
+import { TOKEN_CONFIGS } from "@/config/tokens"
 
-const assets = ${JSON.stringify(mockAssets.slice(0, 2), null, 2)};
+// Example assets data
+const assets = [
+  {
+    ...TOKEN_CONFIGS.ETH,
+    balance: '2.5',
+    price: 3500,
+    value: 8750,
+    change24h: 4.2,
+    color: '#627EEA',
+    priceHistory: {
+      '24h': generatePriceHistory(3500, 5, 24),
+      '7d': generatePriceHistory(3500, 10, 7),
+      '30d': generatePriceHistory(3500, 15, 30)
+    },
+    candleData: {
+      '24h': generateCandleData(3500, '24h'),
+      '7d': generateCandleData(3500, '7d'),
+      '30d': generateCandleData(3500, '30d')
+    }
+  },
+  {
+    ...TOKEN_CONFIGS.BTC,
+    balance: '0.15',
+    price: 45000,
+    value: 6750,
+    change24h: -2.1,
+    color: '#F7931A',
+    priceHistory: {
+      '24h': generatePriceHistory(45000, 1000, 24),
+      '7d': generatePriceHistory(45000, 2000, 7),
+      '30d': generatePriceHistory(45000, 3000, 30)
+    },
+    candleData: {
+      '24h': generateCandleData(45000, '24h'),
+      '7d': generateCandleData(45000, '7d'),
+      '30d': generateCandleData(45000, '30d')
+    }
+  }
+];
+
+// Helper functions for generating price data
+function generatePriceHistory(basePrice: number, volatility: number, length: number) {
+  return Array.from({ length }, (_, i) => {
+    const change = Math.sin(i / (length / Math.PI)) * volatility;
+    return basePrice + change;
+  });
+}
+
+function generateCandleData(basePrice: number, timeframe: '24h' | '7d' | '30d') {
+  const length = timeframe === '24h' ? 24 : timeframe === '7d' ? 7 : 30;
+  const now = new Date();
+  
+  return Array.from({ length }, (_, i) => ({
+    time: new Date(now.getTime() - (length - i) * 3600000).toISOString(),
+    open: basePrice + (Math.random() - 0.5) * basePrice * 0.02,
+    high: basePrice + Math.random() * basePrice * 0.02,
+    low: basePrice - Math.random() * basePrice * 0.02,
+    close: basePrice + (Math.random() - 0.5) * basePrice * 0.02,
+    volume: Math.random() * 1000000
+  }));
+}
 
 export default function Page() {
+  const totalValue = assets.reduce((sum, asset) => sum + asset.value, 0);
+  const totalChange24h = 3.2;
+
   return (
     <AssetPortfolio
       assets={assets}
-      totalValue={${totalValue}}
-      totalChange24h={${totalChange24h}}
+      totalValue={totalValue}
+      totalChange24h={totalChange24h}
       variant="${selectedVariant}"
       onAssetClick={(asset) => console.log("Asset clicked:", asset)}
     />
@@ -255,23 +318,80 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add asset-portfolio" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Asset Portfolio component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add asset-portfolio" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add token configurations to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/asset-portfolio" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { AssetPortfolio } from "@w3-kit/asset-portfolio";
-import { TOKEN_CONFIGS } from "@/config/tokens";
+                      code={`// components/ui/asset-portfolio/index.tsx
+import { AssetPortfolio } from "@/components/ui/asset-portfolio/component"
+
+export interface Asset {
+  symbol: string;
+  name: string;
+  icon: string;
+  balance: string;
+  price: number;
+  value: number;
+  change24h: number;
+  color: string;
+  priceHistory: {
+    '24h': number[];
+    '7d': number[];
+    '30d': number[];
+  };
+  candleData: {
+    '24h': CandleData[];
+    '7d': CandleData[];
+    '30d': CandleData[];
+  };
+}
+
+export interface CandleData {
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+export { AssetPortfolio };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { AssetPortfolio } from "@/components/ui/asset-portfolio"
+import { TOKEN_CONFIGS } from "@/config/tokens"
 
 const assets = [
   {
@@ -280,7 +400,17 @@ const assets = [
     price: 3500,
     value: 8750,
     change24h: 4.2,
-    color: '#627EEA'
+    color: '#627EEA',
+    priceHistory: {
+      '24h': [...], // Array of 24 price points
+      '7d': [...],  // Array of 7 price points
+      '30d': [...], // Array of 30 price points
+    },
+    candleData: {
+      '24h': [...], // Array of 24 candle data points
+      '7d': [...],  // Array of 7 candle data points
+      '30d': [...], // Array of 30 candle data points
+    }
   }
 ];
 

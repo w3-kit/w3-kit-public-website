@@ -118,7 +118,78 @@ export default function ConnectWalletPage() {
                 </div>
               </div>
             ) : (
-              <CodeBlock code={`// Component code will be here`} id="component" />
+              <CodeBlock
+                code={`import { ConnectWalletButton } from "@/components/ui/connect-wallet"
+import { useState } from "react"
+
+// Example configuration
+const config = {
+  providers: {
+    metamask: {
+      name: "MetaMask",
+      icon: "/wallets/metamask.svg",
+      color: "#F6851B"
+    },
+    walletconnect: {
+      name: "WalletConnect",
+      icon: "/wallets/walletconnect.svg",
+      color: "#3B99FC"
+    },
+    coinbase: {
+      name: "Coinbase Wallet",
+      icon: "/wallets/coinbase.svg",
+      color: "#0052FF"
+    }
+  },
+  variants: {
+    ghost: {
+      className: "bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800",
+      textColor: "text-gray-900 dark:text-white"
+    },
+    light: {
+      className: "bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700",
+      textColor: "text-gray-900 dark:text-white"
+    },
+    dark: {
+      className: "bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100",
+      textColor: "text-white dark:text-gray-900"
+    }
+  }
+};
+
+export default function Page() {
+  const [address, setAddress] = useState<string | null>(null);
+
+  return (
+    <div className="space-y-4">
+      <ConnectWalletButton
+        variant="ghost"
+        walletType="metamask"
+        onConnect={(address) => {
+          console.log('Connected:', address);
+          setAddress(address);
+        }}
+      />
+      <ConnectWalletButton
+        variant="light"
+        walletType="walletconnect"
+        onConnect={(address) => {
+          console.log('Connected:', address);
+          setAddress(address);
+        }}
+      />
+      <ConnectWalletButton
+        variant="dark"
+        walletType="coinbase"
+        onConnect={(address) => {
+          console.log('Connected:', address);
+          setAddress(address);
+        }}
+      />
+    </div>
+  );`}
+                id="component"
+              />
             )}
           </div>
         </div>
@@ -155,32 +226,82 @@ export default function ConnectWalletPage() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add connect-wallet" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Connect Wallet component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add connect-wallet" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add wallet provider configurations to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/connect-wallet" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { ConnectWalletButton } from "@w3-kit/connect-wallet";
+                      code={`// components/ui/connect-wallet/index.tsx
+import { ConnectWalletButton } from "@/components/ui/connect-wallet/component"
+
+export interface WalletProvider {
+  name: string;
+  icon: string;
+  color: string;
+}
+
+export interface ButtonVariant {
+  className: string;
+  textColor: string;
+}
+
+export interface ConnectWalletConfig {
+  providers: {
+    [key: string]: WalletProvider;
+  };
+  variants: {
+    [key: string]: ButtonVariant;
+  };
+}
+
+export { ConnectWalletButton };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { ConnectWalletButton } from "@/components/ui/connect-wallet"
+import { useState } from "react"
 
 export default function Page() {
+  const [address, setAddress] = useState<string | null>(null);
+
   return (
     <ConnectWalletButton
-      onConnect={(provider) => {
-        console.log('Connected:', provider);
+      variant="ghost"
+      walletType="metamask"
+      onConnect={(address) => {
+        console.log('Connected:', address);
+        setAddress(address);
       }}
-      customProviders={[
-        // Add your custom providers here
-      ]}
     />
   );
 }`}

@@ -75,23 +75,64 @@ export default function NFTCardPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <div className="w-full max-w-md mx-auto">
-                {mockData.map((nft) => (
-                  <NFTCard
-                    key={nft.id}
-                    nft={nft}
-                    variant="expanded"
-                    onOwnerClick={(owner) =>
-                      console.log("Owner clicked:", owner)
-                    }
-                    onNFTClick={(nft) => console.log("NFT clicked:", nft)}
-                    className="transform scale-90"
-                  />
-                ))}
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div className="w-full max-w-md mx-auto">
+                  {mockData.map((nft) => (
+                    <NFTCard
+                      key={nft.id}
+                      nft={nft}
+                      variant="expanded"
+                      onOwnerClick={(owner) =>
+                        console.log("Owner clicked:", owner)
+                      }
+                      onNFTClick={(nft) => console.log("NFT clicked:", nft)}
+                      className="transform scale-90"
+                    />
+                  ))}
+                </div>
               </div>
             ) : (
               <CodeBlock
-                code={`// Component code will be here`}
+                code={`import { NFTCard } from "@/components/ui/nft-card"
+import { useState } from "react"
+
+export default function Page() {
+  const [selectedNFT, setSelectedNFT] = useState(null);
+
+  const handleNFTClick = (nft) => {
+    console.log("NFT clicked:", nft);
+    setSelectedNFT(nft);
+  };
+
+  const handleOwnerClick = (owner) => {
+    console.log("Owner clicked:", owner);
+  };
+
+  return (
+    <NFTCard
+      nft={{
+        id: "2",
+        name: "Bored Ape #5678",
+        description: "A unique Bored Ape NFT",
+        image: "https://ipfs.io/ipfs/QmRRPWG96cmgTn2qSzjwr2qvfNEuhunv6FNeMFGa9bx6mQ",
+        owner: "0x9876543210fedcba9876543210fedcba98765432",
+        collection: "Bored Ape Yacht Club",
+        tokenId: "5678",
+        contractAddress: "0x123456789abcdef123456789abcdef1234567890",
+        chainId: 1,
+        attributes: [
+          { trait_type: "Background", value: "Yellow" },
+          { trait_type: "Fur", value: "Brown" },
+          { trait_type: "Eyes", value: "Bored" },
+          { trait_type: "Clothes", value: "Suit" },
+        ],
+      }}
+      variant="expanded"
+      onOwnerClick={handleOwnerClick}
+      onNFTClick={handleNFTClick}
+    />
+  );
+}`}
                 id="component"
               />
             )}
@@ -130,40 +171,111 @@ export default function NFTCardPage() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add nft-card" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the NFT Card component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add nft-card" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add NFT utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/nft-card" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { NFTCard } from "@w3-kit/nft-card";
+                      code={`// components/ui/nft-card/index.tsx
+import { NFTCard } from "@/components/ui/nft-card/component"
+
+export interface NFTAttribute {
+  trait_type: string;
+  value: string;
+}
+
+export interface NFT {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  owner: string;
+  collection: string;
+  tokenId: string;
+  contractAddress: string;
+  chainId: number;
+  attributes: NFTAttribute[];
+}
+
+export interface NFTCardProps {
+  nft: NFT;
+  variant?: "compact" | "expanded";
+  onOwnerClick?: (owner: string) => void;
+  onNFTClick?: (nft: NFT) => void;
+  className?: string;
+}
+
+export { NFTCard };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { NFTCard } from "@/components/ui/nft-card"
+import { useState } from "react"
 
 export default function Page() {
+  const [selectedNFT, setSelectedNFT] = useState(null);
+
+  const handleNFTClick = (nft) => {
+    console.log("NFT clicked:", nft);
+    setSelectedNFT(nft);
+  };
+
+  const handleOwnerClick = (owner) => {
+    console.log("Owner clicked:", owner);
+  };
+
   return (
     <NFTCard
-      name="Bored Ape #1234"
-      description="A unique NFT from the BAYC collection"
-      image="https://example.com/nft-image.png"
-      attributes={[
-        { trait_type: "Background", value: "Blue" },
-        { trait_type: "Eyes", value: "Laser" }
-      ]}
-      collection={{
-        name: "Bored Ape Yacht Club",
-        verified: true
+      nft={{
+        id: "2",
+        name: "Bored Ape #5678",
+        description: "A unique Bored Ape NFT",
+        image: "https://ipfs.io/ipfs/QmRRPWG96cmgTn2qSzjwr2qvfNEuhunv6FNeMFGa9bx6mQ",
+        owner: "0x9876543210fedcba9876543210fedcba98765432",
+        collection: "Bored Ape Yacht Club",
+        tokenId: "5678",
+        contractAddress: "0x123456789abcdef123456789abcdef1234567890",
+        chainId: 1,
+        attributes: [
+          { trait_type: "Background", value: "Yellow" },
+          { trait_type: "Fur", value: "Brown" },
+          { trait_type: "Eyes", value: "Bored" },
+          { trait_type: "Clothes", value: "Suit" },
+        ],
       }}
-      owner="0x1234...5678"
-      tokenId="1234"
-      contractAddress="0xBC4CA0..."
+      variant="expanded"
+      onOwnerClick={handleOwnerClick}
+      onNFTClick={handleNFTClick}
     />
   );
 }`}

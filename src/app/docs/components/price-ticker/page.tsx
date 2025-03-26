@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { PriceTicker } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
@@ -8,8 +8,7 @@ import { CodeBlock } from "@/components/docs/codeBlock";
 export default function PriceTickerPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
-  const [tickerVariant, setTickerVariant] = useState<"detailed" | "compact">("detailed");
-  const [refreshInterval, setRefreshInterval] = useState<number>(10000);
+  const [selectedToken, setSelectedToken] = useState<string | null>(null);
 
   // Mock data for preview
   const mockData = [
@@ -50,65 +49,13 @@ export default function PriceTickerPage() {
       maxSupply: null,
       logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
       lastUpdated: new Date().toISOString()
-    },
-    {
-      name: "Solana",
-      symbol: "SOL",
-      price: 100,
-      priceChange: {
-        "1h": 1.2,
-        "24h": 5.7,
-        "7d": 15.2,
-        "30d": 45.4
-      },
-      marketCap: 40000000000,
-      volume: {
-        "24h": 3000000000
-      },
-      circulatingSupply: 400000000,
-      maxSupply: 500000000,
-      logoURI: "https://cryptologos.cc/logos/solana-sol-logo.png",
-      lastUpdated: new Date().toISOString()
-    },
-    {
-      name: "Cardano",
-      symbol: "ADA",
-      price: 0.5,
-      priceChange: {
-        "1h": -0.3,
-        "24h": -1.2,
-        "7d": -3.5,
-        "30d": 5.4
-      },
-      marketCap: 18000000000,
-      volume: {
-        "24h": 800000000
-      },
-      circulatingSupply: 35000000000,
-      maxSupply: 45000000000,
-      logoURI: "https://cryptologos.cc/logos/cardano-ada-logo.png",
-      lastUpdated: new Date().toISOString()
-    },
-    {
-      name: "Binance Coin",
-      symbol: "BNB",
-      price: 400,
-      priceChange: {
-        "1h": 0.1,
-        "24h": 0.8,
-        "7d": 2.5,
-        "30d": 8.7
-      },
-      marketCap: 65000000000,
-      volume: {
-        "24h": 2000000000
-      },
-      circulatingSupply: 1000000000,
-      maxSupply: 1500000000,
-      logoURI: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png",
-      lastUpdated: new Date().toISOString()
     }
   ];
+
+  const handleTokenSelect = useCallback((token: string) => {
+    setSelectedToken(token);
+    console.log("Selected token:", token);
+  }, []);
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
@@ -153,16 +100,59 @@ export default function PriceTickerPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <div className="space-y-4">
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
                 <PriceTicker
                   tokens={mockData}
-                  onPriceUpdate={(prices) => console.log("Prices updated:", prices)}
-                  variant={tickerVariant}
-                  refreshInterval={refreshInterval}
+                  onTokenSelect={handleTokenSelect}
                 />
+                {selectedToken && (
+                  <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                    Selected Token: {selectedToken}
+                  </div>
+                )}
               </div>
             ) : (
-              <CodeBlock code={`// Component code will be here`} id="component" />
+              <CodeBlock
+                code={`import { PriceTicker } from "@/components/ui/price-ticker"
+import { useState, useCallback } from "react"
+
+export default function Page() {
+  const [selectedToken, setSelectedToken] = useState<string | null>(null);
+
+  const handleTokenSelect = useCallback((token: string) => {
+    setSelectedToken(token);
+    console.log("Selected token:", token);
+  }, []);
+
+  return (
+    <PriceTicker
+      tokens={[
+        {
+          name: "Bitcoin",
+          symbol: "BTC",
+          price: 50000,
+          priceChange: {
+            "1h": 0.5,
+            "24h": 2.3,
+            "7d": -1.2,
+            "30d": 15.4
+          },
+          marketCap: 950000000000,
+          volume: {
+            "24h": 25000000000
+          },
+          circulatingSupply: 19000000,
+          maxSupply: 21000000,
+          logoURI: "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+          lastUpdated: new Date().toISOString()
+        }
+      ]}
+      onTokenSelect={handleTokenSelect}
+    />
+  );
+}`}
+                id="component"
+              />
             )}
           </div>
         </div>
@@ -199,36 +189,109 @@ export default function PriceTickerPage() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add price-ticker" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Price Ticker component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add price-ticker" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add price data fetching utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/price-ticker" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { PriceTicker } from "@w3-kit/price-ticker";
+                      code={`// components/ui/price-ticker/index.tsx
+import { PriceTicker } from "@/components/ui/price-ticker/component"
+
+export interface Token {
+  name: string;
+  symbol: string;
+  price: number;
+  priceChange: {
+    "1h": number;
+    "24h": number;
+    "7d": number;
+    "30d": number;
+  };
+  marketCap: number;
+  volume: {
+    "24h": number;
+  };
+  circulatingSupply: number;
+  maxSupply: number | null;
+  logoURI: string;
+  lastUpdated: string;
+}
+
+export interface PriceTickerProps {
+  tokens: Token[];
+  onTokenSelect?: (token: string) => void;
+  className?: string;
+}
+
+export { PriceTicker };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { PriceTicker } from "@/components/ui/price-ticker"
+import { useState, useCallback } from "react"
 
 export default function Page() {
+  const [selectedToken, setSelectedToken] = useState<string | null>(null);
+
+  const handleTokenSelect = useCallback((token: string) => {
+    setSelectedToken(token);
+    console.log("Selected token:", token);
+  }, []);
+
   return (
     <PriceTicker
-      token={{
-        symbol: "ETH",
-        name: "Ethereum",
-        price: 2150.75,
-        change24h: 3.45,
-        volume24h: 1234567890,
-        marketCap: 234567890123,
-        image: "https://cryptologos.cc/logos/ethereum-eth-logo.svg"
-      }}
-      onTokenClick={(token) => console.log("Token clicked:", token)}
+      tokens={[
+        {
+          name: "Bitcoin",
+          symbol: "BTC",
+          price: 50000,
+          priceChange: {
+            "1h": 0.5,
+            "24h": 2.3,
+            "7d": -1.2,
+            "30d": 15.4
+          },
+          marketCap: 950000000000,
+          volume: {
+            "24h": 25000000000
+          },
+          circulatingSupply: 19000000,
+          maxSupply: 21000000,
+          logoURI: "https://cryptologos.cc/logos/bitcoin-btc-logo.png",
+          lastUpdated: new Date().toISOString()
+        }
+      ]}
+      onTokenSelect={handleTokenSelect}
     />
   );
 }`}
@@ -237,6 +300,40 @@ export default function Page() {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Features Section */}
+        <div className="space-y-4 mt-8 sm:mt-12">
+          <h2 className="text-xl sm:text-2xl font-semibold border-b border-gray-200 dark:border-gray-800 pb-2 text-gray-900 dark:text-white">
+            Features
+          </h2>
+          
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-medium text-gray-900 dark:text-white mb-2">Real-time Updates</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Live price updates with configurable refresh intervals and WebSocket support.
+              </p>
+            </div>
+            <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-medium text-gray-900 dark:text-white mb-2">Price Changes</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Track price changes across multiple timeframes with visual indicators.
+              </p>
+            </div>
+            <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-medium text-gray-900 dark:text-white mb-2">Market Data</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Display market cap, volume, and supply information for each token.
+              </p>
+            </div>
+            <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="font-medium text-gray-900 dark:text-white mb-2">Token Selection</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Interactive token selection with customizable click handlers and callbacks.
+              </p>
             </div>
           </div>
         </div>

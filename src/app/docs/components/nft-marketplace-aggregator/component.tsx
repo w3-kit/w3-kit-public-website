@@ -649,9 +649,11 @@ export function NFTMarketplaceAggregator({ onSearch }: NFTMarketplaceAggregatorP
               <div className="p-4">
                 <div className="flex items-start space-x-4">
                   <div className="w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0 overflow-hidden rounded-lg">
-                    <img
+                    <Image
                       src={listing.imageUrl}
                       alt={listing.name}
+                      width={160}
+                      height={160}
                       className="w-full h-full object-cover transform transition-transform duration-300 
                                hover:scale-110"
                     />

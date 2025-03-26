@@ -65,8 +65,8 @@ export default function LiquidityPoolStatsPage() {
 
         {/* Preview/Code Section */}
         <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-between overflow-x-auto">
+            <div className="flex items-center space-x-2 min-w-full sm:min-w-0">
               <button
                 onClick={() => setActiveTab("preview")}
                 className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
@@ -112,16 +112,40 @@ export default function LiquidityPoolStatsPage() {
               </div>
             ) : (
               <CodeBlock
-                code={`import { LiquidityPoolStats } from "@w3-kit/liquidity-pool-stats";
+                code={`import { LiquidityPoolStats } from "@/components/ui/liquidity-pool-stats"
+import { useState } from "react"
 
-const poolData = ${JSON.stringify(mockPool, null, 2)};
+export default function Page() {
+  const [selectedVariant, setSelectedVariant] = useState<'default' | 'compact'>('default');
 
-export default function Pool() {
+  const poolData = {
+    token: {
+      symbol: "ETH-USDC",
+      logoURI: "/tokens/eth-usdc.svg",
+      liquidity: 245678.34,
+      price: 2845.67,
+      marketCap: 345678901.23,
+      totalSupply: 120000000,
+      circulatingSupply: 118500000,
+    },
+    fee: 3000, // 0.3%
+    tvl: 456789123.45,
+    tvlChange24h: 5.67,
+    volume24h: 89012345.67,
+    volumeChange24h: -2.34,
+    apr: 12.34,
+    feesEarned24h: 23456.78,
+    uniqueHolders: 45678,
+    transactions24h: 3456,
+  };
+
   return (
     <LiquidityPoolStats
       poolData={poolData}
-      variant="${selectedVariant}"
-      onTokenClick={(pairId) => console.log("Token pair clicked:", pairId)}
+      variant={selectedVariant}
+      onTokenClick={(pairId) => {
+        console.log("Token pair clicked:", pairId);
+      }}
     />
   );
 }`}
@@ -163,28 +187,110 @@ export default function Pool() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add liquidity-pool-stats" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Liquidity Pool Stats component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add liquidity-pool-stats" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add pool statistics utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/liquidity-pool-stats" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { LiquidityPoolStats } from "@w3-kit/liquidity-pool-stats";
+                      code={`// components/ui/liquidity-pool-stats/index.tsx
+import { LiquidityPoolStats } from "@/components/ui/liquidity-pool-stats/component"
 
-export default function Pool() {
+export interface Token {
+  symbol: string;
+  logoURI: string;
+  liquidity: number;
+  price: number;
+  marketCap: number;
+  totalSupply: number;
+  circulatingSupply: number;
+}
+
+export interface PoolData {
+  token: Token;
+  fee: number;
+  tvl: number;
+  tvlChange24h: number;
+  volume24h: number;
+  volumeChange24h: number;
+  apr: number;
+  feesEarned24h: number;
+  uniqueHolders: number;
+  transactions24h: number;
+}
+
+export interface LiquidityPoolStatsProps {
+  poolData: PoolData;
+  variant?: 'default' | 'compact';
+  isLoading?: boolean;
+  onTokenClick?: (pairId: string) => void;
+  className?: string;
+}
+
+export { LiquidityPoolStats };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { LiquidityPoolStats } from "@/components/ui/liquidity-pool-stats"
+import { useState } from "react"
+
+export default function Page() {
+  const [selectedVariant, setSelectedVariant] = useState<'default' | 'compact'>('default');
+
+  const poolData = {
+    token: {
+      symbol: "ETH-USDC",
+      logoURI: "/tokens/eth-usdc.svg",
+      liquidity: 245678.34,
+      price: 2845.67,
+      marketCap: 345678901.23,
+      totalSupply: 120000000,
+      circulatingSupply: 118500000,
+    },
+    fee: 3000, // 0.3%
+    tvl: 456789123.45,
+    tvlChange24h: 5.67,
+    volume24h: 89012345.67,
+    volumeChange24h: -2.34,
+    apr: 12.34,
+    feesEarned24h: 23456.78,
+    uniqueHolders: 45678,
+    transactions24h: 3456,
+  };
+
   return (
     <LiquidityPoolStats
       poolData={poolData}
-      variant="${selectedVariant}"
+      variant={selectedVariant}
       onTokenClick={(pairId) => {
         console.log("Token pair clicked:", pairId);
       }}

@@ -24,6 +24,11 @@ export default function NFTCollectionGridPage() {
       chainId: 1,
       tokenId: "9839",
       contractAddress: "",
+      attributes: [
+        { trait_type: "Background", value: "Blue" },
+        { trait_type: "Type", value: "Human" },
+        { trait_type: "Eyes", value: "Red" },
+      ],
     },
     {
       id: "2",
@@ -37,6 +42,11 @@ export default function NFTCollectionGridPage() {
       chainId: 1,
       tokenId: "7329",
       contractAddress: "",
+      attributes: [
+        { trait_type: "Background", value: "Yellow" },
+        { trait_type: "Fur", value: "Brown" },
+        { trait_type: "Eyes", value: "Bored" },
+      ],
     },
     {
       id: "3",
@@ -50,6 +60,11 @@ export default function NFTCollectionGridPage() {
       chainId: 1,
       tokenId: "8147",
       contractAddress: "",
+      attributes: [
+        { trait_type: "Background", value: "Purple" },
+        { trait_type: "Body", value: "Rainbow" },
+        { trait_type: "Face", value: "Happy" },
+      ],
     },
     {
       id: "4",
@@ -135,26 +150,59 @@ export default function NFTCollectionGridPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <NFTCollectionGrid
-                nfts={mockData}
-                variant="default"
-                columns={{
-                  default: 1,
-                  sm: 2,
-                  md: 3,
-                  lg: 4,
-                }}
-                onNFTClick={(nft) => console.log("NFT clicked:", nft)}
-                onOwnerClick={(owner) => console.log("Owner clicked:", owner)}
-              />
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <NFTCollectionGrid
+                  nfts={mockData}
+                  variant="default"
+                  columns={{
+                    default: 1,
+                    sm: 2,
+                    md: 3,
+                    lg: 4,
+                  }}
+                  onNFTClick={(nft) => console.log("NFT clicked:", nft)}
+                  onOwnerClick={(owner) => console.log("Owner clicked:", owner)}
+                />
+              </div>
             ) : (
               <CodeBlock
-                code={`import { NFTCollectionGrid } from "@w3-kit/nft-collection-grid";
+                code={`import { NFTCollectionGrid } from "@/components/ui/nft-collection-grid"
+import { useState } from "react"
+import { NFT } from "@/components/ui/nft-card"
 
 export default function Page() {
+  const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
+
+  const handleNFTClick = (nft: NFT) => {
+    console.log("NFT clicked:", nft);
+    setSelectedNFT(nft);
+  };
+
+  const handleOwnerClick = (owner: string) => {
+    console.log("Owner clicked:", owner);
+  };
+
   return (
     <NFTCollectionGrid
-      nfts={nfts}
+      nfts={[
+        {
+          id: "1",
+          name: "Azuki #9839",
+          description: "Azuki starts with a collection of 10,000 avatars that give you membership access to The Garden.",
+          image: "https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?auto=format&dpr=1&w=1000",
+          owner: "0x1234567890abcdef1234567890abcdef12345678",
+          collection: "Azuki",
+          chainId: 1,
+          tokenId: "9839",
+          contractAddress: "",
+          attributes: [
+            { trait_type: "Background", value: "Blue" },
+            { trait_type: "Type", value: "Human" },
+            { trait_type: "Eyes", value: "Red" },
+          ],
+        },
+        // Add more NFTs here...
+      ]}
       variant="default"
       columns={{
         default: 1,
@@ -162,8 +210,8 @@ export default function Page() {
         md: 3,
         lg: 4,
       }}
-      onNFTClick={(nft) => console.log("NFT clicked:", nft)}
-      onOwnerClick={(owner) => console.log("Owner clicked:", owner)}
+      onNFTClick={handleNFTClick}
+      onOwnerClick={handleOwnerClick}
     />
   );
 }`}
@@ -205,60 +253,111 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock
-                  code="npx w3-kit@latest add nft-collection-grid"
-                  id="cli"
-                />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the NFT Collection Grid component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add nft-collection-grid" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add NFT utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
+                    </p>
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code="npm install @w3-kit/nft-collection-grid"
-                      id="npm"
+                      code={`// components/ui/nft-collection-grid/index.tsx
+import { NFTCollectionGrid } from "@/components/ui/nft-collection-grid/component"
+import { NFT } from "@/components/ui/nft-card"
+
+export interface NFTCollectionGridProps {
+  nfts: NFT[];
+  variant?: "default" | "compact";
+  columns?: {
+    default?: number;
+    sm?: number;
+    md?: number;
+    lg?: number;
+    xl?: number;
+    "2xl"?: number;
+  };
+  onNFTClick?: (nft: NFT) => void;
+  onOwnerClick?: (owner: string) => void;
+  className?: string;
+}
+
+export { NFTCollectionGrid };`}
+                      id="component"
                     />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      3. Use the component in your code:
                     </p>
                     <CodeBlock
-                      code={`import { NFTCollectionGrid } from "@w3-kit/nft-collection-grid";
-
-const nfts = [
-  {
-    id: "1",
-    name: "Bored Ape #1234",
-    description: "A unique NFT",
-    image: "https://example.com/nft.png",
-    owner: "0x1234...",
-    collection: "Bored Ape Yacht Club",
-    tokenId: "1234",
-    contractAddress: "0x1234...",
-    chainId: 1,
-    attributes: [
-      { trait_type: "Background", value: "Blue" },
-      { trait_type: "Eyes", value: "Laser" }
-    ]
-  }
-];
+                      code={`import { NFTCollectionGrid } from "@/components/ui/nft-collection-grid"
+import { useState } from "react"
+import { NFT } from "@/components/ui/nft-card"
 
 export default function Page() {
+  const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
+
+  const handleNFTClick = (nft: NFT) => {
+    console.log("NFT clicked:", nft);
+    setSelectedNFT(nft);
+  };
+
+  const handleOwnerClick = (owner: string) => {
+    console.log("Owner clicked:", owner);
+  };
+
   return (
     <NFTCollectionGrid
-      nfts={nfts}
+      nfts={[
+        {
+          id: "1",
+          name: "Azuki #9839",
+          description: "Azuki starts with a collection of 10,000 avatars that give you membership access to The Garden.",
+          image: "https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?auto=format&dpr=1&w=1000",
+          owner: "0x1234567890abcdef1234567890abcdef12345678",
+          collection: "Azuki",
+          chainId: 1,
+          tokenId: "9839",
+          contractAddress: "",
+          attributes: [
+            { trait_type: "Background", value: "Blue" },
+            { trait_type: "Type", value: "Human" },
+            { trait_type: "Eyes", value: "Red" },
+          ],
+        },
+        // Add more NFTs here...
+      ]}
       variant="default"
       columns={{
         default: 1,
         sm: 2,
         md: 3,
-        lg: 4
+        lg: 4,
       }}
-      onNFTClick={(nft) => console.log("NFT clicked:", nft)}
-      onOwnerClick={(owner) => console.log("Owner clicked:", owner)}
+      onNFTClick={handleNFTClick}
+      onOwnerClick={handleOwnerClick}
     />
   );
 }`}

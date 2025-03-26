@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { StakingInterface } from "./component";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
@@ -8,24 +8,11 @@ import { TOKEN_CONFIGS } from "@/config/tokens";
 
 export default function StakingInterfacePage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
-  const [selectedVariant, setSelectedVariant] = useState<'default' | 'compact'>('default');
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [selectedPool, setSelectedPool] = useState<string | null>(null);
 
   // Mock data for staking pools using TOKEN_CONFIGS
   const mockPools = [
-    // {
-    //   id: '1',
-    //   name: 'ETH 2.0 Staking',
-    //   token: {
-    //     symbol: TOKEN_CONFIGS.ETH.symbol,
-    //     logoURI: TOKEN_CONFIGS.ETH.logoURI,
-    //     decimals: TOKEN_CONFIGS.ETH.decimals
-    //   },
-    //   apr: 4.5,
-    //   minStake: '32',
-    //   lockPeriod: 365,
-    //   totalStaked: '1250000'
-    // },
     {
       id: '2',
       name: 'USDC Yield Pool',
@@ -67,6 +54,17 @@ export default function StakingInterfacePage() {
     }
   ];
 
+  // Handle staking operations
+  const handleStake = useCallback((poolId: string, amount: string) => {
+    console.log("Staking:", { poolId, amount });
+    setSelectedPool(poolId);
+  }, []);
+
+  const handleUnstake = useCallback((poolId: string, amount: string) => {
+    console.log("Unstaking:", { poolId, amount });
+    setSelectedPool(null);
+  }, []);
+
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
       <div className="space-y-6 py-4 sm:py-6">
@@ -79,81 +77,81 @@ export default function StakingInterfacePage() {
           </p>
         </div>
 
-        {/* Variant Selector */}
-        <div className="flex space-x-2 border-b border-gray-200 dark:border-gray-800">
-          {(['default', 'compact'] as const).map((variant) => (
-            <button
-              key={variant}
-              onClick={() => setSelectedVariant(variant)}
-              className={`px-4 py-2 text-sm font-medium transition-colors duration-200 ${
-                selectedVariant === variant
-                  ? "border-b-2 border-blue-500 text-blue-500"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
-              }`}
-            >
-              {variant.charAt(0).toUpperCase() + variant.slice(1)}
-            </button>
-          ))}
-        </div>
-
         {/* Preview/Code Section */}
         <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setActiveTab("preview")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
-                activeTab === "preview"
-                  ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-              }`}
-            >
-              <Eye className="mr-2 h-4 w-4" />
-              Preview
-            </button>
-            <button
-              onClick={() => setActiveTab("code")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
-                activeTab === "code"
-                  ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-              }`}
-            >
-              <Code className="mr-2 h-4 w-4" />
-              Code
-            </button>
+          <div className="flex items-center justify-between overflow-x-auto">
+            <div className="flex items-center space-x-2 min-w-full sm:min-w-0">
+              <button
+                onClick={() => setActiveTab("preview")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                  activeTab === "preview"
+                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
+                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+              >
+                <Eye className="mr-2 h-4 w-4" />
+                Preview
+              </button>
+              <button
+                onClick={() => setActiveTab("code")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ${
+                  activeTab === "code"
+                    ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
+                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+              >
+                <Code className="mr-2 h-4 w-4" />
+                Code
+              </button>
+            </div>
           </div>
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <div className="p-4 bg-gray-50 dark:bg-gray-900">
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                  Selected Pool: {selectedPool || "None"}
+                </div>
                 <StakingInterface
                   pools={mockPools}
                   userBalance="2.5"
-                  variant={selectedVariant}
-                  onStake={(poolId, amount) => console.log("Staking:", { poolId, amount })}
-                  onUnstake={(poolId, amount) => console.log("Unstaking:", { poolId, amount })}
+                  onStake={handleStake}
+                  onUnstake={handleUnstake}
                 />
               </div>
             ) : (
               <CodeBlock
-                code={`import { StakingInterface } from "@w3-kit/staking-interface";
-import { TOKEN_CONFIGS } from "@/config/tokens";
+                code={`import { StakingInterface } from "@/components/ui/staking-interface"
+import { useState, useCallback } from "react"
+import { TOKEN_CONFIGS } from "@/config/tokens"
 
 const pools = ${JSON.stringify(mockPools.slice(0, 1), null, 2)};
 
 export default function Page() {
+  const [selectedPool, setSelectedPool] = useState<string | null>(null);
+
+  const handleStake = useCallback((poolId: string, amount: string) => {
+    console.log("Staking:", { poolId, amount });
+    setSelectedPool(poolId);
+  }, []);
+
+  const handleUnstake = useCallback((poolId: string, amount: string) => {
+    console.log("Unstaking:", { poolId, amount });
+    setSelectedPool(null);
+  }, []);
+
   return (
-    <StakingInterface
-      pools={pools}
-      userBalance="2.5"
-      variant="${selectedVariant}"
-      onStake={(poolId, amount) => {
-        console.log("Staking:", { poolId, amount });
-      }}
-      onUnstake={(poolId, amount) => {
-        console.log("Unstaking:", { poolId, amount });
-      }}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Selected Pool: {selectedPool || "None"}
+      </div>
+      <StakingInterface
+        pools={pools}
+        userBalance="2.5"
+        onStake={handleStake}
+        onUnstake={handleUnstake}
+      />
+    </div>
   );
 }`}
                 id="component"
@@ -194,52 +192,117 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add staking-interface" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Staking Interface component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add staking-interface" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add staking utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/staking-interface" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { StakingInterface } from "@w3-kit/staking-interface";
-import { TOKEN_CONFIGS } from "@/config/tokens";
+                      code={`// components/ui/staking-interface/index.tsx
+import { StakingInterface } from "@/components/ui/staking-interface/component"
+
+export interface Token {
+  symbol: string;
+  logoURI: string;
+  decimals: number;
+}
+
+export interface StakingPool {
+  id: string;
+  name: string;
+  token: Token;
+  apr: number;
+  minStake: string;
+  lockPeriod: number;
+  totalStaked: string;
+}
+
+export interface StakingInterfaceProps {
+  pools: StakingPool[];
+  userBalance: string;
+  onStake?: (poolId: string, amount: string) => void;
+  onUnstake?: (poolId: string, amount: string) => void;
+  className?: string;
+}
+
+export { StakingInterface };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { StakingInterface } from "@/components/ui/staking-interface"
+import { useState, useCallback } from "react"
+import { TOKEN_CONFIGS } from "@/config/tokens"
 
 const pools = [
   {
-    id: '1',
-    name: 'ETH Staking Pool',
+    id: "1",
+    name: "USDC Yield Pool",
     token: {
-      symbol: TOKEN_CONFIGS.ETH.symbol,
-      logoURI: TOKEN_CONFIGS.ETH.logoURI,
-      decimals: TOKEN_CONFIGS.ETH.decimals
+      symbol: TOKEN_CONFIGS.USDC.symbol,
+      logoURI: TOKEN_CONFIGS.USDC.logoURI,
+      decimals: TOKEN_CONFIGS.USDC.decimals
     },
-    apr: 5.5,
-    minStake: '0.1',
+    apr: 8.2,
+    minStake: "100",
     lockPeriod: 30,
-    totalStaked: '1250.45'
+    totalStaked: "5000000"
   }
 ];
 
 export default function Page() {
+  const [selectedPool, setSelectedPool] = useState<string | null>(null);
+
+  const handleStake = useCallback((poolId: string, amount: string) => {
+    console.log("Staking:", { poolId, amount });
+    setSelectedPool(poolId);
+  }, []);
+
+  const handleUnstake = useCallback((poolId: string, amount: string) => {
+    console.log("Unstaking:", { poolId, amount });
+    setSelectedPool(null);
+  }, []);
+
   return (
-    <StakingInterface
-      pools={pools}
-      userBalance="2.5"
-      onStake={(poolId, amount) => {
-        console.log("Staking:", { poolId, amount });
-      }}
-      onUnstake={(poolId, amount) => {
-        console.log("Unstaking:", { poolId, amount });
-      }}
-    />
+    <div>
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Selected Pool: {selectedPool || "None"}
+      </div>
+      <StakingInterface
+        pools={pools}
+        userBalance="2.5"
+        onStake={handleStake}
+        onUnstake={handleUnstake}
+      />
+    </div>
   );
 }`}
                       id="usage"

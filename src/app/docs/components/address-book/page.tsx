@@ -140,15 +140,22 @@ export default function AddressBookPage() {
               </div>
             ) : (
               <CodeBlock
-                code={`import { AddressBook } from "@w3-kit/address-book";
+                code={`import { AddressBook } from "@/components/ui/address-book"
 
-const entries = ${JSON.stringify(addresses.slice(0, 1), null, 2)};
+const entries = [
+  {
+    id: '1',
+    name: 'Vitalik Buterin',
+    address: '0xd8dA...',
+    ensName: 'vitalik.eth',
+    notes: 'Ethereum Co-founder'
+  }
+];
 
 export default function Page() {
   return (
     <AddressBook
       entries={entries}
-      variant="${selectedVariant}"
       onAdd={(entry) => console.log("Added:", entry)}
       onEdit={(entry) => console.log("Edited:", entry)}
       onDelete={(id) => console.log("Deleted:", id)}
@@ -193,29 +200,65 @@ export default function Page() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add address-book" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Address Book component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add address-book" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/address-book" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { AddressBook } from "@w3-kit/address-book";
+                      code={`// components/ui/address-book/index.tsx
+import { AddressBook } from "@/components/ui/address-book/component"
+
+export interface AddressEntry {
+  id: string;
+  name: string;
+  address: string;
+  ensName?: string;
+  avatar?: string;
+  notes?: string;
+}
+
+export { AddressBook };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { AddressBook } from "@/components/ui/address-book"
 
 const entries = [
   {
     id: '1',
     name: 'Vitalik Buterin',
     address: '0xd8dA...',
-    ensName: 'vitalik.eth'
+    ensName: 'vitalik.eth',
+    notes: 'Ethereum Co-founder'
   }
 ];
 

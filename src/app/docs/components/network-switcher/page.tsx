@@ -40,12 +40,16 @@ const TEST_NETWORKS = [
 export default function NetworkSwitcherPage() {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
   const [installTab, setInstallTab] = useState<"cli" | "manual">("cli");
+  const [selectedChainId, setSelectedChainId] = useState<number>(1);
 
   // Update the mockData object
   const mockData = {
     networks: NETWORKS,
     testNetworks: TEST_NETWORKS,
-    onSwitch: (chainId: number) => console.log('Switching to network:', chainId)
+    onSwitch: (chainId: number) => {
+      console.log('Switching to network:', chainId);
+      setSelectedChainId(chainId);
+    }
   };
 
   return (
@@ -91,9 +95,36 @@ export default function NetworkSwitcherPage() {
 
           <div className="rounded-lg overflow-hidden">
             {activeTab === "preview" ? (
-              <NetworkSwitcher {...mockData} />
+              <div className="p-20 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                  Selected Chain ID: {selectedChainId}
+                </div>
+                <NetworkSwitcher {...mockData} />
+              </div>
             ) : (
-              <CodeBlock code={`// Component code will be here`} id="component" />
+              <CodeBlock
+                code={`import { NetworkSwitcher } from "@/components/ui/network-switcher"
+import { useState } from "react"
+import { NETWORKS, TEST_NETWORKS } from "@/components/ui/network-switcher/networks"
+
+export default function Page() {
+  const [selectedChainId, setSelectedChainId] = useState<number>(1);
+
+  const handleNetworkSwitch = (chainId: number) => {
+    console.log('Switching to network:', chainId);
+    setSelectedChainId(chainId);
+  };
+
+  return (
+    <NetworkSwitcher
+      networks={NETWORKS}
+      testNetworks={TEST_NETWORKS}
+      onSwitch={handleNetworkSwitch}
+    />
+  );
+}`}
+                id="component"
+              />
             )}
           </div>
         </div>
@@ -130,32 +161,82 @@ export default function NetworkSwitcherPage() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add network-switcher" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Network Switcher component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add network-switcher" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add network configuration utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/network-switcher" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { NetworkSwitcher } from "@w3-kit/network-switcher";
-import { NETWORKS, TEST_NETWORKS } from "@w3-kit/network-switcher/networks";
+                      code={`// components/ui/network-switcher/index.tsx
+import { NetworkSwitcher } from "@/components/ui/network-switcher/component"
+
+export interface Network {
+  name: string;
+  chainId: number;
+  symbol: string;
+  currency: string;
+  rpcUrl: string;
+  blockExplorer: string;
+  logoURI: string;
+}
+
+export interface NetworkSwitcherProps {
+  networks: Network[];
+  testNetworks?: Network[];
+  onSwitch?: (chainId: number) => void;
+  className?: string;
+}
+
+export { NetworkSwitcher };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { NetworkSwitcher } from "@/components/ui/network-switcher"
+import { useState } from "react"
+import { NETWORKS, TEST_NETWORKS } from "@/components/ui/network-switcher/networks"
 
 export default function Page() {
+  const [selectedChainId, setSelectedChainId] = useState<number>(1);
+
+  const handleNetworkSwitch = (chainId: number) => {
+    console.log('Switching to network:', chainId);
+    setSelectedChainId(chainId);
+  };
+
   return (
     <NetworkSwitcher
       networks={NETWORKS}
       testNetworks={TEST_NETWORKS}
-      onSwitch={(chainId) => {
-        console.log('Switching to network:', chainId);
-      }}
+      onSwitch={handleNetworkSwitch}
     />
   );
 }`}

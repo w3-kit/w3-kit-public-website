@@ -137,19 +137,56 @@ export default function FlashLoanExecutorPage() {
               </div>
             ) : (
               <CodeBlock
-                code={`import { FlashLoanExecutor } from "@w3-kit/flash-loan-executor";
+                code={`import { FlashLoanExecutor } from "@/components/ui/flash-loan-executor"
+import { useState } from "react"
 
-const protocols = ${JSON.stringify(mockProtocols, null, 2)};
-const tokens = ${JSON.stringify(mockTokens, null, 2)};
+// Example protocol data
+const protocols = [
+  {
+    name: "Aave",
+    logoURI: "/protocols/aave.svg",
+    address: "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9"
+  },
+  {
+    name: "dYdX",
+    logoURI: "/protocols/dydx.svg",
+    address: "0x92D6C1e31e14520e676a687F0a93788B716BEff5"
+  }
+];
 
-export default function FlashLoans() {
+// Example token data
+const tokens = [
+  {
+    symbol: "ETH",
+    logoURI: "/tokens/eth.svg",
+    decimals: 18,
+    address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+  },
+  {
+    symbol: "USDC",
+    logoURI: "/tokens/usdc.svg",
+    decimals: 6,
+    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+  }
+];
+
+export default function Page() {
+  const [flashLoans, setFlashLoans] = useState<FlashLoanData[]>([]);
+
+  const handleExecute = async (data: Omit<FlashLoanData, "id" | "timestamp">) => {
+    const newFlashLoan: FlashLoanData = {
+      ...data,
+      id: Math.random().toString(36).substr(2, 9),
+      timestamp: Date.now()
+    };
+    setFlashLoans(prev => [...prev, newFlashLoan]);
+  };
+
   return (
     <FlashLoanExecutor
       protocols={protocols}
       tokens={tokens}
-      onExecute={(data) => {
-        console.log("Executing flash loan:", data);
-      }}
+      onExecute={handleExecute}
     />
   );
 }`}
@@ -191,31 +228,114 @@ export default function FlashLoans() {
 
             <div className="mt-4">
               {installTab === "cli" ? (
-                <CodeBlock code="npx w3-kit@latest add flash-loan-executor" id="cli" />
+                <>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Run the following command to add the Flash Loan Executor component to your project:
+                  </p>
+                  <CodeBlock code="npx w3-kit@latest add flash-loan-executor" id="cli" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    This will:
+                  </p>
+                  <ul className="list-disc pl-6 mb-4 text-sm text-gray-600 dark:text-gray-400">
+                    <li>Create the component in your <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">components/ui</code> directory</li>
+                    <li>Add all necessary dependencies to your package.json</li>
+                    <li>Set up required configuration files</li>
+                    <li>Add flash loan execution utilities to your project</li>
+                  </ul>
+                </>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      1. Install the package using npm:
+                      1. Initialize W3-Kit in your project if you haven&apos;t already:
                     </p>
-                    <CodeBlock code="npm install @w3-kit/flash-loan-executor" id="npm" />
+                    <CodeBlock code="npx w3-kit@latest init" id="init" />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      2. Import and use the component:
+                      2. Copy the component to your project:
                     </p>
                     <CodeBlock
-                      code={`import { FlashLoanExecutor } from "@w3-kit/flash-loan-executor";
+                      code={`// components/ui/flash-loan-executor/index.tsx
+import { FlashLoanExecutor } from "@/components/ui/flash-loan-executor/component"
 
-export default function FlashLoans() {
+export interface Protocol {
+  name: string;
+  logoURI: string;
+  address: string;
+}
+
+export interface Token {
+  symbol: string;
+  logoURI: string;
+  decimals: number;
+  address: string;
+}
+
+export interface FlashLoanData {
+  id: string;
+  timestamp: number;
+  protocol: Protocol;
+  token: Token;
+  amount: string;
+  profit: number;
+  risk: "low" | "medium" | "high";
+}
+
+export interface FlashLoanExecutorProps {
+  protocols: Protocol[];
+  tokens: Token[];
+  onExecute: (data: Omit<FlashLoanData, "id" | "timestamp">) => void;
+}
+
+export { FlashLoanExecutor };`}
+                      id="component"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      3. Use the component in your code:
+                    </p>
+                    <CodeBlock
+                      code={`import { FlashLoanExecutor } from "@/components/ui/flash-loan-executor"
+import { useState } from "react"
+
+export default function Page() {
+  const [flashLoans, setFlashLoans] = useState<FlashLoanData[]>([]);
+
+  const protocols = [
+    {
+      name: "Aave",
+      logoURI: "/protocols/aave.svg",
+      address: "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9"
+    }
+  ];
+
+  const tokens = [
+    {
+      symbol: "ETH",
+      logoURI: "/tokens/eth.svg",
+      decimals: 18,
+      address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+    }
+  ];
+
+  const handleExecute = async (data: Omit<FlashLoanData, "id" | "timestamp">) => {
+    const newFlashLoan: FlashLoanData = {
+      ...data,
+      id: Math.random().toString(36).substr(2, 9),
+      timestamp: Date.now()
+    };
+    setFlashLoans(prev => [...prev, newFlashLoan]);
+  };
+
   return (
     <FlashLoanExecutor
       protocols={protocols}
       tokens={tokens}
-      onExecute={(data) => {
-        console.log("Executing flash loan:", data);
-      }}
+      onExecute={handleExecute}
     />
   );
 }`}
