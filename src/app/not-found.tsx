@@ -9,7 +9,7 @@ export default function NotFound() {
         <h1 className="text-9xl font-bold text-gray-900 dark:text-white">404</h1>
         <h2 className="mt-4 text-3xl font-semibold text-gray-900 dark:text-white">Page not found</h2>
         <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-lg">
-          Sorry, we couldn't find the page you're looking for. It might have been moved or doesn't exist.
+          Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been moved or doesn&apos;t exist.
         </p>
         
         <div className="mt-10 flex items-center justify-center gap-6">
