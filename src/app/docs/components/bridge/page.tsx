@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { BridgeWidget } from "./component";
+import { BridgeWidget } from "@/components/w3-kit/bridge";
 import { Code, Eye } from "lucide-react";
 import { CodeBlock } from "@/components/docs/codeBlock";
 
