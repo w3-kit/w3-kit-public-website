@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { NFTCardProps } from "./nft-card-types";
 import { formatAddress, getChainName, getExplorerUrl } from "./nft-card-utils";
 
@@ -42,9 +45,8 @@ export function NFTCard({
   if (variant === "expanded") {
     return (
       <>
-        <div
-          className={`group bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden
-            hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1
+        <Card
+          className={`group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1
             w-full max-w-[500px] mx-auto ${className}`}
           onClick={() => onNFTClick?.(nft)}
         >
@@ -53,7 +55,7 @@ export function NFTCard({
             onClick={handleImageClick}
           >
             {!isImageLoaded && !imageError && (
-              <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse" />
+              <div className="absolute inset-0 bg-muted animate-pulse" />
             )}
             {!imageError ? (
               <>
@@ -82,35 +84,37 @@ export function NFTCard({
               </>
             ) : (
               <div
-                className="absolute inset-0 bg-gray-100 dark:bg-gray-700
+                className="absolute inset-0 bg-muted
                 flex items-center justify-center rounded-t-lg"
               >
-                <span className="text-gray-400 dark:text-gray-500 animate-pulse">
+                <span className="text-muted-foreground animate-pulse">
                   Failed to load image
                 </span>
               </div>
             )}
           </div>
 
-          <div
+          <CardContent
             className="p-4 sm:p-6 transform transition-transform duration-300
             group-hover:scale-[0.98]"
           >
             <div className="flex items-center justify-between mb-4">
               <div className="transform transition-all duration-300 hover:scale-105 relative group/copy">
                 <h3
-                  className="text-xl font-bold text-gray-900 dark:text-white
+                  className="text-xl font-bold text-foreground
                   hover:text-blue-600 dark:hover:text-blue-400
                   transition-colors duration-300 pr-8"
                 >
                   {nft.name}
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={handleCopyName}
                     className="absolute right-0 top-1/2 -translate-y-1/2
                       opacity-0 group-hover/copy:opacity-100
                       transition-all duration-300
                       text-gray-400 hover:text-blue-500
-                      p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                      h-8 w-8"
                   >
                     {copySuccess ? (
                       <svg
@@ -141,11 +145,11 @@ export function NFTCard({
                         />
                       </svg>
                     )}
-                  </button>
+                  </Button>
                 </h3>
                 {nft.collection && (
                   <p
-                    className="text-sm text-gray-500 dark:text-gray-400
+                    className="text-sm text-muted-foreground
                     hover:text-gray-700 dark:hover:text-gray-300
                     transition-colors duration-300"
                   >
@@ -154,10 +158,10 @@ export function NFTCard({
                 )}
               </div>
               <span
-                className="text-sm text-gray-500 dark:text-gray-400
-                px-3 py-1 bg-gray-100 dark:bg-gray-700
+                className="text-sm text-muted-foreground
+                px-3 py-1 bg-muted
                 rounded-full transition-all duration-300
-                hover:bg-gray-200 dark:hover:bg-gray-600"
+                hover:bg-muted/80"
               >
                 #{nft.tokenId}
               </span>
@@ -174,28 +178,32 @@ export function NFTCard({
 
             <div className="flex flex-col space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-500 dark:text-gray-400">Chain</span>
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="text-muted-foreground">Chain</span>
+                <span className="font-medium text-foreground">
                   {getChainName(nft.chainId)}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-500 dark:text-gray-400">Owner</span>
+                <span className="text-muted-foreground">Owner</span>
                 <div className="flex items-center space-x-2">
-                  <button
+                  <Button
+                    variant="link"
                     onClick={handleOwnerClick}
                     className="text-sm text-blue-600 dark:text-blue-400
                       hover:text-blue-800 dark:hover:text-blue-300
                       transition-all duration-300 transform hover:scale-105
-                      truncate max-w-[250px]"
+                      truncate max-w-[250px] h-auto p-0"
                   >
                     {formatAddress(nft.owner)}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     onClick={handleExplorerClick}
                     className="text-gray-400 dark:text-gray-500
                       hover:text-gray-600 dark:hover:text-gray-300
-                      transition-all duration-300 transform hover:scale-110"
+                      transition-all duration-300 transform hover:scale-110
+                      h-8 w-8"
                   >
                     <svg
                       className="w-4 h-4"
@@ -210,28 +218,28 @@ export function NFTCard({
                         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                       />
                     </svg>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
 
             {nft.attributes && nft.attributes.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+              <div className="mt-4 pt-4 border-t border-border">
                 <div className="grid grid-cols-2 gap-2">
                   {nft.attributes.map((attr, index) => (
                     <div
                       key={index}
-                      className="bg-gray-50 dark:bg-gray-700 p-2 rounded-lg
+                      className="bg-muted p-2 rounded-lg
                         transform transition-all duration-300"
                     >
                       <p
-                        className="text-xs text-gray-500 dark:text-gray-400
+                        className="text-xs text-muted-foreground
                         transition-colors duration-300"
                       >
                         {attr.trait_type}
                       </p>
                       <p
-                        className="text-sm font-medium text-gray-900 dark:text-white
+                        className="text-sm font-medium text-foreground
                         transition-colors duration-300"
                       >
                         {attr.value}
@@ -241,60 +249,31 @@ export function NFTCard({
                 </div>
               </div>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {showImageModal && (
-          <div
-            className="fixed inset-0 bg-black/70 z-50
-              flex items-center justify-center p-4 backdrop-blur-sm"
-            onClick={() => setShowImageModal(false)}
-          >
-            <div
-              className="relative w-full max-w-4xl max-h-[90vh]
-              rounded-lg overflow-hidden transform transition-all duration-300"
-            >
-              <img
-                src={nft.image}
-                alt={nft.name}
-                className="w-full h-auto object-contain"
-                onClick={(e) => e.stopPropagation()}
-              />
-              <button
-                onClick={() => setShowImageModal(false)}
-                className="absolute top-4 right-4 p-2 rounded-full
-                  bg-black/50 hover:bg-black/70 text-white
-                  transition-all duration-300 transform hover:scale-110"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
+        <Dialog open={showImageModal} onOpenChange={setShowImageModal}>
+          <DialogContent className="max-w-4xl max-h-[90vh] p-4">
+            <img
+              src={nft.image}
+              alt={nft.name}
+              className="w-full h-auto object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </DialogContent>
+        </Dialog>
       </>
     );
   }
 
   return (
-    <div
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden h-full flex flex-col ${className}`}
+    <Card
+      className={`overflow-hidden h-full flex flex-col ${className}`}
       onClick={() => onNFTClick?.(nft)}
     >
       <div className="relative aspect-square cursor-pointer overflow-hidden">
         {!isImageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 animate-pulse" />
+          <div className="absolute inset-0 bg-muted animate-pulse" />
         )}
         {!imageError ? (
           <img
@@ -307,24 +286,26 @@ export function NFTCard({
             } transition-opacity duration-300`}
           />
         ) : (
-          <div className="absolute inset-0 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-            <span className="text-gray-400 dark:text-gray-500">
+          <div className="absolute inset-0 bg-muted flex items-center justify-center">
+            <span className="text-muted-foreground">
               Failed to load image
             </span>
           </div>
         )}
       </div>
-      <div className="p-4 flex-1 flex flex-col">
+      <CardContent className="p-4 flex-1 flex flex-col">
         <div className="relative group/copy">
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-2 truncate pr-8">
+          <h3 className="font-semibold text-foreground mb-2 truncate pr-8">
             {nft.name}
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={handleCopyName}
               className="absolute right-0 top-1/2 -translate-y-1/2
                 opacity-0 group-hover/copy:opacity-100
                 transition-all duration-300
                 text-gray-400 hover:text-blue-500
-                p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                h-8 w-8"
             >
               {copySuccess ? (
                 <svg
@@ -355,22 +336,23 @@ export function NFTCard({
                   />
                 </svg>
               )}
-            </button>
+            </Button>
           </h3>
         </div>
         <div className="flex items-center justify-between">
-          <button
+          <Button
+            variant="link"
             onClick={handleOwnerClick}
-            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 truncate max-w-[250px]"
+            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 truncate max-w-[250px] h-auto p-0"
           >
             {formatAddress(nft.owner)}
-          </button>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          </Button>
+          <span className="text-sm text-muted-foreground">
             #{nft.tokenId}
           </span>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
