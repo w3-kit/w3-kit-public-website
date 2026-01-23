@@ -1,83 +1,28 @@
+'use client';
+
 import React, { useState } from "react";
 import { ArrowUpDown, Check, Loader2, Info } from "lucide-react";
-import Image from "next/image";
+import { Network, Token, BridgeWidgetProps } from './bridge-types';
+import {
+  DEFAULT_NETWORKS,
+  DEFAULT_TOKENS,
+  DEFAULT_TOKEN_FEES,
+  buttonAnimation,
+  switchAnimation,
+  tooltipAnimation,
+} from './bridge-utils';
 
-export interface Network {
-  id: number;
-  name: string;
-  icon: string;
-}
-
-interface Token {
-  symbol: string;
-  name: string;
-  icon: string;
-  balance: string;
-  decimals: number;
-}
-
-interface BridgeProps {
-  className?: string;
-}
-
-const SUPPORTED_NETWORKS: Network[] = [
-  {
-    id: 1,
-    name: "Ethereum",
-    icon: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=040",
-  },
-  {
-    id: 137,
-    name: "Polygon",
-    icon: "https://cryptologos.cc/logos/polygon-matic-logo.svg?v=040",
-  },
-  {
-    id: 56,
-    name: "BSC",
-    icon: "https://cryptologos.cc/logos/bnb-bnb-logo.svg?v=040",
-  },
-  {
-    id: 43114,
-    name: "Avalanche",
-    icon: "https://cryptologos.cc/logos/avalanche-avax-logo.svg?v=040",
-  },
-];
-
-const AVAILABLE_TOKENS: Token[] = [
-  {
-    symbol: 'ETH',
-    name: 'Ethereum',
-    icon: 'https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=040',
-    balance: '1.234',
-    decimals: 18
-  },
-  {
-    symbol: 'USDC',
-    name: 'USD Coin',
-    icon: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=040',
-    balance: '1234.56',
-    decimals: 6
-  },
-  {
-    symbol: 'USDT',
-    name: 'Tether',
-    icon: 'https://cryptologos.cc/logos/tether-usdt-logo.svg?v=040',
-    balance: '5678.90',
-    decimals: 6
-  }
-];
-
-const TOKEN_FEES = {
-  'ETH': '0.001',
-  'USDC': '5',
-  'USDT': '5'
-} as const;
-
-export function BridgeWidget({ className = "" }: BridgeProps) {
+export function BridgeWidget({
+  className = "",
+  networks = DEFAULT_NETWORKS,
+  tokens = DEFAULT_TOKENS,
+  tokenFees = DEFAULT_TOKEN_FEES,
+  estimatedTime = "15-30",
+  onBridge,
+}: BridgeWidgetProps) {
   const [fromNetwork, setFromNetwork] = useState<Network | null>(null);
   const [toNetwork, setToNetwork] = useState<Network | null>(null);
   const [amount, setAmount] = useState<string>("");
-  const estimatedTime = "15-30";
   const [rotationDegrees, setRotationDegrees] = useState(0);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -105,9 +50,19 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
     setToNetwork(toNetwork?.id === network.id ? null : network);
   };
 
-  const handleBridgeClick = () => {
-    if (!fromNetwork || !toNetwork || !amount || isProcessing) return;
-    
+  const resetState = () => {
+    setIsComplete(false);
+    setAmount("");
+    setFromNetwork(null);
+    setToNetwork(null);
+    setSelectedToken(null);
+    setRotationDegrees(0);
+    setIsConfirming(false);
+  };
+
+  const handleBridgeClick = async () => {
+    if (!fromNetwork || !toNetwork || !selectedToken || !amount || isProcessing) return;
+
     if (!isConfirming) {
       setIsConfirming(true);
       return;
@@ -116,34 +71,39 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
     setIsConfirming(false);
     setIsProcessing(true);
 
-    // Simulate bridge processing
-    setTimeout(() => {
+    try {
+      if (onBridge) {
+        await onBridge({
+          fromNetwork,
+          toNetwork,
+          token: selectedToken,
+          amount,
+        });
+      } else {
+        // Simulate bridge processing if no handler provided
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+
       setIsProcessing(false);
       setIsComplete(true);
-      
+
       // Reset after showing success
-      setTimeout(() => {
-        // Reset all states
-        setIsComplete(false);
-        setAmount("");
-        setFromNetwork(null);
-        setToNetwork(null);
-        setSelectedToken(null);
-        setRotationDegrees(0);
-        setIsConfirming(false);
-      }, 2000);
-    }, 2000);
+      setTimeout(resetState, 2000);
+    } catch {
+      setIsProcessing(false);
+      setIsConfirming(false);
+    }
   };
 
   const isValid = fromNetwork && toNetwork && selectedToken && amount && Number(amount) > 0;
 
   const getEstimatedFee = () => {
     if (!selectedToken) return '---';
-    return `${TOKEN_FEES[selectedToken.symbol as keyof typeof TOKEN_FEES]} ${selectedToken.symbol}`;
+    return `${tokenFees[selectedToken.symbol] || '0'} ${selectedToken.symbol}`;
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl shadow-lg 
+    <div className={`bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-2xl shadow-lg
       p-3 xs:p-4 sm:p-6 max-w-2xl w-full mx-auto ${className}`}
     >
       <div className="space-y-3 xs:space-y-4 sm:space-y-6">
@@ -157,20 +117,20 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
             From Network
           </label>
           <div className="grid grid-cols-2 gap-1.5 xs:gap-2 sm:gap-4 items-center">
-            {SUPPORTED_NETWORKS.map((network) => (
+            {networks.map((network) => (
               <button
                 key={network.id}
                 onClick={() => handleFromNetworkSelect(network)}
                 disabled={toNetwork?.id === network.id}
-                className={`p-1.5 xs:p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center 
-                  sm:space-x-2 space-y-1 sm:space-y-0 transition-all duration-300 active:scale-95
+                className={`p-1.5 xs:p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center
+                  sm:space-x-2 space-y-1 sm:space-y-0 ${buttonAnimation}
                   ${toNetwork?.id === network.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                   ${fromNetwork?.id === network.id
                     ? "bg-blue-500 text-white shadow-lg ring-2 ring-blue-500/50"
                     : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                   }`}
               >
-                <Image
+                <img
                   src={network.icon}
                   alt={network.name}
                   width={32}
@@ -190,7 +150,7 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
           <button
             onClick={handleSwitchClick}
             disabled={!fromNetwork || !toNetwork}
-            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full shadow-lg backdrop-blur-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out
+            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full shadow-lg backdrop-blur-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 ${switchAnimation}
               ${
                 !fromNetwork || !toNetwork
                   ? "opacity-50 cursor-not-allowed"
@@ -208,26 +168,26 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
           </button>
         </div>
 
-        {/* To Network - same as From Network */}
+        {/* To Network */}
         <div className="space-y-2">
           <label className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300">
             To Network
           </label>
           <div className="grid grid-cols-2 gap-2 sm:gap-4 items-center">
-            {SUPPORTED_NETWORKS.map((network) => (
+            {networks.map((network) => (
               <button
                 key={network.id}
                 onClick={() => handleToNetworkSelect(network)}
                 disabled={fromNetwork?.id === network.id}
-                className={`p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 
-                  transition-all duration-300 active:scale-95
+                className={`p-2 sm:p-3 rounded-xl flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0
+                  ${buttonAnimation}
                   ${fromNetwork?.id === network.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                   ${toNetwork?.id === network.id
                     ? "bg-blue-500 text-white shadow-lg ring-2 ring-blue-500/50"
                     : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                   }`}
               >
-                <Image
+                <img
                   src={network.icon}
                   alt={network.name}
                   width={32}
@@ -248,18 +208,18 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
             Select Token
           </label>
           <div className="grid grid-cols-3 gap-2 mb-4">
-            {AVAILABLE_TOKENS.map((token) => (
+            {tokens.map((token) => (
               <button
                 key={token.symbol}
                 onClick={() => setSelectedToken(selectedToken?.symbol === token.symbol ? null : token)}
                 className={`p-2 sm:p-3 rounded-xl flex flex-col items-center space-y-1
-                  transition-all duration-300 active:scale-95
+                  ${buttonAnimation}
                   ${selectedToken?.symbol === token.symbol
                     ? "bg-blue-500 text-white shadow-lg ring-2 ring-blue-500/50"
                     : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
                   }`}
               >
-                <Image
+                <img
                   src={token.icon}
                   alt={token.symbol}
                   width={32}
@@ -291,17 +251,17 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
                   onClick={() => setShowTooltip(!showTooltip)}
                 >
                   <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
-                  
+
                   {/* Tooltip */}
                   <div className={`absolute bottom-full left-0 mb-2 w-48 xs:w-56 sm:w-64
                     bg-gray-900 dark:bg-gray-700 text-white px-2 py-1.5 rounded-lg text-xs
-                    transition-all duration-300 pointer-events-none
+                    ${tooltipAnimation} pointer-events-none
                     ${showTooltip ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
                   >
-                    Enter the amount of {selectedToken?.symbol || 'tokens'} you want to bridge. 
+                    Enter the amount of {selectedToken?.symbol || 'tokens'} you want to bridge.
                     Make sure you have enough balance including gas fees.
-                    <div className="absolute bottom-0 left-4 translate-y-1/2 
-                      border-4 border-transparent border-t-gray-900 dark:border-t-gray-700" 
+                    <div className="absolute bottom-0 left-4 translate-y-1/2
+                      border-4 border-transparent border-t-gray-900 dark:border-t-gray-700"
                     />
                   </div>
                 </button>
@@ -323,15 +283,15 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               disabled={!selectedToken}
-              className="w-full bg-gray-100 dark:bg-gray-700 outline-none 
-                text-sm xs:text-base sm:text-lg font-medium 
-                p-2.5 xs:p-3 sm:p-4 pr-16 rounded-xl 
+              className="w-full bg-gray-100 dark:bg-gray-700 outline-none
+                text-sm xs:text-base sm:text-lg font-medium
+                p-2.5 xs:p-3 sm:p-4 pr-16 rounded-xl
                 transition-all duration-300 focus:ring-2 focus:ring-blue-500
                 disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="0.0"
             />
             {selectedToken && (
-              <div className="absolute right-12 top-1/2 -translate-y-1/2 
+              <div className="absolute right-12 top-1/2 -translate-y-1/2
                 text-gray-500 dark:text-gray-400 text-sm xs:text-base"
               >
                 {selectedToken.symbol}
@@ -341,8 +301,8 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
         </div>
 
         {/* Estimated Info */}
-        <div className="bg-gray-100 dark:bg-gray-700 
-          p-2.5 xs:p-3 sm:p-4 rounded-xl space-y-2 
+        <div className="bg-gray-100 dark:bg-gray-700
+          p-2.5 xs:p-3 sm:p-4 rounded-xl space-y-2
           text-xs xs:text-sm sm:text-base"
         >
           <div className="flex justify-between items-center">
@@ -361,10 +321,10 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
         <button
           onClick={handleBridgeClick}
           disabled={!isValid || isProcessing}
-          className={`w-full py-2.5 xs:py-3 sm:py-4 px-4 rounded-xl font-medium text-white 
+          className={`w-full py-2.5 xs:py-3 sm:py-4 px-4 rounded-xl font-medium text-white
             transition-all duration-300 relative overflow-hidden
-            ${!isValid 
-              ? 'bg-blue-500/50 cursor-not-allowed' 
+            ${!isValid
+              ? 'bg-blue-500/50 cursor-not-allowed'
               : isConfirming
                 ? 'bg-yellow-500 hover:bg-yellow-600'
                 : isProcessing
@@ -374,7 +334,7 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
                     : 'bg-blue-500 hover:bg-blue-600 active:scale-[0.98]'
             }`}
         >
-          <div className={`flex items-center justify-center gap-2 
+          <div className={`flex items-center justify-center gap-2
             transition-all duration-300
             ${isProcessing ? 'opacity-0' : 'opacity-100'}`}
           >
@@ -413,7 +373,7 @@ export function BridgeWidget({ className = "" }: BridgeProps) {
         {isConfirming && (
           <button
             onClick={() => setIsConfirming(false)}
-            className="mt-2 w-full py-2 px-4 rounded-xl font-medium text-gray-600 dark:text-gray-400 
+            className="mt-2 w-full py-2 px-4 rounded-xl font-medium text-gray-600 dark:text-gray-400
               bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600
               transition-all duration-300 active:scale-[0.98]"
           >
