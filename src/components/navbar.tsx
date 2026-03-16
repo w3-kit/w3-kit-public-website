@@ -252,6 +252,14 @@ export function Navbar() {
               Docs
             </Link>
 
+            {/* Showcase Link */}
+            <Link
+              href="/showcase"
+              className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >
+              Showcase
+            </Link>
+
             {/* Components Dropdown */}
             <div className="relative dropdown-container group">
               <button className="flex items-center space-x-1 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
