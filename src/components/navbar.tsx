@@ -153,15 +153,6 @@ export function Navbar() {
               </Link>
             </NavigationMenuPrimitive.Item>
 
-            {/* Showcase — direct link */}
-            <NavigationMenuPrimitive.Item>
-              <Link href="/showcase" passHref legacyBehavior>
-                <NavigationMenuPrimitive.Link className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 ease-in-out rounded-md">
-                  Showcase
-                </NavigationMenuPrimitive.Link>
-              </Link>
-            </NavigationMenuPrimitive.Item>
-
             {/* Resources — mega menu trigger */}
             <NavigationMenuPrimitive.Item>
               <NavigationMenuPrimitive.Trigger className="group flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 ease-in-out rounded-md">
@@ -331,11 +322,6 @@ export function Navbar() {
               {/* Docs direct link */}
               <Link href="/docs/installation" onClick={() => setIsMobileMenuOpen(false)} className="block py-3 text-sm font-medium text-gray-900 dark:text-white">
                 Docs
-              </Link>
-
-              {/* Showcase direct link */}
-              <Link href="/showcase" onClick={() => setIsMobileMenuOpen(false)} className="block py-3 text-sm font-medium text-gray-900 dark:text-white">
-                Showcase
               </Link>
 
               {/* Resources accordion */}
