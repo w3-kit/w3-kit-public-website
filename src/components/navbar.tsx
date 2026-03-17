@@ -13,7 +13,6 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { useThemeContext } from "@/providers/ThemeProvider";
 import { getComponentList } from "@/config/docs";
 import { useGitHubStars } from "@/hooks/useGitHubStars";
@@ -128,45 +127,41 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Desktop Navigation — Radix NavigationMenu */}
-        <NavigationMenuPrimitive.Root className="hidden md:flex ml-8 relative z-50">
-          <NavigationMenuPrimitive.List className="flex items-center space-x-1">
-            {/* Components — mega menu trigger */}
-            <NavigationMenuPrimitive.Item>
-              <NavigationMenuPrimitive.Trigger className="group flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 ease-in-out rounded-md">
-                Components
-                <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-              </NavigationMenuPrimitive.Trigger>
-              <NavigationMenuPrimitive.Content forceMount className="data-[state=closed]:hidden absolute left-0 top-full w-screen bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg animate-slide-down">
+        {/* Desktop Navigation — CSS hover dropdowns */}
+        <nav className="hidden md:flex ml-8 items-center space-x-1">
+          {/* Components — hover mega menu */}
+          <div className="relative group">
+            <button className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 ease-in-out rounded-md">
+              Components
+              <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+            </button>
+            <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-150 absolute left-0 top-full pt-2 z-50" style={{ left: 'calc(-50vw + 50%)' , width: '100vw' }}>
+              <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg">
                 <div className="mx-auto max-w-7xl">
                   <ComponentsMegaMenu />
                 </div>
-              </NavigationMenuPrimitive.Content>
-            </NavigationMenuPrimitive.Item>
+              </div>
+            </div>
+          </div>
 
-            {/* Docs — direct link */}
-            <NavigationMenuPrimitive.Item>
-              <Link href="/docs/installation" passHref legacyBehavior>
-                <NavigationMenuPrimitive.Link className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 ease-in-out rounded-md">
-                  Docs
-                </NavigationMenuPrimitive.Link>
-              </Link>
-            </NavigationMenuPrimitive.Item>
+          {/* Docs — direct link */}
+          <Link href="/docs/installation" className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 ease-in-out rounded-md">
+            Docs
+          </Link>
 
-            {/* Resources — mega menu trigger */}
-            <NavigationMenuPrimitive.Item>
-              <NavigationMenuPrimitive.Trigger className="group flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 ease-in-out rounded-md">
-                Resources
-                <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-              </NavigationMenuPrimitive.Trigger>
-              <NavigationMenuPrimitive.Content forceMount className="data-[state=closed]:hidden absolute left-0 top-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg animate-slide-down rounded-b-lg">
+          {/* Resources — hover mega menu */}
+          <div className="relative group">
+            <button className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 ease-in-out rounded-md">
+              Resources
+              <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+            </button>
+            <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-150 absolute left-0 top-full pt-2 z-50">
+              <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg rounded-lg">
                 <ResourcesMegaMenu />
-              </NavigationMenuPrimitive.Content>
-            </NavigationMenuPrimitive.Item>
-          </NavigationMenuPrimitive.List>
-
-          <NavigationMenuPrimitive.Viewport className="hidden" />
-        </NavigationMenuPrimitive.Root>
+              </div>
+            </div>
+          </div>
+        </nav>
 
         {/* Right side actions */}
         <div className="ml-auto flex items-center space-x-4">
