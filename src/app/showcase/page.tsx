@@ -15,7 +15,6 @@ import { NFTCollectionGrid } from "@/components/w3-kit/nft-collection-grid";
 import { TokenSwapWidget } from "@/components/w3-kit/token-swap";
 import { BridgeWidget } from "@/components/w3-kit/bridge";
 import { NetworkSwitcher } from "@/components/w3-kit/network-switcher";
-import { ConnectWalletButton } from "@/components/w3-kit/connect-wallet";
 import { ContractInteraction } from "@/components/w3-kit/contract-interaction";
 import { AddressBook } from "@/components/w3-kit/address-book";
 import { StakingInterface } from "@/components/w3-kit/staking-interface";
@@ -76,12 +75,9 @@ const mockTokenCard = {
   symbol: "ETH",
   name: "Ethereum",
   balance: "1.5",
-  value: 2850.75,
   price: 1900.5,
+  priceChange24h: 2.5,
   logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=040",
-  address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-  decimals: 18,
-  chainId: 1,
 };
 
 const mockPriceData = [
@@ -123,9 +119,9 @@ const mockWalletTokens = [
 ];
 
 const mockTransactions = [
-  { hash: "0x113...abc", from: "0xabc...def", to: "0xdef...789", value: "1000000000000000000", timestamp: Math.floor(Date.now() / 1000), status: "success" as const, nonce: 1, blockNumber: 12345678 },
-  { hash: "0x456...def", from: "0x789...123", to: "0xfed...456", value: "500000000000000000", timestamp: Math.floor(Date.now() / 1000) - 3600, status: "pending" as const, nonce: 2, blockNumber: 12345679 },
-  { hash: "0x789...ghi", from: "0xabc...def", to: "0x123...456", value: "2500000000000000000", timestamp: Math.floor(Date.now() / 1000) - 7200, status: "failed" as const, nonce: 3, blockNumber: 12345680 },
+  { hash: "0x113...abc", from: "0xabc...def", to: "0xdef...789", value: "1000000000000000000", timestamp: Math.floor(Date.now() / 1000), status: "success" as const, type: "send" as const, nonce: 1, blockNumber: 12345678 },
+  { hash: "0x456...def", from: "0x789...123", to: "0xfed...456", value: "500000000000000000", timestamp: Math.floor(Date.now() / 1000) - 3600, status: "pending" as const, type: "receive" as const, nonce: 2, blockNumber: 12345679 },
+  { hash: "0x789...ghi", from: "0xabc...def", to: "0x123...456", value: "2500000000000000000", timestamp: Math.floor(Date.now() / 1000) - 7200, status: "failed" as const, type: "send" as const, nonce: 3, blockNumber: 12345680 },
 ];
 
 const mockNFTCollection = [
@@ -167,8 +163,8 @@ const mockAirdrops = [
 ];
 
 const mockSubscriptionPlans = [
-  { id: "basic", name: "Basic", price: "0.1", token: { symbol: "ETH", logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png", decimals: 18 }, interval: "monthly" as const, features: ["Basic features", "Email support", "Community access"], description: "Perfect for getting started", icon: "sparkles" as const },
-  { id: "pro", name: "Pro", price: "0.5", token: { symbol: "ETH", logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png", decimals: 18 }, interval: "monthly" as const, features: ["All Basic features", "Priority support", "Advanced analytics", "API access"], description: "Best value for most users", icon: "zap" as const, isPopular: true },
+  { id: "basic", name: "Basic", price: "0.1", priceUsd: "350", token: { symbol: "ETH", logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png", decimals: 18 }, interval: "monthly" as const, features: ["Basic features", "Email support", "Community access"], description: "Perfect for getting started", icon: "sparkles" as const },
+  { id: "pro", name: "Pro", price: "0.5", priceUsd: "1,750", token: { symbol: "ETH", logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png", decimals: 18 }, interval: "monthly" as const, features: ["All Basic features", "Priority support", "Advanced analytics", "API access"], description: "Best value for most users", icon: "zap" as const, isPopular: true },
 ];
 
 const mockDefiPositions = [
@@ -224,14 +220,14 @@ const showcaseItems: ShowcaseItem[] = [
     description: "Display NFTs with rich metadata and interactive features",
     href: "/docs/components/nft-card",
     category: "Data Display",
-    render: () => <NFTCard nft={mockNFT} variant="default" />,
+    render: () => <NFTCard nft={mockNFT} />,
   },
   {
     name: "Token Card",
     description: "Display token information with price and balance details",
     href: "/docs/components/token-card",
     category: "Data Display",
-    render: () => <TokenCard token={mockTokenCard} onClick={() => {}} />,
+    render: () => <TokenCard token={mockTokenCard} />,
   },
   {
     name: "Price Ticker",
@@ -245,28 +241,28 @@ const showcaseItems: ShowcaseItem[] = [
     description: "Searchable list of tokens with metadata and filtering",
     href: "/docs/components/token-list",
     category: "Data Display",
-    render: () => <TokenList tokens={mockTokenList} variant="list" onTokenSelect={() => {}} />,
+    render: () => <TokenList tokens={mockTokenList} />,
   },
   {
     name: "Wallet Balance",
     description: "Display wallet token balances with real-time value updates",
     href: "/docs/components/wallet-balance",
     category: "Data Display",
-    render: () => <WalletBalance tokens={mockWalletTokens} variant="default" onTokenClick={() => {}} />,
+    render: () => <WalletBalance tokens={mockWalletTokens} />,
   },
   {
     name: "Transaction History",
     description: "View and track transaction history with detailed status",
     href: "/docs/components/transaction-history",
     category: "Data Display",
-    render: () => <TransactionHistory transactions={mockTransactions} onTransactionClick={() => {}} />,
+    render: () => <TransactionHistory transactions={mockTransactions} />,
   },
   {
     name: "NFT Collection Grid",
     description: "Grid layout for displaying and managing NFT collections",
     href: "/docs/components/nft-collection-grid",
     category: "Data Display",
-    render: () => <NFTCollectionGrid nfts={mockNFTCollection} onNFTClick={() => {}} />,
+    render: () => <NFTCollectionGrid nfts={mockNFTCollection} collectionName="CryptoPunks" />,
   },
   // Inputs & Actions
   {
@@ -289,13 +285,6 @@ const showcaseItems: ShowcaseItem[] = [
     href: "/docs/components/network-switcher",
     category: "Inputs & Actions",
     render: () => <NetworkSwitcher networks={NETWORKS} testNetworks={TEST_NETWORKS} onSwitch={() => {}} />,
-  },
-  {
-    name: "Connect Wallet",
-    description: "Web3 wallet connection modal with multiple wallet options",
-    href: "/docs/components/connect-wallet",
-    category: "Inputs & Actions",
-    render: () => <ConnectWalletButton />,
   },
   {
     name: "Contract Interaction",
@@ -380,21 +369,21 @@ const showcaseItems: ShowcaseItem[] = [
     description: "Track and visualize crypto asset holdings with detailed analytics",
     href: "/docs/components/asset-portfolio",
     category: "Analytics",
-    render: () => <AssetPortfolio variant="compact" assets={mockPortfolioAssets} totalValue={15500} totalChange24h={2.8} />,
+    render: () => <AssetPortfolio assets={mockPortfolioAssets} totalValue={15500} totalChange24h={2.8} />,
   },
   {
     name: "Gas Calculator",
     description: "Calculate and estimate transaction gas costs across networks",
     href: "/docs/components/gas-calculator",
     category: "Analytics",
-    render: () => <GasCalculator />,
+    render: () => <GasCalculator ethPrice={3500} />,
   },
   {
     name: "Smart Contract Scanner",
     description: "Analyze and verify smart contracts with security checks",
     href: "/docs/components/smart-contract-scanner",
     category: "Analytics",
-    render: () => <SmartContractScanner variant="compact" />,
+    render: () => <SmartContractScanner />,
   },
   {
     name: "NFT Marketplace Aggregator",
@@ -505,9 +494,9 @@ export default function ShowcasePage() {
               key={item.name}
               className="break-inside-avoid mb-6 group"
             >
-              <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-gray-900/50">
+              <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden transition-colors duration-150 hover:border-gray-300 dark:hover:border-gray-700">
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                <div className="px-5 pt-5 pb-3">
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-gray-900 dark:text-white text-sm">
                       {item.name}
@@ -518,37 +507,30 @@ export default function ShowcasePage() {
                       </span>
                     )}
                   </div>
-                  <Link
-                    href={item.href}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 dark:hover:text-white"
-                  >
-                    View docs
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mt-1">
+                    {item.description}
+                  </p>
                 </div>
-                <p className="px-5 pb-4 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                  {item.description}
-                </p>
                 {/* Component Preview */}
                 <div className="px-3 pb-3">
-                  <div className="rounded-lg bg-gray-50 dark:bg-gray-900/50 p-4 overflow-hidden">
+                  <div className="rounded-lg bg-gray-100 dark:bg-gray-900 p-6 overflow-hidden">
                     <div className="[&>*]:max-w-full">
                       {item.render()}
                     </div>
                   </div>
                 </div>
                 {/* Footer */}
-                <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800/50 flex items-center justify-between">
+                <Link
+                  href={item.href}
+                  className="flex items-center justify-between px-5 py-3 border-t border-gray-100 dark:border-gray-800/50 transition-colors duration-150 hover:bg-gray-50 dark:hover:bg-gray-900"
+                >
                   <span className="text-[11px] text-gray-400 dark:text-gray-500 font-medium uppercase tracking-wider">
                     {item.category}
                   </span>
-                  <Link
-                    href={item.href}
-                    className="text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-                  >
-                    Documentation &rarr;
-                  </Link>
-                </div>
+                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400 inline-flex items-center gap-1">
+                    Docs <ArrowRight className="h-3 w-3" />
+                  </span>
+                </Link>
               </div>
             </div>
           ))}

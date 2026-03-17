@@ -14,18 +14,9 @@ export interface NFT {
   }[];
 }
 
-export interface GridColumns {
-  default: number;
-  sm?: number;
-  md?: number;
-  lg?: number;
-}
-
 export interface NFTCollectionGridProps {
   nfts: NFT[];
+  collectionName?: string;
   onNFTClick?: (nft: NFT) => void;
-  onOwnerClick?: (owner: string) => void;
   className?: string;
-  variant?: "default" | "expanded";
-  columns?: GridColumns;
 }
