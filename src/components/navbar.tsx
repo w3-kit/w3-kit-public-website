@@ -137,7 +137,7 @@ export function Navbar() {
                 Components
                 <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </NavigationMenuPrimitive.Trigger>
-              <NavigationMenuPrimitive.Content className="absolute left-0 top-full w-screen bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg animate-slide-down data-[state=closed]:animate-fade-out">
+              <NavigationMenuPrimitive.Content forceMount className="data-[state=closed]:hidden absolute left-0 top-full w-screen bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg animate-slide-down">
                 <div className="mx-auto max-w-7xl">
                   <ComponentsMegaMenu />
                 </div>
@@ -159,13 +159,13 @@ export function Navbar() {
                 Resources
                 <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </NavigationMenuPrimitive.Trigger>
-              <NavigationMenuPrimitive.Content className="absolute left-0 top-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg animate-slide-down data-[state=closed]:animate-fade-out rounded-b-lg">
+              <NavigationMenuPrimitive.Content forceMount className="data-[state=closed]:hidden absolute left-0 top-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-lg animate-slide-down rounded-b-lg">
                 <ResourcesMegaMenu />
               </NavigationMenuPrimitive.Content>
             </NavigationMenuPrimitive.Item>
           </NavigationMenuPrimitive.List>
 
-          <NavigationMenuPrimitive.Viewport />
+          <NavigationMenuPrimitive.Viewport className="hidden" />
         </NavigationMenuPrimitive.Root>
 
         {/* Right side actions */}
