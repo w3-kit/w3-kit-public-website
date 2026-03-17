@@ -123,7 +123,7 @@ export function ResourcesMegaMenu() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  {...("external" in item && item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className="block py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150"
                 >
                   {item.title}
