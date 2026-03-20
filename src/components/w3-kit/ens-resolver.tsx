@@ -100,7 +100,7 @@ export function ENSResolver({ onResolve, className, resolver = defaultResolver }
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {result.avatar ? (
-                    <img src={result.avatar} alt="" className="w-8 h-8 rounded-full object-cover bg-gray-200 dark:bg-gray-700" />
+                    <img src={result.avatar} alt={`Avatar for ${result.ensName || result.address}`} className="w-8 h-8 rounded-full object-cover bg-gray-200 dark:bg-gray-700" />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-medium text-gray-500 dark:text-gray-400">
                       {result.ensName.charAt(0).toUpperCase()}
