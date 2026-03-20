@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import React from "react";
@@ -9,8 +9,21 @@ import { Footer } from "@/components/footer";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { Analytics } from "@vercel/analytics/next";
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#030712" },
+  ],
+};
+
 export const metadata: Metadata = {
-  title: "Web3 UI Component Library | W3-Kit",
+  metadataBase: new URL("https://w3-kit.com"),
+  title: {
+    default: "Web3 UI Component Library | W3-Kit",
+    template: "%s | W3-Kit",
+  },
   description:
     "A modern, accessible UI component library for Web3 applications",
   authors: [{ name: "W3-Kit Team" }],
@@ -19,6 +32,22 @@ export const metadata: Metadata = {
     description:
       "A modern, accessible UI component library for Web3 applications",
     type: "website",
+    siteName: "W3-Kit",
+    locale: "en_US",
+    images: [
+      {
+        url: "/OpenGraphImage.png",
+        width: 1200,
+        height: 628,
+        alt: "W3-Kit - Web3 UI Component Library",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  verification: {
+    google: "PLACEHOLDER_VERIFICATION_CODE",
   },
 };
 
