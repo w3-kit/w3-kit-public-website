@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
   verification: {
-    google: "PLACEHOLDER_VERIFICATION_CODE",
+    google: "XolRY9ebbta-f_Gium7DeblgQYR9UbS04VlEPHIJfxA",
   },
 };
 
