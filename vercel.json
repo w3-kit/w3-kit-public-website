@@ -1,4 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "ui.w3-kit.com" }],
+      "destination": "/ui/:path*"
+    }
+  ]
 }

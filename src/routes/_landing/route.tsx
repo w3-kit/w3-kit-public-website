@@ -5,12 +5,5 @@ export const Route = createFileRoute("/_landing")({
 });
 
 function LandingLayout() {
-  return (
-    <div>
-      <header>w3-kit</header>
-      <main>
-        <Outlet />
-      </main>
-    </div>
-  );
+  return <Outlet />;
 }
