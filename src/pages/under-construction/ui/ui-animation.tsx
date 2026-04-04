@@ -1,4 +1,4 @@
-import { useAnimatedSvg, STROKE, SVG_STYLE, SVG_VIEWBOX } from "../../shared/lib/animation";
+import { useAnimatedSvg, STROKE, SVG_STYLE, SVG_VIEWBOX } from "../../../shared/lib/animation";
 
 export function UiAnimation() {
   const svgRef = useAnimatedSvg((tl) => {

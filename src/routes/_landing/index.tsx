@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { UnderConstructionLayout } from "../../pages/under-construction/layout";
-import { LandingAnimation } from "../../pages/under-construction/landing-animation";
+import { UnderConstructionLayout } from "../../pages/under-construction";
+import { LandingAnimation } from "../../pages/under-construction/ui/landing-animation";
 
 export const Route = createFileRoute("/_landing/")({
   component: () => (

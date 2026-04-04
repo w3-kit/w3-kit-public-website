@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import type { Section } from "../../shared/lib/theme";
-import { PageShell } from "../../shared/ui/page-shell";
+import type { Section } from "../../../shared/lib/theme";
+import { PageShell } from "../../../widgets/page-shell";
 
 interface UnderConstructionLayoutProps {
   section: Section;

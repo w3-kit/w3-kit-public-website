@@ -1,9 +1,9 @@
-import { SiteHeader } from "../../shared/ui/site-header";
-import { SiteFooter } from "../../shared/ui/site-footer";
-import { LandingAnimation } from "../under-construction/landing-animation";
-import { UiAnimation } from "../under-construction/ui-animation";
-import { DocsAnimation } from "../under-construction/docs-animation";
-import { RegistryAnimation } from "../under-construction/registry-animation";
+import { SiteHeader } from "../../../widgets/site-header";
+import { SiteFooter } from "../../../widgets/site-footer";
+import { LandingAnimation } from "../../under-construction/ui/landing-animation";
+import { UiAnimation } from "../../under-construction/ui/ui-animation";
+import { DocsAnimation } from "../../under-construction/ui/docs-animation";
+import { RegistryAnimation } from "../../under-construction/ui/registry-animation";
 
 const sidebarSections = [
   {

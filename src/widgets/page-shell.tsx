@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { SiteHeader } from "./site-header";
 import { SiteFooter } from "./site-footer";
-import type { Section } from "../lib/theme";
+import type { Section } from "../shared/lib/theme";
 
 interface PageShellProps {
   section: Section;

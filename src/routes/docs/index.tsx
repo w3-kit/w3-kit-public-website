@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { UnderConstructionLayout } from "../../pages/under-construction/layout";
-import { DocsAnimation } from "../../pages/under-construction/docs-animation";
+import { UnderConstructionLayout } from "../../pages/under-construction";
+import { DocsAnimation } from "../../pages/under-construction/ui/docs-animation";
 
 export const Route = createFileRoute("/docs/")({
   component: () => (

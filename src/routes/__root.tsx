@@ -10,15 +10,16 @@ import "../shared/styles/tokens.css";
 
 // Mirrors constants from shared/lib/theme.ts — must stay in sync.
 // Inline script prevents flash of wrong theme (FOUWT) before React hydrates.
-import { THEME_KEY, THEME_ATTR, SYSTEM_DARK_CLASS } from "../shared/lib/theme";
+import { THEME_KEY, THEME_ATTR, SYSTEM_DARK_CLASS, DARK_CLASS } from "../shared/lib/theme";
 
 const themeScript = [
   "(function(){",
   `var t=localStorage.getItem('${THEME_KEY}')||'system';`,
-  `document.documentElement.setAttribute('${THEME_ATTR}',t);`,
-  "if(t==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches){",
-  `document.documentElement.classList.add('${SYSTEM_DARK_CLASS}');`,
-  "}",
+  "var d=document.documentElement;",
+  `d.setAttribute('${THEME_ATTR}',t);`,
+  "var isDark=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);",
+  `if(t==='system'&&isDark)d.classList.add('${SYSTEM_DARK_CLASS}');`,
+  `if(isDark)d.classList.add('${DARK_CLASS}');`,
   "})();",
 ].join("");
 

@@ -4,7 +4,7 @@ import {
   getStoredTheme,
   setTheme,
   listenToSystemTheme,
-} from "../lib/theme";
+} from "../../shared/lib/theme";
 
 const iconPaths: Record<Theme, string> = {
   system:

@@ -1,4 +1,4 @@
-import { useAnimatedSvg, STROKE, SVG_STYLE, SVG_VIEWBOX } from "../../shared/lib/animation";
+import { useAnimatedSvg, STROKE, SVG_STYLE, SVG_VIEWBOX } from "../../../shared/lib/animation";
 
 const cols = [60, 130, 200, 270, 340];
 const rows = [60, 100, 140, 180, 220, 260];

@@ -1,4 +1,4 @@
-import { useAnimatedSvg, STROKE, SVG_STYLE, SVG_VIEWBOX } from "../../shared/lib/animation";
+import { useAnimatedSvg, STROKE, SVG_STYLE, SVG_VIEWBOX } from "../../../shared/lib/animation";
 
 const lines = [
   { y: 30, w: 120, h: 4, isHeading: true },

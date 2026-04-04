@@ -1,4 +1,4 @@
-import type { Section } from "../lib/theme";
+import type { Section } from "../../shared/lib/theme";
 
 interface SiteHeaderProps {
   currentSection?: Section;

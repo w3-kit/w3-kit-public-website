@@ -4,7 +4,12 @@ export type Section = "landing" | "ui" | "docs" | "registry" | "design";
 export const THEME_KEY = "w3-theme";
 export const THEME_ATTR = "data-theme";
 export const SYSTEM_DARK_CLASS = "system-dark";
+export const DARK_CLASS = "dark"; // shadcn uses .dark for dark mode
 const DARK_MQ = "(prefers-color-scheme: dark)";
+
+function applyDarkClass(root: HTMLElement, isDark: boolean) {
+  root.classList.toggle(DARK_CLASS, isDark);
+}
 
 export function getStoredTheme(): Theme {
   if (typeof window === "undefined") return "system";
@@ -17,12 +22,12 @@ export function setTheme(theme: Theme): void {
   root.setAttribute(THEME_ATTR, theme);
 
   if (theme === "system") {
-    root.classList.toggle(
-      SYSTEM_DARK_CLASS,
-      window.matchMedia(DARK_MQ).matches
-    );
+    const prefersDark = window.matchMedia(DARK_MQ).matches;
+    root.classList.toggle(SYSTEM_DARK_CLASS, prefersDark);
+    applyDarkClass(root, prefersDark);
   } else {
     root.classList.remove(SYSTEM_DARK_CLASS);
+    applyDarkClass(root, theme === "dark");
   }
 }
 
@@ -30,7 +35,9 @@ export function listenToSystemTheme(callback: () => void): () => void {
   const mq = window.matchMedia(DARK_MQ);
   const handler = () => {
     if (getStoredTheme() === "system") {
-      document.documentElement.classList.toggle(SYSTEM_DARK_CLASS, mq.matches);
+      const root = document.documentElement;
+      root.classList.toggle(SYSTEM_DARK_CLASS, mq.matches);
+      applyDarkClass(root, mq.matches);
       callback();
     }
   };
