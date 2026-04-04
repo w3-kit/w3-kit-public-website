@@ -6,6 +6,21 @@ import {
 } from "@tanstack/react-router";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import type { ReactNode } from "react";
+import "../shared/styles/tokens.css";
+
+// Mirrors constants from shared/lib/theme.ts — must stay in sync.
+// Inline script prevents flash of wrong theme (FOUWT) before React hydrates.
+import { THEME_KEY, THEME_ATTR, SYSTEM_DARK_CLASS } from "../shared/lib/theme";
+
+const themeScript = [
+  "(function(){",
+  `var t=localStorage.getItem('${THEME_KEY}')||'system';`,
+  `document.documentElement.setAttribute('${THEME_ATTR}',t);`,
+  "if(t==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches){",
+  `document.documentElement.classList.add('${SYSTEM_DARK_CLASS}');`,
+  "}",
+  "})();",
+].join("");
 
 export const Route = createRootRoute({
   head: () => ({
@@ -32,9 +47,11 @@ function RootComponent() {
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="system">
       <head>
         <HeadContent />
+        {/* Static theme script — no user input, safe to inline */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
         {children}

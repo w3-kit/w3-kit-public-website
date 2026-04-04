@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { UnderConstruction } from "../../shared/ui/under-construction";
+import { UnderConstructionLayout } from "../../pages/under-construction/layout";
+import { DocsAnimation } from "../../pages/under-construction/docs-animation";
 
 export const Route = createFileRoute("/docs/")({
   component: () => (
-    <UnderConstruction
-      section="Documentation"
+    <UnderConstructionLayout
+      section="docs"
+      title="Documentation"
       description="Guides, recipes, and API reference."
+      animation={<DocsAnimation />}
     />
   ),
 });
