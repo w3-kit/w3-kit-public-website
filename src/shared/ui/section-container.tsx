@@ -1,5 +1,5 @@
 import type { ReactNode, ElementType, HTMLAttributes } from "react";
-import { cn } from "~/shared/lib/utils";
+import { cn } from "../lib/utils";
 
 interface SectionContainerProps extends HTMLAttributes<HTMLElement> {
   as?: ElementType;

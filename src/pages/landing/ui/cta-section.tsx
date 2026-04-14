@@ -1,8 +1,8 @@
 import { ArrowRight, BookOpen } from "lucide-react";
-import { Button } from "~/shared/ui/button";
-import { SectionContainer } from "~/shared/ui/section-container";
-import { useScrollReveal } from "~/shared/lib/use-scroll-animation";
-import { getSectionUrl } from "~/shared/lib/urls";
+import { Button } from "../../../shared/ui/button";
+import { SectionContainer } from "../../../shared/ui/section-container";
+import { useScrollReveal } from "../../../shared/lib/use-scroll-animation";
+import { getSectionUrl } from "../../../shared/lib/urls";
 
 export function CtaSection() {
   const containerRef = useScrollReveal({ y: 20 });

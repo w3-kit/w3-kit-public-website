@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import "~/shared/lib/gsap-plugins";
+import "./gsap-plugins";
 
 interface ScrollRevealOptions {
   /** Selector for elements to animate (default: "[data-reveal]") */

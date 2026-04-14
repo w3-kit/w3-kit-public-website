@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Card, CardHeader, CardTitle, CardDescription } from "~/shared/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription } from "../../../shared/ui/card";
 
 interface FeatureCardProps {
   icon: ReactNode;

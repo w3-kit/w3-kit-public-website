@@ -1,5 +1,5 @@
-import { SectionContainer } from "~/shared/ui/section-container";
-import { useScrollReveal } from "~/shared/lib/use-scroll-animation";
+import { SectionContainer } from "../../../shared/ui/section-container";
+import { useScrollReveal } from "../../../shared/lib/use-scroll-animation";
 import { CodeSnippet } from "./code-snippet";
 import { StepItem } from "./step-item";
 

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "~/shared/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../../shared/ui/card";
 
 interface EcosystemCardProps {
   icon: ReactNode;

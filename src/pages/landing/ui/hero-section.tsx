@@ -1,8 +1,8 @@
 import { ArrowRight } from "lucide-react";
-import { Button } from "~/shared/ui/button";
-import { Badge } from "~/shared/ui/badge";
-import { SectionContainer } from "~/shared/ui/section-container";
-import { useEntranceAnimation } from "~/shared/lib/use-scroll-animation";
+import { Button } from "../../../shared/ui/button";
+import { Badge } from "../../../shared/ui/badge";
+import { SectionContainer } from "../../../shared/ui/section-container";
+import { useEntranceAnimation } from "../../../shared/lib/use-scroll-animation";
 import { HeroVisual } from "./hero-visual";
 import { GitHubIcon } from "./github-icon";
 

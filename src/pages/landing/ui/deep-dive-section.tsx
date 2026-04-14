@@ -1,6 +1,6 @@
 import { Terminal, LayoutTemplate, BookMarked, Component } from "lucide-react";
-import { SectionContainer } from "~/shared/ui/section-container";
-import { useScrollReveal } from "~/shared/lib/use-scroll-animation";
+import { SectionContainer } from "../../../shared/ui/section-container";
+import { useScrollReveal } from "../../../shared/lib/use-scroll-animation";
 import { DeepDiveRow } from "./deep-dive-row";
 
 function PlaceholderVisual({ label }: { label: string }) {

@@ -1,6 +1,6 @@
-import "~/shared/lib/gsap-plugins";
+import "../../../shared/lib/gsap-plugins";
 
-import { PageShell } from "~/widgets/page-shell";
+import { PageShell } from "../../../widgets/page-shell";
 import { HeroSection } from "./hero-section";
 import { EcosystemSection } from "./ecosystem-section";
 import { QuickStartSection } from "./quick-start-section";
@@ -11,7 +11,7 @@ import { CtaSection } from "./cta-section";
 
 export function LandingPage() {
   return (
-    <PageShell section="landing">
+    <PageShell section="landing" transparentHeader>
       <HeroSection />
       <EcosystemSection />
       <QuickStartSection />

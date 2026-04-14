@@ -1,7 +1,7 @@
 import { Blocks, BookOpen, Database } from "lucide-react";
-import { SectionContainer } from "~/shared/ui/section-container";
-import { useScrollReveal } from "~/shared/lib/use-scroll-animation";
-import { getSectionUrl } from "~/shared/lib/urls";
+import { SectionContainer } from "../../../shared/ui/section-container";
+import { useScrollReveal } from "../../../shared/lib/use-scroll-animation";
+import { getSectionUrl } from "../../../shared/lib/urls";
 import { EcosystemCard } from "./ecosystem-card";
 
 const pillars = [

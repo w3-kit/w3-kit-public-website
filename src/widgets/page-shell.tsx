@@ -6,20 +6,18 @@ import type { Section } from "../shared/lib/theme";
 interface PageShellProps {
   section: Section;
   children: ReactNode;
+  /** Use transparent header that floats over content */
+  transparentHeader?: boolean;
 }
 
-export function PageShell({ section, children }: PageShellProps) {
+export function PageShell({ section, children, transparentHeader }: PageShellProps) {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background: "var(--w3-gray-100)",
-      }}
-    >
-      <SiteHeader currentSection={section} />
-      <main style={{ flex: 1 }}>{children}</main>
+    <div className="flex min-h-screen flex-col" style={{ background: "var(--w3-gray-100)" }}>
+      <SiteHeader
+        currentSection={section}
+        variant={transparentHeader ? "transparent" : "default"}
+      />
+      <main className="flex-1">{children}</main>
       <SiteFooter />
     </div>
   );

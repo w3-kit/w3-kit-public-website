@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Check, Copy } from "lucide-react";
-import { Button } from "~/shared/ui/button";
-import { Separator } from "~/shared/ui/separator";
+import { Button } from "../../../shared/ui/button";
+import { Separator } from "../../../shared/ui/separator";
 
 interface CodeSnippetProps {
   code: string;

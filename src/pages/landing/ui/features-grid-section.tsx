@@ -9,8 +9,8 @@ import {
   Puzzle,
   Zap,
 } from "lucide-react";
-import { SectionContainer } from "~/shared/ui/section-container";
-import { useScrollReveal } from "~/shared/lib/use-scroll-animation";
+import { SectionContainer } from "../../../shared/ui/section-container";
+import { useScrollReveal } from "../../../shared/lib/use-scroll-animation";
 import { FeatureCard } from "./feature-card";
 
 const features = [

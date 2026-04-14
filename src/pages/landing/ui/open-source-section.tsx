@@ -1,8 +1,8 @@
 import { Heart, Star } from "lucide-react";
 import { GitHubIcon } from "./github-icon";
-import { Button } from "~/shared/ui/button";
-import { SectionContainer } from "~/shared/ui/section-container";
-import { useScrollReveal } from "~/shared/lib/use-scroll-animation";
+import { Button } from "../../../shared/ui/button";
+import { SectionContainer } from "../../../shared/ui/section-container";
+import { useScrollReveal } from "../../../shared/lib/use-scroll-animation";
 
 export function OpenSourceSection() {
   const containerRef = useScrollReveal({ y: 30 });
