@@ -10,11 +10,11 @@ export function HeroSection() {
   const containerRef = useEntranceAnimation({ stagger: 0.18, y: 30, delay: 0.3 });
 
   return (
-    <div className="relative flex min-h-[100svh] items-center overflow-hidden">
+    <div className="relative flex min-h-[100svh] items-center overflow-hidden pb-32 md:pb-40">
       <HeroVisual />
 
-      <SectionContainer className="relative z-10 py-20 md:py-32">
-        <div ref={containerRef} className="flex max-w-2xl flex-col gap-8">
+      <SectionContainer className="relative z-10">
+        <div ref={containerRef} className="flex flex-col items-center gap-8 text-center">
           {/* Badge */}
           <div data-entrance>
             <Badge variant="outline" className="gap-2 px-3 py-1">
@@ -29,16 +29,16 @@ export function HeroSection() {
           {/* Headline */}
           <h1
             data-entrance
-            className="text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl lg:text-[72px]"
+            className="max-w-3xl text-4xl font-semibold sm:text-5xl md:text-6xl lg:text-[72px]"
             style={{
               color: "var(--w3-gray-900)",
-              lineHeight: 1,
+              lineHeight: 1.05,
               letterSpacing: "-0.03em",
             }}
           >
-            Build Web3.
+            The Web3
             <br />
-            <span style={{ color: "var(--w3-accent)" }}>Ship Fast.</span>
+            Developer Toolkit
           </h1>
 
           {/* Subtitle */}
@@ -47,12 +47,11 @@ export function HeroSection() {
             className="max-w-lg text-lg md:text-xl"
             style={{ color: "var(--w3-gray-600)", lineHeight: 1.6 }}
           >
-            Open-source components, recipes, and developer tooling for the decentralized web.
-            Everything you need to go from idea to production.
+            Ship dApps faster with typed components, recipes, and CLI tooling.
           </p>
 
           {/* CTAs */}
-          <div data-entrance className="flex flex-wrap gap-3">
+          <div data-entrance className="flex flex-wrap items-center justify-center gap-3">
             <Button
               size="lg"
               className="gap-2 px-6 py-5 text-sm"
@@ -70,7 +69,7 @@ export function HeroSection() {
               }
             >
               <GitHubIcon size={16} />
-              View on GitHub
+              GitHub
             </Button>
           </div>
 
@@ -87,7 +86,6 @@ export function HeroSection() {
             >
               npx w3-kit init
             </code>
-            <span className="text-sm text-muted-foreground">— start in seconds</span>
           </div>
         </div>
       </SectionContainer>
