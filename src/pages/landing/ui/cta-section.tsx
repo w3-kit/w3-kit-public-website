@@ -20,10 +20,11 @@ export function CtaSection() {
         {/* Card */}
         <div
           data-reveal
-          className="relative flex flex-col items-center gap-6 rounded-2xl px-8 py-16 text-center md:px-16 md:py-20"
+          className="relative flex flex-col items-center gap-6 rounded-2xl px-8 py-16 text-center backdrop-blur-xl md:px-16 md:py-20"
           style={{
-            background: "var(--w3-surface-translucent)",
-            border: "1px solid var(--w3-border-subtle)",
+            background: "var(--w3-glass-bg)",
+            border: "1px solid var(--w3-glass-border)",
+            boxShadow: "var(--w3-glass-shadow)",
           }}
         >
           <h2
@@ -37,7 +38,7 @@ export function CtaSection() {
             className="max-w-md text-base"
             style={{ color: "var(--w3-gray-600)", lineHeight: 1.6 }}
           >
-            Free and open source. MIT licensed.
+            Open source and free forever.
             <br />
             Start shipping in minutes.
           </p>

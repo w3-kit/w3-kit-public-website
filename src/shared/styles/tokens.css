@@ -62,6 +62,12 @@
   );
   --w3-glow-accent: rgba(85, 84, 217, 0.15);
 
+  /* Glass / Liquid glass */
+  --w3-glass-bg: rgba(255, 255, 255, 0.45);
+  --w3-glass-border: rgba(255, 255, 255, 0.6);
+  --w3-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  --w3-glass-inner-bg: rgba(255, 255, 255, 0.55);
+
   font-family:
     "Geist Sans",
     system-ui,
@@ -128,6 +134,12 @@
     transparent 60%
   );
   --w3-glow-accent: rgba(85, 84, 217, 0.25);
+
+  /* Glass / Liquid glass */
+  --w3-glass-bg: rgba(255, 255, 255, 0.04);
+  --w3-glass-border: rgba(255, 255, 255, 0.08);
+  --w3-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --w3-glass-inner-bg: rgba(255, 255, 255, 0.06);
 }
 
 @layer base {

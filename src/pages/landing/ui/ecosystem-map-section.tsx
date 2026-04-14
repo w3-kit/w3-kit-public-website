@@ -69,10 +69,11 @@ export function EcosystemMapSection() {
               <a
                 key={sub.section}
                 href={getSectionUrl(sub.section)}
-                className="group flex flex-col items-center gap-2 rounded-xl p-5 transition-all duration-200 hover:scale-[1.03]"
+                className="group flex flex-col items-center gap-2 rounded-xl p-5 backdrop-blur-xl transition-all duration-200 hover:scale-[1.03]"
                 style={{
-                  background: "var(--w3-surface-translucent)",
-                  border: "1px solid var(--w3-border-subtle)",
+                  background: "var(--w3-glass-bg)",
+                  border: "1px solid var(--w3-glass-border)",
+                  boxShadow: "var(--w3-glass-shadow)",
                 }}
               >
                 <span className="text-base font-semibold" style={{ color: "var(--w3-gray-900)" }}>
