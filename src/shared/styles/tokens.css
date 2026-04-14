@@ -130,39 +130,16 @@
   --w3-glow-accent: rgba(85, 84, 217, 0.25);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-h1 {
-  font-size: 48px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-h2 {
-  font-size: 32px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.15;
-}
-h3 {
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-}
-
-code,
-pre {
-  font-family: "Geist Mono", ui-monospace, monospace;
+  code,
+  pre {
+    font-family: "Geist Mono", ui-monospace, monospace;
+  }
 }
 
 @theme inline {
