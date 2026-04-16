@@ -113,7 +113,6 @@ export function ContractInteractionPreview() {
           <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>{CONTRACT.name}</span>
           <span style={{ fontSize: 11, fontWeight: 500, padding: "2px 6px", borderRadius: 5, background: "var(--w3-surface-elevated)", color: "var(--w3-gray-600)" }}>{CONTRACT.standard}</span>
         </div>
-        <span style={{ fontSize: 12, fontFamily: monoFont, color: "var(--w3-gray-500)" }}>{truncateAddress(CONTRACT.address)}</span>
       </div>
 
       {/* STEP: Actions list */}
