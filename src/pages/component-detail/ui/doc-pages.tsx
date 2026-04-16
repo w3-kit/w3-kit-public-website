@@ -99,8 +99,8 @@ function IntroductionPage() {
             { name: "Wallet", count: 5, desc: "Connect, balance, network, address book, multisig" },
             { name: "DeFi", count: 7, desc: "Swap, staking, bridge, positions, flash loans, limits, liquidity" },
             { name: "NFT", count: 3, desc: "Card, collection grid, marketplace aggregator" },
-            { name: "Data", count: 6, desc: "Portfolio, price ticker, token card, token list, transactions" },
-            { name: "Utility", count: 6, desc: "Scanner, contract interaction, ENS, gas, subscriptions, airdrop, vesting" },
+            { name: "Data", count: 5, desc: "Portfolio, price ticker, token card, token list, transactions" },
+            { name: "Utility", count: 7, desc: "Scanner, contract interaction, ENS, gas, subscriptions, airdrop, vesting" },
           ].map((cat) => (
             <div
               key={cat.name}

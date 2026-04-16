@@ -73,7 +73,7 @@ export const componentRegistry: ComponentMeta[] = [
     description: "Manage saved addresses with ENS name support, notes, and CRUD operations.",
     category: "wallet",
     tags: ["address", "ens", "contacts"],
-    hasPreview: false,
+    hasPreview: true,
     importPath: "w3-kit/address-book",
     sourceUrl: `${GITHUB_BASE}/address-book`,
     props: [
