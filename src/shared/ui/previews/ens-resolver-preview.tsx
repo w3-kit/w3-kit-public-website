@@ -136,7 +136,9 @@ export function ENSResolverPreview() {
         <div style={{ padding: "20px" }}>
           {/* ENS name */}
           <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px", borderRadius: 12, background: "var(--w3-accent-subtle)", marginBottom: 12 }}>
-            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, var(--w3-accent), #8b5cf6)", flexShrink: 0 }} />
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--w3-surface-elevated)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 600, color: "var(--w3-accent)", flexShrink: 0 }}>
+              {result.ensName.charAt(0).toUpperCase()}
+            </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 2 }}>ENS Name</div>
               <div style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>{result.ensName}</div>
