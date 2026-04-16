@@ -1,8 +1,13 @@
+import { useEffect } from "react";
+import { BarChart3, Shield, TrendingUp } from "lucide-react";
+import { domainLogo, cryptoLogo, preloadDomainLogos, preloadCryptoLogos } from "../../lib/logos";
+import { previewCard, previewHeader, monoFont } from "./_shared";
+
 const POSITIONS = [
   {
     id: "1",
-    protocol: "Aave V3",
-    type: "Lending",
+    protocol: "Aave",
+    protocolDomain: "aave.com",
     token: "ETH",
     amount: "5.24",
     value: 16892.0,
@@ -13,13 +18,24 @@ const POSITIONS = [
   {
     id: "2",
     protocol: "Compound",
-    type: "Lending",
+    protocolDomain: "compound.finance",
     token: "USDC",
     amount: "10,000",
     value: 10000.0,
     apy: 5.67,
     healthFactor: 1.48,
     risk: "medium" as const,
+  },
+  {
+    id: "3",
+    protocol: "Aave",
+    protocolDomain: "aave.com",
+    token: "WBTC",
+    amount: "0.85",
+    value: 54230.0,
+    apy: 1.23,
+    healthFactor: 2.82,
+    risk: "low" as const,
   },
 ];
 
@@ -43,44 +59,29 @@ function riskBadgeStyle(risk: "low" | "medium" | "high") {
 }
 
 export function DefiPositionPreview() {
+  useEffect(() => {
+    preloadDomainLogos([...new Set(POSITIONS.map((p) => p.protocolDomain))]);
+    preloadCryptoLogos(POSITIONS.map((p) => p.token));
+  }, []);
+
   const totalValue = POSITIONS.reduce((s, p) => s + p.value, 0);
 
   return (
-    <div
-      style={{
-        borderRadius: 12,
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
-        overflow: "hidden",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
+    <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "10px 14px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-        }}
-      >
+      <div style={{ ...previewHeader }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <BarChart3 size={16} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 14, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            DeFi Positions
+          </span>
+        </div>
         <span
           style={{
-            fontSize: 10,
-            fontWeight: 600,
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            color: "var(--w3-gray-500)",
-          }}
-        >
-          DeFi Positions
-        </span>
-        <span
-          style={{
-            fontSize: 13,
+            fontSize: 14,
             fontWeight: 600,
             color: "var(--w3-gray-900)",
+            fontFamily: monoFont,
             fontVariantNumeric: "tabular-nums",
           }}
         >
@@ -88,7 +89,7 @@ export function DefiPositionPreview() {
         </span>
       </div>
 
-      {/* Positions */}
+      {/* Position rows */}
       {POSITIONS.map((pos, i) => {
         const badge = riskBadgeStyle(pos.risk);
         const hfColor = healthColor(pos.healthFactor);
@@ -98,127 +99,83 @@ export function DefiPositionPreview() {
           <div
             key={pos.id}
             style={{
-              padding: "12px 14px",
-              borderBottom:
-                i < POSITIONS.length - 1
-                  ? "1px solid var(--w3-border-subtle)"
-                  : "none",
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "12px 16px",
+              borderTop: i > 0 ? "1px solid var(--w3-border-subtle)" : undefined,
+              cursor: "pointer",
             }}
           >
-            {/* Top row: token info + value */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: 10 }}
-              >
-                {/* Token icon */}
-                <div
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: "50%",
-                    background: "var(--w3-accent-subtle)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: "var(--w3-accent)",
-                  }}
-                >
-                  {pos.token.charAt(0)}
-                </div>
-                <div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 500,
-                        color: "var(--w3-gray-900)",
-                        fontVariantNumeric: "tabular-nums",
-                      }}
-                    >
-                      {pos.amount} {pos.token}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 500,
-                        padding: "1px 6px",
-                        borderRadius: 6,
-                        background: badge.bg,
-                        color: badge.color,
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {pos.risk}
-                    </span>
-                  </div>
-                  <span style={{ fontSize: 11, color: "var(--w3-gray-500)" }}>
-                    {pos.protocol} · {pos.type}
-                  </span>
-                </div>
-              </div>
+            {/* Protocol logo */}
+            <img
+              src={domainLogo(pos.protocolDomain, 64)}
+              alt={pos.protocol}
+              width={32}
+              height={32}
+              style={{ borderRadius: "50%", flexShrink: 0, display: "block" }}
+              loading="lazy"
+            />
 
-              <div style={{ textAlign: "right" }}>
+            {/* Token info */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span
                   style={{
                     fontSize: 13,
                     fontWeight: 500,
                     color: "var(--w3-gray-900)",
+                    fontFamily: monoFont,
                     fontVariantNumeric: "tabular-nums",
-                    display: "block",
                   }}
                 >
-                  {formatCurrency(pos.value)}
+                  {pos.amount} {pos.token}
                 </span>
                 <span
                   style={{
-                    fontSize: 11,
-                    fontVariantNumeric: "tabular-nums",
-                    color: pos.apy >= 0 ? "#22c55e" : "#ef4444",
+                    fontSize: 10,
+                    fontWeight: 500,
+                    padding: "1px 6px",
+                    borderRadius: 6,
+                    background: badge.bg,
+                    color: badge.color,
+                    textTransform: "capitalize",
                   }}
                 >
-                  +{pos.apy}% APY
+                  {pos.risk}
                 </span>
               </div>
+              <span style={{ fontSize: 11, color: "var(--w3-gray-500)" }}>
+                {pos.protocol}
+              </span>
             </div>
 
             {/* Health factor bar */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginTop: 8,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 10,
-                  fontWeight: 500,
-                  color: hfColor,
-                  fontVariantNumeric: "tabular-nums",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                HF {pos.healthFactor.toFixed(2)}
-              </span>
+            <div style={{ width: 72, flexShrink: 0 }}>
               <div
                 style={{
-                  flex: 1,
-                  height: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: 3,
+                }}
+              >
+                <Shield size={10} style={{ color: "var(--w3-gray-400)" }} />
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 500,
+                    color: hfColor,
+                    fontFamily: monoFont,
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {pos.healthFactor.toFixed(2)}
+                </span>
+              </div>
+              <div
+                style={{
+                  height: 3,
                   borderRadius: 2,
                   background: "var(--w3-glass-inner-bg)",
                   overflow: "hidden",
@@ -234,9 +191,53 @@ export function DefiPositionPreview() {
                 />
               </div>
             </div>
+
+            {/* Value + APY */}
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <span
+                style={{
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: "var(--w3-gray-900)",
+                  fontFamily: monoFont,
+                  fontVariantNumeric: "tabular-nums",
+                  display: "block",
+                }}
+              >
+                {formatCurrency(pos.value)}
+              </span>
+              <span
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 3,
+                  fontSize: 11,
+                  fontFamily: monoFont,
+                  fontVariantNumeric: "tabular-nums",
+                  color: "#22c55e",
+                }}
+              >
+                <TrendingUp size={10} />
+                {pos.apy}%
+              </span>
+            </div>
           </div>
         );
       })}
+
+      {/* Footer */}
+      <div
+        style={{
+          padding: "10px 16px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
+        <span style={{ fontSize: 12, color: "var(--w3-gray-500)" }}>
+          {POSITIONS.length} positions
+        </span>
+      </div>
     </div>
   );
 }
