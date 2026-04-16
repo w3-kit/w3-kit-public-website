@@ -12,14 +12,21 @@ interface Ticker {
 }
 
 const TICKERS: Ticker[] = [
-  { symbol: "BTC", name: "Bitcoin", price: 67_498.42, change24h: 1.87, marketCap: 1_327_000_000_000 },
+  {
+    symbol: "BTC",
+    name: "Bitcoin",
+    price: 67_498.42,
+    change24h: 1.87,
+    marketCap: 1_327_000_000_000,
+  },
   { symbol: "ETH", name: "Ethereum", price: 3_355.18, change24h: 3.12, marketCap: 403_200_000_000 },
   { symbol: "SOL", name: "Solana", price: 148.32, change24h: -2.45, marketCap: 64_800_000_000 },
   { symbol: "AVAX", name: "Avalanche", price: 35.67, change24h: -0.82, marketCap: 13_100_000_000 },
 ];
 
 function fmtPrice(n: number) {
-  if (n >= 1000) return `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if (n >= 1000)
+    return `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   return `$${n.toFixed(2)}`;
 }
 
@@ -30,7 +37,9 @@ function fmtCap(n: number) {
 }
 
 export function PriceTickerPreview() {
-  useEffect(() => { preloadCryptoLogos(TICKERS.map((t) => t.symbol)); }, []);
+  useEffect(() => {
+    preloadCryptoLogos(TICKERS.map((t) => t.symbol));
+  }, []);
 
   return (
     <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
@@ -38,9 +47,7 @@ export function PriceTickerPreview() {
       <div style={{ ...previewHeader }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <TrendingUp size={18} style={{ color: "var(--w3-accent)" }} />
-          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
-            Market
-          </span>
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Market</span>
         </div>
       </div>
 
@@ -61,8 +68,12 @@ export function PriceTickerPreview() {
                 transition: "background 0.15s",
                 cursor: "default",
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "var(--w3-accent-subtle)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLDivElement).style.background = "var(--w3-accent-subtle)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLDivElement).style.background = "transparent";
+              }}
             >
               <img
                 src={cryptoLogo(t.symbol)}
@@ -73,15 +84,37 @@ export function PriceTickerPreview() {
                 loading="lazy"
               />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "var(--w3-gray-900)",
+                    display: "block",
+                  }}
+                >
                   {t.name}
                 </span>
-                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                <span
+                  style={{
+                    fontSize: 13,
+                    color: "var(--w3-gray-600)",
+                    display: "block",
+                    marginTop: 1,
+                  }}
+                >
                   {t.symbol} &middot; {fmtCap(t.marketCap)}
                 </span>
               </div>
               <div style={{ textAlign: "right", flexShrink: 0 }}>
-                <div style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", fontFamily: monoFont, fontVariantNumeric: "tabular-nums" }}>
+                <div
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "var(--w3-gray-900)",
+                    fontFamily: monoFont,
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
                   {fmtPrice(t.price)}
                 </div>
                 <div style={{ marginTop: 3, display: "flex", justifyContent: "flex-end" }}>
@@ -110,10 +143,14 @@ export function PriceTickerPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
-        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
-          {TICKERS.length} tokens
-        </span>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>{TICKERS.length} tokens</span>
       </div>
     </div>
   );

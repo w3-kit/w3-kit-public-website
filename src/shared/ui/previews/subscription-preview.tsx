@@ -28,12 +28,7 @@ const PLANS: Plan[] = [
     price: "20",
     token: "USDC",
     interval: "mo",
-    features: [
-      "Unlimited API calls",
-      "Advanced analytics",
-      "Priority support",
-      "Custom webhooks",
-    ],
+    features: ["Unlimited API calls", "Advanced analytics", "Priority support", "Custom webhooks"],
     isPopular: true,
   },
 ];
@@ -136,9 +131,7 @@ export function SubscriptionPreview() {
                 >
                   {plan.price} {plan.token}
                 </span>
-                <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
-                  /{plan.interval}
-                </span>
+                <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>/{plan.interval}</span>
               </div>
 
               {/* Features */}
@@ -152,10 +145,7 @@ export function SubscriptionPreview() {
                 }}
               >
                 {plan.features.map((feature, i) => (
-                  <div
-                    key={i}
-                    style={{ display: "flex", alignItems: "flex-start", gap: 6 }}
-                  >
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
                     <Check
                       size={12}
                       style={{
@@ -164,7 +154,14 @@ export function SubscriptionPreview() {
                         marginTop: 2,
                       }}
                     />
-                    <span style={{ fontSize: 13, fontWeight: 400, color: "var(--w3-gray-600)", lineHeight: 1.4 }}>
+                    <span
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 400,
+                        color: "var(--w3-gray-600)",
+                        lineHeight: 1.4,
+                      }}
+                    >
                       {feature}
                     </span>
                   </div>
@@ -197,10 +194,14 @@ export function SubscriptionPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
-        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
-          2 plans available
-        </span>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>2 plans available</span>
       </div>
     </div>
   );

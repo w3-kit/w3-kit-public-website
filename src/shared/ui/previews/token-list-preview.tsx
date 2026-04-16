@@ -31,9 +31,7 @@ export function TokenListPreview() {
       <div style={{ ...previewHeader }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <List size={18} style={{ color: "var(--w3-accent)" }} />
-          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
-            Tokens
-          </span>
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Tokens</span>
           <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>{TOKENS.length}</span>
         </div>
       </div>
@@ -74,10 +72,24 @@ export function TokenListPreview() {
 
               {/* Symbol + Name */}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "var(--w3-gray-900)",
+                    display: "block",
+                  }}
+                >
                   {t.symbol}
                 </span>
-                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                <span
+                  style={{
+                    fontSize: 13,
+                    color: "var(--w3-gray-600)",
+                    display: "block",
+                    marginTop: 1,
+                  }}
+                >
                   {t.name}
                 </span>
               </div>
@@ -95,7 +107,14 @@ export function TokenListPreview() {
                 >
                   {fmtBalance(t.balance)}
                 </span>
-                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                <span
+                  style={{
+                    fontSize: 13,
+                    color: "var(--w3-gray-600)",
+                    display: "block",
+                    marginTop: 1,
+                  }}
+                >
                   {fmtCurrency(value)}
                 </span>
               </div>
@@ -105,10 +124,14 @@ export function TokenListPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
-        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
-          {TOKENS.length} tokens
-        </span>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>{TOKENS.length} tokens</span>
       </div>
     </div>
   );

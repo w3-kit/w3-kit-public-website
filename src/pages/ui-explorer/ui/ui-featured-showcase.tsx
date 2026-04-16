@@ -30,13 +30,7 @@ function getPreview(id: string) {
     case "connect-wallet":
       return <ConnectWalletButton className="w-full" />;
     case "network-switcher":
-      return (
-        <NetworkSwitcher
-          networks={DEMO_NETWORKS}
-          testNetworks={[]}
-          onSwitch={() => {}}
-        />
-      );
+      return <NetworkSwitcher networks={DEMO_NETWORKS} testNetworks={[]} onSwitch={() => {}} />;
     case "wallet-balance":
       return <WalletBalance tokens={DEMO_BALANCE_TOKENS} variant="compact" />;
     case "token-swap":
@@ -96,8 +90,7 @@ export function UiFeaturedShowcase() {
                 onClick={() => setActive(i)}
                 className="rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
                 style={{
-                  background:
-                    active === i ? "var(--w3-accent)" : "transparent",
+                  background: active === i ? "var(--w3-accent)" : "transparent",
                   color: active === i ? "#fff" : "var(--w3-gray-600)",
                 }}
               >

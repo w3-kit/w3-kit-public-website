@@ -14,10 +14,34 @@ interface MockTx {
 }
 
 const MOCK_TXS: MockTx[] = [
-  { type: "send", description: "Sent ETH", hash: "0x8a3f21b7c9e04d6f2a1b8c5d3e7f9a0b4c6d8e4b2", amount: "-0.25 ETH", status: "success" },
-  { type: "receive", description: "Received USDC", hash: "0xb1c7d4e8f2a6b9c3d5e7f0a1b4c6d8e2f4a6b9f03", amount: "+1,200 USDC", status: "success" },
-  { type: "swap", description: "Swap ETH → USDC", hash: "0xf29d6c8a3b5e7d1f4a9c2b6e8d0f3a5c7b9d7a11", amount: "0.5 ETH", status: "pending" },
-  { type: "contract", description: "Contract Call", hash: "0x3e0a7b2c9d4f6a8e1c3b5d7f9a0c2e4b6d8f0c8d5", amount: "0.01 ETH", status: "success" },
+  {
+    type: "send",
+    description: "Sent ETH",
+    hash: "0x8a3f21b7c9e04d6f2a1b8c5d3e7f9a0b4c6d8e4b2",
+    amount: "-0.25 ETH",
+    status: "success",
+  },
+  {
+    type: "receive",
+    description: "Received USDC",
+    hash: "0xb1c7d4e8f2a6b9c3d5e7f0a1b4c6d8e2f4a6b9f03",
+    amount: "+1,200 USDC",
+    status: "success",
+  },
+  {
+    type: "swap",
+    description: "Swap ETH → USDC",
+    hash: "0xf29d6c8a3b5e7d1f4a9c2b6e8d0f3a5c7b9d7a11",
+    amount: "0.5 ETH",
+    status: "pending",
+  },
+  {
+    type: "contract",
+    description: "Contract Call",
+    hash: "0x3e0a7b2c9d4f6a8e1c3b5d7f9a0c2e4b6d8f0c8d5",
+    amount: "0.01 ETH",
+    status: "success",
+  },
 ];
 
 const typeConfig: Record<TxType, { icon: typeof ArrowUpRight; color: string; bg: string }> = {
@@ -88,7 +112,14 @@ export function TransactionHistoryPreview() {
 
               {/* Description + Hash */}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "var(--w3-gray-900)",
+                    display: "block",
+                  }}
+                >
                   {tx.description}
                 </span>
                 <span
@@ -106,7 +137,14 @@ export function TransactionHistoryPreview() {
 
               {/* Amount + Status */}
               <div style={{ textAlign: "right", flexShrink: 0 }}>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "var(--w3-gray-900)",
+                    display: "block",
+                  }}
+                >
                   {tx.amount}
                 </span>
                 <span
@@ -130,7 +168,13 @@ export function TransactionHistoryPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           {MOCK_TXS.length} transactions
         </span>

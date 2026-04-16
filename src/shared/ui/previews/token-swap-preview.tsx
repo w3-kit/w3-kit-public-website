@@ -13,7 +13,9 @@ const TOKENS = [
 const RATE = 1917.5;
 
 export function TokenSwapPreview() {
-  useEffect(() => { preloadCryptoLogos(TOKENS.map((t) => t.symbol)); }, []);
+  useEffect(() => {
+    preloadCryptoLogos(TOKENS.map((t) => t.symbol));
+  }, []);
 
   const [fromIdx, setFromIdx] = useState(0);
   const [toIdx, setToIdx] = useState(1);
@@ -23,9 +25,7 @@ export function TokenSwapPreview() {
 
   const from = TOKENS[fromIdx];
   const to = TOKENS[toIdx];
-  const toAmount = amount && parseFloat(amount) > 0
-    ? (parseFloat(amount) * RATE).toFixed(2)
-    : "";
+  const toAmount = amount && parseFloat(amount) > 0 ? (parseFloat(amount) * RATE).toFixed(2) : "";
 
   const flip = () => {
     setFromIdx(toIdx);
@@ -46,7 +46,7 @@ export function TokenSwapPreview() {
     setToOpen(false);
   };
 
-  const tokenPill = (token: typeof TOKENS[number], open: boolean, onToggle: () => void) => (
+  const tokenPill = (token: (typeof TOKENS)[number], open: boolean, onToggle: () => void) => (
     <button
       onClick={onToggle}
       style={{
@@ -61,36 +61,62 @@ export function TokenSwapPreview() {
         flexShrink: 0,
       }}
     >
-      <img src={cryptoLogo(token.symbol)} alt="" width={20} height={20} style={{ borderRadius: "50%" }} />
-      <span style={{ fontSize: 14, fontWeight: 600, color: "var(--w3-gray-900)" }}>{token.symbol}</span>
-      <ChevronDown size={12} style={{ color: "var(--w3-gray-500)", transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "none" }} />
+      <img
+        src={cryptoLogo(token.symbol)}
+        alt=""
+        width={20}
+        height={20}
+        style={{ borderRadius: "50%" }}
+      />
+      <span style={{ fontSize: 14, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+        {token.symbol}
+      </span>
+      <ChevronDown
+        size={12}
+        style={{
+          color: "var(--w3-gray-500)",
+          transition: "transform 0.2s",
+          transform: open ? "rotate(180deg)" : "none",
+        }}
+      />
     </button>
   );
 
   const tokenDropdown = (selected: number, onSelect: (i: number) => void, exclude: number) => (
     <div style={{ marginTop: 6, display: "flex", flexDirection: "column", gap: 2 }}>
-      {TOKENS.map((t, i) => i !== exclude && (
-        <button
-          key={t.symbol}
-          onClick={() => onSelect(i)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "8px 10px",
-            borderRadius: 8,
-            border: "none",
-            background: i === selected ? "var(--w3-accent-subtle)" : "transparent",
-            cursor: "pointer",
-            width: "100%",
-            textAlign: "left",
-          }}
-        >
-          <img src={cryptoLogo(t.symbol)} alt="" width={24} height={24} style={{ borderRadius: "50%" }} />
-          <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: "var(--w3-gray-900)" }}>{t.name}</span>
-          <span style={{ fontSize: 12, color: "var(--w3-gray-500)" }}>{t.symbol}</span>
-        </button>
-      ))}
+      {TOKENS.map(
+        (t, i) =>
+          i !== exclude && (
+            <button
+              key={t.symbol}
+              onClick={() => onSelect(i)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "8px 10px",
+                borderRadius: 8,
+                border: "none",
+                background: i === selected ? "var(--w3-accent-subtle)" : "transparent",
+                cursor: "pointer",
+                width: "100%",
+                textAlign: "left",
+              }}
+            >
+              <img
+                src={cryptoLogo(t.symbol)}
+                alt=""
+                width={24}
+                height={24}
+                style={{ borderRadius: "50%" }}
+              />
+              <span style={{ flex: 1, fontSize: 13, fontWeight: 500, color: "var(--w3-gray-900)" }}>
+                {t.name}
+              </span>
+              <span style={{ fontSize: 12, color: "var(--w3-gray-500)" }}>{t.symbol}</span>
+            </button>
+          ),
+      )}
     </div>
   );
 
@@ -111,18 +137,52 @@ export function TokenSwapPreview() {
         {/* From */}
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-            <span style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const }}>From</span>
-            <span style={{ fontSize: 12, color: "var(--w3-gray-500)" }}>Balance: {from.balance}</span>
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 500,
+                color: "var(--w3-gray-500)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase" as const,
+              }}
+            >
+              From
+            </span>
+            <span style={{ fontSize: 12, color: "var(--w3-gray-500)" }}>
+              Balance: {from.balance}
+            </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, border: "1px solid var(--w3-border-subtle)" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "10px 12px",
+              borderRadius: 12,
+              border: "1px solid var(--w3-border-subtle)",
+            }}
+          >
             <input
               type="text"
               value={amount}
               onChange={(e) => /^\d*\.?\d*$/.test(e.target.value) && setAmount(e.target.value)}
               placeholder="0.0"
-              style={{ flex: 1, border: "none", background: "transparent", fontSize: 20, fontWeight: 600, color: "var(--w3-gray-900)", fontFamily: monoFont, outline: "none", width: 0 }}
+              style={{
+                flex: 1,
+                border: "none",
+                background: "transparent",
+                fontSize: 20,
+                fontWeight: 600,
+                color: "var(--w3-gray-900)",
+                fontFamily: monoFont,
+                outline: "none",
+                width: 0,
+              }}
             />
-            {tokenPill(from, fromOpen, () => { setFromOpen(!fromOpen); setToOpen(false); })}
+            {tokenPill(from, fromOpen, () => {
+              setFromOpen(!fromOpen);
+              setToOpen(false);
+            })}
           </div>
           {fromOpen && tokenDropdown(fromIdx, selectFrom, toIdx)}
         </div>
@@ -131,7 +191,18 @@ export function TokenSwapPreview() {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button
             onClick={flip}
-            style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid var(--w3-border-subtle)", background: "var(--w3-surface-elevated)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--w3-gray-600)" }}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              border: "1px solid var(--w3-border-subtle)",
+              background: "var(--w3-surface-elevated)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: "var(--w3-gray-600)",
+            }}
           >
             <ArrowDownUp size={14} />
           </button>
@@ -140,13 +211,43 @@ export function TokenSwapPreview() {
         {/* To */}
         <div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-            <span style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const }}>To</span>
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 500,
+                color: "var(--w3-gray-500)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase" as const,
+              }}
+            >
+              To
+            </span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, border: "1px solid var(--w3-border-subtle)" }}>
-            <span style={{ flex: 1, fontSize: 20, fontWeight: 600, color: toAmount ? "var(--w3-gray-900)" : "var(--w3-gray-400)", fontFamily: monoFont }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "10px 12px",
+              borderRadius: 12,
+              border: "1px solid var(--w3-border-subtle)",
+            }}
+          >
+            <span
+              style={{
+                flex: 1,
+                fontSize: 20,
+                fontWeight: 600,
+                color: toAmount ? "var(--w3-gray-900)" : "var(--w3-gray-400)",
+                fontFamily: monoFont,
+              }}
+            >
               {toAmount || "0.0"}
             </span>
-            {tokenPill(to, toOpen, () => { setToOpen(!toOpen); setFromOpen(false); })}
+            {tokenPill(to, toOpen, () => {
+              setToOpen(!toOpen);
+              setFromOpen(false);
+            })}
           </div>
           {toOpen && tokenDropdown(toIdx, selectTo, fromIdx)}
         </div>
@@ -160,7 +261,8 @@ export function TokenSwapPreview() {
             padding: 12,
             borderRadius: 12,
             border: "none",
-            background: amount && parseFloat(amount) > 0 ? "var(--w3-accent)" : "var(--w3-gray-300)",
+            background:
+              amount && parseFloat(amount) > 0 ? "var(--w3-accent)" : "var(--w3-gray-300)",
             color: "#fff",
             fontSize: 14,
             fontWeight: 600,
@@ -173,7 +275,13 @@ export function TokenSwapPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           {TOKENS.length} tokens available
         </span>

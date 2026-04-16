@@ -12,7 +12,9 @@ const networks = [
 ];
 
 export function NetworkSwitcherPreview() {
-  useEffect(() => { preloadCryptoLogos(networks.map((n) => n.ticker)); }, []);
+  useEffect(() => {
+    preloadCryptoLogos(networks.map((n) => n.ticker));
+  }, []);
 
   const [selected, setSelected] = useState(1);
   const [showTestnets, setShowTestnets] = useState(false);
@@ -31,7 +33,16 @@ export function NetworkSwitcherPreview() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {active && (
-            <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: 8, background: "var(--w3-accent-subtle)" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "3px 10px",
+                borderRadius: 8,
+                background: "var(--w3-accent-subtle)",
+              }}
+            >
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e" }} />
               <span style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-accent)" }}>
                 {active.name}
@@ -87,10 +98,24 @@ export function NetworkSwitcherPreview() {
                 loading="lazy"
               />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "var(--w3-gray-900)",
+                    display: "block",
+                  }}
+                >
                   {net.name}
                 </span>
-                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                <span
+                  style={{
+                    fontSize: 13,
+                    color: "var(--w3-gray-600)",
+                    display: "block",
+                    marginTop: 1,
+                  }}
+                >
                   {net.currency}
                 </span>
               </div>
@@ -105,7 +130,13 @@ export function NetworkSwitcherPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           {networks.length} networks
         </span>

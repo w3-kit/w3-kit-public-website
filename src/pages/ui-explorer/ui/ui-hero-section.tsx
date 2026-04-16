@@ -45,8 +45,8 @@ export function UiHeroSection() {
             className="max-w-lg text-lg md:text-xl"
             style={{ color: "var(--w3-gray-600)", lineHeight: 1.6 }}
           >
-            Production-ready React components for wallets, DeFi, NFTs, and more.
-            Copy, paste, customize.
+            Production-ready React components for wallets, DeFi, NFTs, and more. Copy, paste,
+            customize.
           </p>
 
           {/* CTAs */}

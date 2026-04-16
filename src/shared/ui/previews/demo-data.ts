@@ -33,8 +33,7 @@ export const DEMO_NETWORKS: Network[] = [
     currency: "ETH",
     rpcUrl: "https://arb1.arbitrum.io/rpc",
     blockExplorer: "https://arbiscan.io",
-    logoURI:
-      "https://assets.coingecko.com/coins/images/16547/small/photo_2023-03-29_21.47.00.jpeg",
+    logoURI: "https://assets.coingecko.com/coins/images/16547/small/photo_2023-03-29_21.47.00.jpeg",
   },
 ];
 

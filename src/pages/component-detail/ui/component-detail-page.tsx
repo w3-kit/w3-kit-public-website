@@ -50,9 +50,7 @@ const categoryLabels: Record<ComponentCategory, string> = {
   utility: "Utility",
 };
 
-const sidebarSections = (
-  Object.keys(categoryLabels) as ComponentCategory[]
-).map((cat) => ({
+const sidebarSections = (Object.keys(categoryLabels) as ComponentCategory[]).map((cat) => ({
   title: categoryLabels[cat],
   items: componentRegistry
     .filter((c) => c.category === cat)
@@ -128,15 +126,7 @@ function getPreviewContent(id: string): React.ReactNode | null {
   }
 }
 
-function SidebarLink({
-  label,
-  id,
-  active,
-}: {
-  label: string;
-  id: string;
-  active: boolean;
-}) {
+function SidebarLink({ label, id, active }: { label: string; id: string; active: boolean }) {
   return (
     <a
       href={`${getSectionUrl("ui")}/${id}`}
@@ -170,8 +160,16 @@ function Sidebar({ activeId }: { activeId: string }) {
           >
             Getting Started
           </span>
-          <SidebarLink label="Introduction" id="introduction" active={activeId === "introduction"} />
-          <SidebarLink label="Installation" id="installation" active={activeId === "installation"} />
+          <SidebarLink
+            label="Introduction"
+            id="introduction"
+            active={activeId === "introduction"}
+          />
+          <SidebarLink
+            label="Installation"
+            id="installation"
+            active={activeId === "installation"}
+          />
           <SidebarLink label="Usage" id="usage" active={activeId === "usage"} />
           <SidebarLink label="Theming" id="theming" active={activeId === "theming"} />
           <SidebarLink label="Dark Mode" id="dark-mode" active={activeId === "dark-mode"} />
@@ -274,10 +272,7 @@ export function ComponentDetailPage() {
       <UiShell>
         <div className="flex min-h-[60vh] items-center justify-center">
           <div className="text-center">
-            <h1
-              className="mb-2 text-2xl font-semibold"
-              style={{ color: "var(--w3-gray-900)" }}
-            >
+            <h1 className="mb-2 text-2xl font-semibold" style={{ color: "var(--w3-gray-900)" }}>
               Component Not Found
             </h1>
             <p className="mb-6 text-sm" style={{ color: "var(--w3-gray-600)" }}>
@@ -310,9 +305,7 @@ export function ComponentDetailPage() {
           style={{ borderColor: "var(--w3-border-subtle)" }}
         >
           <ComponentHeader component={component} />
-          <ComponentPreview component={component}>
-            {preview}
-          </ComponentPreview>
+          <ComponentPreview component={component}>{preview}</ComponentPreview>
           <PropsTable props={component.props} />
         </main>
 

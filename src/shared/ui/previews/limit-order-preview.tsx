@@ -84,9 +84,7 @@ export function LimitOrderPreview() {
             {activeCount}
           </span>
         </div>
-        <span style={{ fontSize: 12, color: "var(--w3-gray-500)" }}>
-          {ORDERS.length} orders
-        </span>
+        <span style={{ fontSize: 12, color: "var(--w3-gray-500)" }}>{ORDERS.length} orders</span>
       </div>
 
       {/* Tab bar */}

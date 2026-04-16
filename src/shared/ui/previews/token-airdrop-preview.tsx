@@ -17,7 +17,9 @@ const AIRDROPS: Airdrop[] = [
 ];
 
 export function TokenAirdropPreview() {
-  useEffect(() => { preloadCryptoLogos(AIRDROPS.map((a) => a.token)); }, []);
+  useEffect(() => {
+    preloadCryptoLogos(AIRDROPS.map((a) => a.token));
+  }, []);
 
   const [airdrops, setAirdrops] = useState(AIRDROPS);
   const [claimingId, setClaimingId] = useState<string | null>(null);
@@ -78,10 +80,26 @@ export function TokenAirdropPreview() {
 
               {/* Token info */}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "var(--w3-gray-900)",
+                    display: "block",
+                  }}
+                >
                   {airdrop.name}
                 </span>
-                <span style={{ fontSize: 13, fontWeight: 400, fontFamily: monoFont, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 400,
+                    fontFamily: monoFont,
+                    color: "var(--w3-gray-600)",
+                    display: "block",
+                    marginTop: 1,
+                  }}
+                >
                   {airdrop.amount} {airdrop.token}
                 </span>
               </div>
@@ -130,10 +148,14 @@ export function TokenAirdropPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
-        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
-          2 airdrops
-        </span>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>2 airdrops</span>
       </div>
     </div>
   );

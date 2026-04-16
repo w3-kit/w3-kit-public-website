@@ -4,10 +4,31 @@ import { cryptoLogo, preloadCryptoLogos } from "../../lib/logos";
 import { previewCard, previewHeader } from "./_shared";
 
 const tokens = [
-  { symbol: "ETH", name: "Ethereum", balance: "1.4201", price: 3834.27, change: 2.41, color: "#627EEA" },
-  { symbol: "USDC", name: "USD Coin", balance: "2500.00", price: 1.0, change: 0.01, color: "#2775CA" },
-  { symbol: "LINK", name: "Chainlink", balance: "84.50", price: 14.82, change: -1.32, color: "#2A5ADA" },
-  { symbol: "SOL", name: "Solana", balance: "12.80", price: 148.50, change: 4.22, color: "#14F195" },
+  {
+    symbol: "ETH",
+    name: "Ethereum",
+    balance: "1.4201",
+    price: 3834.27,
+    change: 2.41,
+    color: "#627EEA",
+  },
+  {
+    symbol: "USDC",
+    name: "USD Coin",
+    balance: "2500.00",
+    price: 1.0,
+    change: 0.01,
+    color: "#2775CA",
+  },
+  {
+    symbol: "LINK",
+    name: "Chainlink",
+    balance: "84.50",
+    price: 14.82,
+    change: -1.32,
+    color: "#2A5ADA",
+  },
+  { symbol: "SOL", name: "Solana", balance: "12.80", price: 148.5, change: 4.22, color: "#14F195" },
 ];
 
 const totalValue = tokens.reduce((sum, t) => sum + parseFloat(t.balance) * t.price, 0);
@@ -17,11 +38,18 @@ const weightedChange = tokens.reduce((sum, t) => {
 }, 0);
 
 function fmt(n: number) {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export function WalletBalancePreview() {
-  useEffect(() => { preloadCryptoLogos(tokens.map((t) => t.symbol)); }, []);
+  useEffect(() => {
+    preloadCryptoLogos(tokens.map((t) => t.symbol));
+  }, []);
 
   const [hovered, setHovered] = useState<number | null>(null);
 
@@ -39,22 +67,47 @@ export function WalletBalancePreview() {
 
       {/* Total value + allocation */}
       <div style={{ padding: "16px 20px 12px" }}>
-        <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 6 }}>
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 500,
+            color: "var(--w3-gray-500)",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase" as const,
+            marginBottom: 6,
+          }}
+        >
           Total Value
         </div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
           <span style={{ fontSize: 24, fontWeight: 700, color: "var(--w3-gray-900)" }}>
             {fmt(totalValue)}
           </span>
-          <span style={{ fontSize: 14, fontWeight: 500, color: weightedChange >= 0 ? "#22c55e" : "#ef4444" }}>
-            {weightedChange >= 0 ? "+" : ""}{weightedChange.toFixed(2)}%
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 500,
+              color: weightedChange >= 0 ? "#22c55e" : "#ef4444",
+            }}
+          >
+            {weightedChange >= 0 ? "+" : ""}
+            {weightedChange.toFixed(2)}%
           </span>
         </div>
 
         {/* Allocation bar */}
-        <div style={{ display: "flex", height: 6, borderRadius: 3, overflow: "hidden", marginTop: 14, gap: 3 }}>
+        <div
+          style={{
+            display: "flex",
+            height: 6,
+            borderRadius: 3,
+            overflow: "hidden",
+            marginTop: 14,
+            gap: 3,
+          }}
+        >
           {tokens.map((t, i) => {
-            const pct = (parseFloat(t.balance) * t.price / totalValue) * 100;
+            const pct = ((parseFloat(t.balance) * t.price) / totalValue) * 100;
             return (
               <div
                 key={t.symbol}
@@ -106,11 +159,25 @@ export function WalletBalancePreview() {
                   <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)" }}>
                     {t.symbol}
                   </span>
-                  <span style={{ fontSize: 12, fontWeight: 500, color: t.change >= 0 ? "#22c55e" : "#ef4444" }}>
-                    {t.change >= 0 ? "+" : ""}{t.change.toFixed(1)}%
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: t.change >= 0 ? "#22c55e" : "#ef4444",
+                    }}
+                  >
+                    {t.change >= 0 ? "+" : ""}
+                    {t.change.toFixed(1)}%
                   </span>
                 </div>
-                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                <span
+                  style={{
+                    fontSize: 13,
+                    color: "var(--w3-gray-600)",
+                    display: "block",
+                    marginTop: 1,
+                  }}
+                >
                   {t.name}
                 </span>
               </div>
@@ -128,7 +195,13 @@ export function WalletBalancePreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           {tokens.length} tokens · {fmt(totalValue)}
         </span>

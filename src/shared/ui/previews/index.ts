@@ -81,10 +81,7 @@ export type {
 export { ContractError } from "../../../pages/landing/ui/smart-contract-scanner/types";
 
 // nft-card
-export type {
-  NFT,
-  NFTCardProps,
-} from "../../../pages/landing/ui/nft-card/types";
+export type { NFT, NFTCardProps } from "../../../pages/landing/ui/nft-card/types";
 
 // ── Constant: which component IDs ship with a live preview ──────────────
 export const PREVIEW_COMPONENT_IDS = [

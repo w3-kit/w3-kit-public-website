@@ -63,13 +63,15 @@ function IntroductionPage() {
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
           w3-kit is an open-source Web3 developer toolkit that gives you{" "}
-          <strong style={{ color: "var(--w3-gray-900)" }}>27 production-ready React components</strong>{" "}
-          for wallets, DeFi, NFTs, and more. Build polished dApps without reinventing common UI patterns.
+          <strong style={{ color: "var(--w3-gray-900)" }}>
+            27 production-ready React components
+          </strong>{" "}
+          for wallets, DeFi, NFTs, and more. Build polished dApps without reinventing common UI
+          patterns.
         </p>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Built on Radix UI primitives and styled with Tailwind CSS, every component
-          is accessible, composable, and fully typed with TypeScript. Dark mode support
-          comes out of the box.
+          Built on Radix UI primitives and styled with Tailwind CSS, every component is accessible,
+          composable, and fully typed with TypeScript. Dark mode support comes out of the box.
         </p>
       </div>
 
@@ -81,9 +83,8 @@ function IntroductionPage() {
           shadcn/ui Registry
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          w3-kit is part of the shadcn/ui registry, so you can install only
-          the components you need. No bloated bundles — just pull in what your
-          project requires.
+          w3-kit is part of the shadcn/ui registry, so you can install only the components you need.
+          No bloated bundles — just pull in what your project requires.
         </p>
       </div>
 
@@ -97,10 +98,22 @@ function IntroductionPage() {
         <div className="grid gap-3 sm:grid-cols-2">
           {[
             { name: "Wallet", count: 5, desc: "Connect, balance, network, address book, multisig" },
-            { name: "DeFi", count: 7, desc: "Swap, staking, bridge, positions, flash loans, limits, liquidity" },
+            {
+              name: "DeFi",
+              count: 7,
+              desc: "Swap, staking, bridge, positions, flash loans, limits, liquidity",
+            },
             { name: "NFT", count: 3, desc: "Card, collection grid, marketplace aggregator" },
-            { name: "Data", count: 5, desc: "Portfolio, price ticker, token card, token list, transactions" },
-            { name: "Utility", count: 7, desc: "Scanner, contract interaction, ENS, gas, subscriptions, airdrop, vesting" },
+            {
+              name: "Data",
+              count: 5,
+              desc: "Portfolio, price ticker, token card, token list, transactions",
+            },
+            {
+              name: "Utility",
+              count: 7,
+              desc: "Scanner, contract interaction, ENS, gas, subscriptions, airdrop, vesting",
+            },
           ].map((cat) => (
             <div
               key={cat.name}
@@ -111,10 +124,7 @@ function IntroductionPage() {
               }}
             >
               <div className="mb-1 flex items-center gap-2">
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--w3-gray-900)" }}
-                >
+                <span className="text-sm font-semibold" style={{ color: "var(--w3-gray-900)" }}>
                   {cat.name}
                 </span>
                 <span
@@ -179,8 +189,8 @@ function InstallationPage() {
           Installation
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Get up and running with w3-kit in minutes. Choose the approach that
-          best fits your project.
+          Get up and running with w3-kit in minutes. Choose the approach that best fits your
+          project.
         </p>
       </div>
 
@@ -192,8 +202,8 @@ function InstallationPage() {
           Using the CLI (recommended)
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          The fastest way to start a new project. The CLI scaffolds a complete
-          dApp with your choice of chain and framework.
+          The fastest way to start a new project. The CLI scaffolds a complete dApp with your choice
+          of chain and framework.
         </p>
         <CodeBlock>{`npx w3-kit init my-dapp`}</CodeBlock>
       </div>
@@ -265,8 +275,8 @@ function InstallationPage() {
           Peer Dependencies
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Some components require specific Radix UI packages. These are installed
-          automatically when you add a component via the CLI.
+          Some components require specific Radix UI packages. These are installed automatically when
+          you add a component via the CLI.
         </p>
         <CodeBlock>{`@radix-ui/react-dialog
 @radix-ui/react-tabs
@@ -289,8 +299,8 @@ function UsagePage() {
           Usage
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Each w3-kit component has its own import path, keeping your bundle
-          size small and your imports explicit.
+          Each w3-kit component has its own import path, keeping your bundle size small and your
+          imports explicit.
         </p>
       </div>
 
@@ -322,8 +332,8 @@ function App() {
           Import Paths
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Every component is available from its own subpath. This lets your
-          bundler tree-shake unused components automatically.
+          Every component is available from its own subpath. This lets your bundler tree-shake
+          unused components automatically.
         </p>
         <CodeBlock>{`// Individual imports
 import { ConnectWalletButton } from "w3-kit/connect-wallet"
@@ -342,8 +352,8 @@ import { SmartContractScanner } from "w3-kit/smart-contract-scanner"`}</CodeBloc
           TypeScript
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          All components are fully typed. Props interfaces are exported alongside
-          each component so you can use them in your own types.
+          All components are fully typed. Props interfaces are exported alongside each component so
+          you can use them in your own types.
         </p>
         <CodeBlock title="types.ts">{`import type { ConnectWalletButtonProps } from "w3-kit/connect-wallet"
 import type { NFTCardProps } from "w3-kit/nft-card"
@@ -362,8 +372,8 @@ interface MyWalletButton extends ConnectWalletButtonProps {
           Composing Components
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Components are designed to work together. Here is a common pattern that
-          combines wallet connection, balance display, and a swap widget.
+          Components are designed to work together. Here is a common pattern that combines wallet
+          connection, balance display, and a swap widget.
         </p>
         <CodeBlock title="Dashboard.tsx">{`import { ConnectWalletButton } from "w3-kit/connect-wallet"
 import { WalletBalance } from "w3-kit/wallet-balance"
@@ -396,9 +406,8 @@ function ThemingPage() {
           Theming
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          w3-kit uses CSS custom properties in HSL format for full compatibility
-          with shadcn/ui theming. Component variants are powered by
-          class-variance-authority (CVA).
+          w3-kit uses CSS custom properties in HSL format for full compatibility with shadcn/ui
+          theming. Component variants are powered by class-variance-authority (CVA).
         </p>
       </div>
 
@@ -410,8 +419,8 @@ function ThemingPage() {
           Color Tokens
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          The theming system defines these CSS custom properties. Override them
-          in your global CSS to customize every component at once.
+          The theming system defines these CSS custom properties. Override them in your global CSS
+          to customize every component at once.
         </p>
         <CodeBlock title="globals.css">{`:root {
   --primary: 222.2 47.4% 11.2%;
@@ -438,8 +447,8 @@ function ThemingPage() {
           w3-kit Specific Tokens
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          In addition to the standard shadcn tokens, w3-kit defines its own design
-          tokens for grayscale and accent colors.
+          In addition to the standard shadcn tokens, w3-kit defines its own design tokens for
+          grayscale and accent colors.
         </p>
         <ul className="flex flex-col gap-2">
           {[
@@ -471,8 +480,8 @@ function ThemingPage() {
           Tailwind Configuration
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Extend your Tailwind config to use the custom properties. This pattern
-          is the same one used by shadcn/ui.
+          Extend your Tailwind config to use the custom properties. This pattern is the same one
+          used by shadcn/ui.
         </p>
         <CodeBlock title="tailwind.config.js">{`module.exports = {
   darkMode: "class",
@@ -519,9 +528,8 @@ function ThemingPage() {
           Component Variants (CVA)
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Components use class-variance-authority to define variants. You can
-          pass variant props to change a component's appearance without
-          writing custom CSS.
+          Components use class-variance-authority to define variants. You can pass variant props to
+          change a component's appearance without writing custom CSS.
         </p>
         <CodeBlock>{`<ConnectWalletButton variant="light" />
 <ConnectWalletButton variant="dark" />
@@ -543,9 +551,8 @@ function DarkModePage() {
           Dark Mode
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          w3-kit supports class-based dark mode with three modes: system, light,
-          and dark. The user's preference is stored in localStorage and applied
-          automatically on page load.
+          w3-kit supports class-based dark mode with three modes: system, light, and dark. The
+          user's preference is stored in localStorage and applied automatically on page load.
         </p>
       </div>
 
@@ -559,7 +566,7 @@ function DarkModePage() {
         <ul className="flex flex-col gap-2">
           {[
             'Tailwind is configured with darkMode: "class"',
-            "The theme is stored in the localStorage key \"w3-theme\"",
+            'The theme is stored in the localStorage key "w3-theme"',
             "Applied via a data-theme attribute and the .dark class on <html>",
             "Components use the Tailwind dark: prefix for dark mode styles",
           ].map((item) => (
@@ -586,8 +593,8 @@ function DarkModePage() {
           Dark Mode Classes
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Components use standard Tailwind dark mode utilities. Here are common
-          patterns you will see in the component source.
+          Components use standard Tailwind dark mode utilities. Here are common patterns you will
+          see in the component source.
         </p>
         <CodeBlock>{`// Common dark mode patterns in components
 className="bg-white dark:bg-gray-950"
@@ -604,8 +611,7 @@ className="bg-gray-50 dark:bg-gray-900"`}</CodeBlock>
           Theme Toggle
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Use the built-in theme utilities to toggle between modes
-          programmatically.
+          Use the built-in theme utilities to toggle between modes programmatically.
         </p>
         <CodeBlock title="theme-toggle.tsx">{`import { setTheme, getStoredTheme } from "w3-kit/theme"
 
@@ -669,8 +675,8 @@ function CliInitPage() {
           w3-kit init
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Scaffold a new Web3 project with a single command. The CLI sets up
-          your framework, chain tooling, and package manager automatically.
+          Scaffold a new Web3 project with a single command. The CLI sets up your framework, chain
+          tooling, and package manager automatically.
         </p>
       </div>
 
@@ -732,10 +738,7 @@ Options:
               >
                 {template.name}
               </span>
-              <p
-                className="mt-1 text-sm"
-                style={{ color: "var(--w3-gray-600)" }}
-              >
+              <p className="mt-1 text-sm" style={{ color: "var(--w3-gray-600)" }}>
                 {template.desc}
               </p>
             </div>
@@ -774,9 +777,8 @@ function CliAddPage() {
           w3-kit add
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Add recipes, components, or contract templates to an existing project.
-          Each recipe includes working code and optional educational output
-          explaining what it does.
+          Add recipes, components, or contract templates to an existing project. Each recipe
+          includes working code and optional educational output explaining what it does.
         </p>
       </div>
 
@@ -894,9 +896,8 @@ function McpPage() {
           MCP Server
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          The w3-kit MCP server lets AI assistants browse components, read source
-          code, extract design tokens, and generate compositions — all through
-          the Model Context Protocol.
+          The w3-kit MCP server lets AI assistants browse components, read source code, extract
+          design tokens, and generate compositions — all through the Model Context Protocol.
         </p>
       </div>
 
@@ -981,10 +982,7 @@ function McpPage() {
               >
                 {tool.name}
               </span>
-              <p
-                className="mt-1 text-sm"
-                style={{ color: "var(--w3-gray-600)" }}
-              >
+              <p className="mt-1 text-sm" style={{ color: "var(--w3-gray-600)" }}>
                 {tool.desc}
               </p>
             </div>
@@ -1035,9 +1033,9 @@ function ShadcnPage() {
           shadcn Registry
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          w3-kit is published as a shadcn/ui compatible registry. Install
-          components directly into your project using the shadcn CLI — they
-          land in your codebase as local files you fully own.
+          w3-kit is published as a shadcn/ui compatible registry. Install components directly into
+          your project using the shadcn CLI — they land in your codebase as local files you fully
+          own.
         </p>
       </div>
 
@@ -1059,8 +1057,7 @@ function ShadcnPage() {
           Installing Components
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Use the shadcn CLI to add any of the 27 components directly from the
-          w3-kit registry.
+          Use the shadcn CLI to add any of the 27 components directly from the w3-kit registry.
         </p>
         <CodeBlock>{`npx shadcn@latest add https://w3-kit.com/registry/connect-wallet`}</CodeBlock>
       </div>
@@ -1105,8 +1102,8 @@ function ShadcnPage() {
           Registry Format
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          The registry serves each component as a JSON entry following the
-          shadcn/ui registry schema.
+          The registry serves each component as a JSON entry following the shadcn/ui registry
+          schema.
         </p>
         <CodeBlock title="registry/connect-wallet.json">{`{
   "name": "connect-wallet",
@@ -1132,10 +1129,9 @@ function ShadcnPage() {
           Compatibility
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          w3-kit components are fully compatible with the shadcn/ui theming
-          system and project structure. They use the same CSS custom properties,
-          the same Tailwind config patterns, and the same file organization
-          conventions.
+          w3-kit components are fully compatible with the shadcn/ui theming system and project
+          structure. They use the same CSS custom properties, the same Tailwind config patterns, and
+          the same file organization conventions.
         </p>
       </div>
     </div>
@@ -1153,9 +1149,9 @@ function FigmaPage() {
           Figma
         </h1>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          The w3-kit Figma integration bridges design and code. Use Code Connect
-          mappings to link Figma components to their codebase counterparts, and
-          keep design tokens in sync between both environments.
+          The w3-kit Figma integration bridges design and code. Use Code Connect mappings to link
+          Figma components to their codebase counterparts, and keep design tokens in sync between
+          both environments.
         </p>
       </div>
 
@@ -1167,9 +1163,9 @@ function FigmaPage() {
           Code Connect
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Code Connect creates mappings between Figma components and their code
-          implementations. When a developer inspects a component in Figma, they
-          see the exact import path and usage code.
+          Code Connect creates mappings between Figma components and their code implementations.
+          When a developer inspects a component in Figma, they see the exact import path and usage
+          code.
         </p>
       </div>
 
@@ -1181,10 +1177,9 @@ function FigmaPage() {
           Design Tokens
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Design tokens (colors, spacing, typography, border radii) are synced
-          between Figma variables and the CSS custom properties used in code.
-          When a designer updates a token in Figma, the corresponding CSS
-          variable can be updated to match.
+          Design tokens (colors, spacing, typography, border radii) are synced between Figma
+          variables and the CSS custom properties used in code. When a designer updates a token in
+          Figma, the corresponding CSS variable can be updated to match.
         </p>
       </div>
 
@@ -1196,9 +1191,9 @@ function FigmaPage() {
           Figma MCP Integration
         </h2>
         <p className="text-base" style={{ color: "var(--w3-gray-600)" }}>
-          Use the Figma MCP server alongside the w3-kit MCP server to create
-          a design-to-code workflow. The Figma server reads designs and the
-          w3-kit server provides the component library.
+          Use the Figma MCP server alongside the w3-kit MCP server to create a design-to-code
+          workflow. The Figma server reads designs and the w3-kit server provides the component
+          library.
         </p>
         <CodeBlock title=".mcp.json">{`{
   "mcpServers": {

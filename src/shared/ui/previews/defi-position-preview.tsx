@@ -145,9 +145,7 @@ export function DefiPositionPreview() {
                   {pos.risk}
                 </span>
               </div>
-              <span style={{ fontSize: 11, color: "var(--w3-gray-500)" }}>
-                {pos.protocol}
-              </span>
+              <span style={{ fontSize: 11, color: "var(--w3-gray-500)" }}>{pos.protocol}</span>
             </div>
 
             {/* Health factor bar */}

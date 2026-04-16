@@ -272,10 +272,7 @@ export function UiHeader({ variant = "default" }: UiHeaderProps) {
               </div>
             ))}
 
-            <div
-              className="mt-2 border-t pt-3"
-              style={{ borderColor: "var(--w3-border-subtle)" }}
-            >
+            <div className="mt-2 border-t pt-3" style={{ borderColor: "var(--w3-border-subtle)" }}>
               <a
                 href={getSectionUrl("docs")}
                 className="block rounded-lg px-4 py-3 text-base font-medium transition-colors text-muted-foreground"

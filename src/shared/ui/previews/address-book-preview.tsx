@@ -4,9 +4,19 @@ import { truncateAddress } from "../../lib/format";
 import { previewCard, previewHeader, monoFont } from "./_shared";
 
 const MOCK_ENTRIES = [
-  { id: "1", name: "Vitalik", address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045", ensName: "vitalik.eth" },
+  {
+    id: "1",
+    name: "Vitalik",
+    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    ensName: "vitalik.eth",
+  },
   { id: "2", name: "Treasury", address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984" },
-  { id: "3", name: "Deployer", address: "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B", ensName: "deployer.eth" },
+  {
+    id: "3",
+    name: "Deployer",
+    address: "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
+    ensName: "deployer.eth",
+  },
 ];
 
 export function AddressBookPreview() {
@@ -17,7 +27,8 @@ export function AddressBookPreview() {
   const [newAddr, setNewAddr] = useState("");
   const [addrError, setAddrError] = useState("");
 
-  const isValidAddr = (a: string) => /^0x[a-fA-F0-9]{40}$/.test(a) || a.toLowerCase().endsWith(".eth");
+  const isValidAddr = (a: string) =>
+    /^0x[a-fA-F0-9]{40}$/.test(a) || a.toLowerCase().endsWith(".eth");
   const canAdd = newName.trim().length > 0 && newAddr.trim().length > 0 && !addrError;
 
   const handleAdd = useCallback(() => {
@@ -26,7 +37,10 @@ export function AddressBookPreview() {
       setAddrError("Invalid address or ENS name");
       return;
     }
-    setEntries((prev) => [...prev, { id: String(Date.now()), name: newName.trim(), address: newAddr.trim() }]);
+    setEntries((prev) => [
+      ...prev,
+      { id: String(Date.now()), name: newName.trim(), address: newAddr.trim() },
+    ]);
     setNewName("");
     setNewAddr("");
     setAddrError("");
@@ -71,7 +85,15 @@ export function AddressBookPreview() {
 
       {/* Add form */}
       {showAdd && (
-        <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--w3-border-subtle)", display: "flex", flexDirection: "column", gap: 10 }}>
+        <div
+          style={{
+            padding: "16px 20px",
+            borderBottom: "1px solid var(--w3-border-subtle)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
           <input
             placeholder="Name"
             value={newName}
@@ -119,15 +141,39 @@ export function AddressBookPreview() {
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
             <button
-              onClick={() => { setShowAdd(false); setNewName(""); setNewAddr(""); setAddrError(""); }}
-              style={{ padding: "8px 14px", borderRadius: 8, border: "none", background: "transparent", fontSize: 13, fontWeight: 500, color: "var(--w3-gray-600)", cursor: "pointer" }}
+              onClick={() => {
+                setShowAdd(false);
+                setNewName("");
+                setNewAddr("");
+                setAddrError("");
+              }}
+              style={{
+                padding: "8px 14px",
+                borderRadius: 8,
+                border: "none",
+                background: "transparent",
+                fontSize: 13,
+                fontWeight: 500,
+                color: "var(--w3-gray-600)",
+                cursor: "pointer",
+              }}
             >
               Cancel
             </button>
             <button
               onClick={handleAdd}
               disabled={!canAdd}
-              style={{ padding: "8px 16px", borderRadius: 8, border: "none", background: canAdd ? "var(--w3-accent)" : "var(--w3-gray-300)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: canAdd ? "pointer" : "not-allowed", opacity: canAdd ? 1 : 0.5 }}
+              style={{
+                padding: "8px 16px",
+                borderRadius: 8,
+                border: "none",
+                background: canAdd ? "var(--w3-accent)" : "var(--w3-gray-300)",
+                color: "#fff",
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: canAdd ? "pointer" : "not-allowed",
+                opacity: canAdd ? 1 : 0.5,
+              }}
             >
               Add
             </button>
@@ -149,8 +195,12 @@ export function AddressBookPreview() {
               transition: "background 0.15s",
               cursor: "default",
             }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--w3-accent-subtle)"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background = "var(--w3-accent-subtle)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background = "transparent";
+            }}
           >
             {/* Avatar */}
             <div
@@ -178,12 +228,29 @@ export function AddressBookPreview() {
                   {entry.name}
                 </span>
                 {entry.ensName && (
-                  <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 6px", borderRadius: 5, background: "var(--w3-accent-subtle)", color: "var(--w3-accent)" }}>
+                  <span
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 600,
+                      padding: "2px 6px",
+                      borderRadius: 5,
+                      background: "var(--w3-accent-subtle)",
+                      color: "var(--w3-accent)",
+                    }}
+                  >
                     ENS
                   </span>
                 )}
               </div>
-              <span style={{ fontSize: 13, color: "var(--w3-gray-600)", fontFamily: monoFont, display: "block", marginTop: 1 }}>
+              <span
+                style={{
+                  fontSize: 13,
+                  color: "var(--w3-gray-600)",
+                  fontFamily: monoFont,
+                  display: "block",
+                  marginTop: 1,
+                }}
+              >
                 {entry.ensName || truncateAddress(entry.address)}
               </span>
             </div>
@@ -192,13 +259,29 @@ export function AddressBookPreview() {
             <div style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0 }}>
               <button
                 onClick={() => handleCopy(entry.id)}
-                style={{ padding: 6, borderRadius: 6, border: "none", background: "transparent", cursor: "pointer", color: copiedId === entry.id ? "#22c55e" : "var(--w3-gray-400)", display: "flex" }}
+                style={{
+                  padding: 6,
+                  borderRadius: 6,
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  color: copiedId === entry.id ? "#22c55e" : "var(--w3-gray-400)",
+                  display: "flex",
+                }}
               >
                 {copiedId === entry.id ? <Check size={14} /> : <Copy size={14} />}
               </button>
               <button
                 onClick={() => handleDelete(entry.id)}
-                style={{ padding: 6, borderRadius: 6, border: "none", background: "transparent", cursor: "pointer", color: "var(--w3-gray-400)", display: "flex" }}
+                style={{
+                  padding: 6,
+                  borderRadius: 6,
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  color: "var(--w3-gray-400)",
+                  display: "flex",
+                }}
               >
                 <Trash2 size={14} />
               </button>
@@ -208,7 +291,13 @@ export function AddressBookPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           {entries.length} address{entries.length !== 1 ? "es" : ""}
         </span>

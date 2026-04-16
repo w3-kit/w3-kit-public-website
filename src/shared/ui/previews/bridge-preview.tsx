@@ -140,8 +140,7 @@ export function BridgePreview() {
                   }}
                   style={{
                     ...menuItemBase,
-                    background:
-                      i === idx ? "var(--w3-accent-subtle)" : "transparent",
+                    background: i === idx ? "var(--w3-accent-subtle)" : "transparent",
                   }}
                 >
                   <img
@@ -167,14 +166,19 @@ export function BridgePreview() {
       {/* Header */}
       <div style={{ ...previewHeader, justifyContent: "flex-start", gap: 10 }}>
         <Globe size={18} style={{ color: "var(--w3-accent)" }} />
-        <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
-          Bridge
-        </span>
+        <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Bridge</span>
       </div>
 
       <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 16 }}>
         {/* From / To with swap */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 12, alignItems: "end" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr auto 1fr",
+            gap: 12,
+            alignItems: "end",
+          }}
+        >
           {renderNetworkSelector("from")}
 
           <button
@@ -240,8 +244,7 @@ export function BridgePreview() {
                     }}
                     style={{
                       ...menuItemBase,
-                      background:
-                        i === tokenIdx ? "var(--w3-accent-subtle)" : "transparent",
+                      background: i === tokenIdx ? "var(--w3-accent-subtle)" : "transparent",
                     }}
                   >
                     <img
@@ -322,7 +325,13 @@ export function BridgePreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           {NETWORKS.length} networks supported
         </span>

@@ -43,10 +43,7 @@ export function ComponentCard({ component }: ComponentCardProps) {
       </div>
 
       {/* Name */}
-      <h3
-        className="text-sm font-semibold tracking-tight"
-        style={{ color: "var(--w3-gray-900)" }}
-      >
+      <h3 className="text-sm font-semibold tracking-tight" style={{ color: "var(--w3-gray-900)" }}>
         {component.name}
       </h3>
 

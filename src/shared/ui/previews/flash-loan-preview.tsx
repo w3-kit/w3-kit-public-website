@@ -27,9 +27,7 @@ export function FlashLoanPreview() {
   const protocol = PROTOCOLS[protocolIdx];
   const token = TOKENS[tokenIdx];
   const fee =
-    parseFloat(amount || "0") > 0
-      ? (parseFloat(amount) * protocol.fee).toFixed(4)
-      : "0.00";
+    parseFloat(amount || "0") > 0 ? (parseFloat(amount) * protocol.fee).toFixed(4) : "0.00";
 
   return (
     <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
@@ -46,7 +44,15 @@ export function FlashLoanPreview() {
       <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 16 }}>
         {/* Protocol selector */}
         <div>
-          <span style={{ fontSize: 11, fontWeight: 500, color: "var(--w3-gray-500)", display: "block", marginBottom: 6 }}>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 500,
+              color: "var(--w3-gray-500)",
+              display: "block",
+              marginBottom: 6,
+            }}
+          >
             Protocol
           </span>
           <div style={{ display: "flex", gap: 8 }}>
@@ -62,12 +68,11 @@ export function FlashLoanPreview() {
                   gap: 8,
                   padding: "8px 12px",
                   borderRadius: 8,
-                  border: protocolIdx === i
-                    ? "1px solid var(--w3-gray-900)"
-                    : "1px solid var(--w3-border-subtle)",
-                  background: protocolIdx === i
-                    ? "var(--w3-glass-inner-bg)"
-                    : "transparent",
+                  border:
+                    protocolIdx === i
+                      ? "1px solid var(--w3-gray-900)"
+                      : "1px solid var(--w3-border-subtle)",
+                  background: protocolIdx === i ? "var(--w3-glass-inner-bg)" : "transparent",
                   fontSize: 13,
                   fontWeight: 500,
                   color: "var(--w3-gray-900)",
@@ -94,7 +99,15 @@ export function FlashLoanPreview() {
 
         {/* Token + Amount */}
         <div>
-          <span style={{ fontSize: 11, fontWeight: 500, color: "var(--w3-gray-500)", display: "block", marginBottom: 6 }}>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 500,
+              color: "var(--w3-gray-500)",
+              display: "block",
+              marginBottom: 6,
+            }}
+          >
             Token & Amount
           </span>
           <div
@@ -110,9 +123,7 @@ export function FlashLoanPreview() {
                 inputMode="decimal"
                 placeholder="0.00"
                 value={amount}
-                onChange={(e) =>
-                  /^\d*\.?\d*$/.test(e.target.value) && setAmount(e.target.value)
-                }
+                onChange={(e) => /^\d*\.?\d*$/.test(e.target.value) && setAmount(e.target.value)}
                 style={{
                   flex: 1,
                   background: "transparent",
@@ -234,14 +245,11 @@ export function FlashLoanPreview() {
             borderRadius: 8,
             border: "none",
             background:
-              amount && parseFloat(amount) > 0
-                ? "var(--w3-accent)"
-                : "var(--w3-gray-300)",
+              amount && parseFloat(amount) > 0 ? "var(--w3-accent)" : "var(--w3-gray-300)",
             color: "#fff",
             fontSize: 13,
             fontWeight: 500,
-            cursor:
-              amount && parseFloat(amount) > 0 ? "pointer" : "not-allowed",
+            cursor: amount && parseFloat(amount) > 0 ? "pointer" : "not-allowed",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

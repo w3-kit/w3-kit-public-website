@@ -118,9 +118,7 @@ export function UiComponentGrid() {
   const gridRef = useScrollReveal({ stagger: 0.06, y: 30 });
 
   const filtered =
-    active === "all"
-      ? componentRegistry
-      : componentRegistry.filter((c) => c.category === active);
+    active === "all" ? componentRegistry : componentRegistry.filter((c) => c.category === active);
 
   return (
     <SectionContainer>
@@ -147,11 +145,8 @@ export function UiComponentGrid() {
               className="rounded-lg px-3 py-1.5 text-sm font-medium transition-all"
               style={{
                 background:
-                  active === cat.value
-                    ? "var(--w3-accent)"
-                    : "var(--w3-surface-elevated)",
-                color:
-                  active === cat.value ? "#fff" : "var(--w3-gray-700)",
+                  active === cat.value ? "var(--w3-accent)" : "var(--w3-surface-elevated)",
+                color: active === cat.value ? "#fff" : "var(--w3-gray-700)",
               }}
             >
               {cat.label}
@@ -160,10 +155,7 @@ export function UiComponentGrid() {
         </div>
 
         {/* Masonry preview grid */}
-        <div
-          ref={gridRef}
-          className="columns-1 gap-5 sm:columns-2 xl:columns-3"
-        >
+        <div ref={gridRef} className="columns-1 gap-5 sm:columns-2 xl:columns-3">
           {filtered.map((component) => (
             <a
               key={component.id}
@@ -181,9 +173,7 @@ export function UiComponentGrid() {
                 className="pointer-events-none flex items-center justify-center overflow-hidden p-4"
                 style={{ background: "var(--w3-glass-inner-bg)" }}
               >
-                <div className="w-full">
-                  {getPreview(component.id)}
-                </div>
+                <div className="w-full">{getPreview(component.id)}</div>
               </div>
 
               {/* Info bar */}
@@ -192,10 +182,7 @@ export function UiComponentGrid() {
                 style={{ borderTop: "1px solid var(--w3-border-subtle)" }}
               >
                 <div className="flex items-center gap-2">
-                  <span
-                    className="text-sm font-semibold"
-                    style={{ color: "var(--w3-gray-900)" }}
-                  >
+                  <span className="text-sm font-semibold" style={{ color: "var(--w3-gray-900)" }}>
                     {component.name}
                   </span>
                   <Badge variant="outline" className="text-[10px]">

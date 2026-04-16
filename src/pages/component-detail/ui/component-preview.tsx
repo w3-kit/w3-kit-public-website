@@ -37,8 +37,7 @@ export function ComponentPreview({ component, children }: ComponentPreviewProps)
             style={{
               color: tab === t ? "var(--w3-gray-900)" : "var(--w3-gray-500)",
               background: tab === t ? "var(--w3-surface-elevated)" : "transparent",
-              borderBottom:
-                tab === t ? "2px solid var(--w3-accent)" : "2px solid transparent",
+              borderBottom: tab === t ? "2px solid var(--w3-accent)" : "2px solid transparent",
             }}
           >
             {t}
@@ -69,10 +68,7 @@ export function ComponentPreview({ component, children }: ComponentPreviewProps)
           )}
         </div>
       ) : (
-        <div
-          className="flex flex-col gap-4 p-6"
-          style={{ background: "var(--w3-glass-inner-bg)" }}
-        >
+        <div className="flex flex-col gap-4 p-6" style={{ background: "var(--w3-glass-inner-bg)" }}>
           {/* Install */}
           <div className="flex flex-col gap-2">
             <span

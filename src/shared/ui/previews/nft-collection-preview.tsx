@@ -15,7 +15,9 @@ const RARITY_COLORS: Record<string, { bg: string; color: string }> = {
 };
 
 export function NFTCollectionPreview() {
-  useEffect(() => { preloadAllNFTImages(); }, []);
+  useEffect(() => {
+    preloadAllNFTImages();
+  }, []);
 
   const [loadedIds, setLoadedIds] = useState<Set<string>>(new Set());
   const [rarity, setRarity] = useState<Rarity>("all");
@@ -24,14 +26,16 @@ export function NFTCollectionPreview() {
   const filtered = useMemo(() => {
     let items = rarity === "all" ? ALL_ITEMS : ALL_ITEMS.filter((n) => n.rarity === rarity);
 
-    if (sort === "price-asc") items = [...items].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-    else if (sort === "price-desc") items = [...items].sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    if (sort === "price-asc")
+      items = [...items].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+    else if (sort === "price-desc")
+      items = [...items].sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
 
     return items;
   }, [rarity, sort]);
 
   const cycleSort = () => {
-    setSort((s) => s === "price-desc" ? "price-asc" : s === "price-asc" ? "id" : "price-desc");
+    setSort((s) => (s === "price-desc" ? "price-asc" : s === "price-asc" ? "id" : "price-desc"));
   };
 
   const sortLabel = sort === "price-desc" ? "Price ↓" : sort === "price-asc" ? "Price ↑" : "ID";
@@ -47,7 +51,19 @@ export function NFTCollectionPreview() {
         </div>
         <button
           onClick={cycleSort}
-          style={{ display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 8, border: "1px solid var(--w3-border-subtle)", background: "transparent", cursor: "pointer", fontSize: 12, fontWeight: 500, color: "var(--w3-gray-600)" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+            padding: "4px 10px",
+            borderRadius: 8,
+            border: "1px solid var(--w3-border-subtle)",
+            background: "transparent",
+            cursor: "pointer",
+            fontSize: 12,
+            fontWeight: 500,
+            color: "var(--w3-gray-600)",
+          }}
         >
           <ArrowUpDown size={12} />
           {sortLabel}
@@ -55,7 +71,14 @@ export function NFTCollectionPreview() {
       </div>
 
       {/* Rarity filter */}
-      <div style={{ padding: "10px 20px", borderBottom: "1px solid var(--w3-border-subtle)", display: "flex", gap: 6 }}>
+      <div
+        style={{
+          padding: "10px 20px",
+          borderBottom: "1px solid var(--w3-border-subtle)",
+          display: "flex",
+          gap: 6,
+        }}
+      >
         {(["all", "common", "rare", "legendary"] as Rarity[]).map((r) => (
           <button
             key={r}
@@ -79,20 +102,40 @@ export function NFTCollectionPreview() {
       </div>
 
       {/* Grid */}
-      <div style={{ padding: "16px 20px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+      <div
+        style={{ padding: "16px 20px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
+      >
         {filtered.map((nft) => (
           <div
             key={nft.id}
             style={{ cursor: "pointer", transition: "transform 0.15s" }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "none"; }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLDivElement).style.transform = "none";
+            }}
           >
-            <div style={{ position: "relative", aspectRatio: "1", borderRadius: 12, overflow: "hidden", background: "var(--w3-surface-elevated)" }}>
+            <div
+              style={{
+                position: "relative",
+                aspectRatio: "1",
+                borderRadius: 12,
+                overflow: "hidden",
+                background: "var(--w3-surface-elevated)",
+              }}
+            >
               <img
                 src={getCachedNFTImage(nft.image)}
                 alt={nft.name}
                 onLoad={() => setLoadedIds((prev) => new Set(prev).add(nft.id))}
-                style={{ width: "100%", height: "100%", objectFit: "cover", opacity: loadedIds.has(nft.id) ? 1 : 0, transition: "opacity 0.3s" }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  opacity: loadedIds.has(nft.id) ? 1 : 0,
+                  transition: "opacity 0.3s",
+                }}
               />
               {/* Rarity badge */}
               <div
@@ -113,22 +156,47 @@ export function NFTCollectionPreview() {
                 {nft.rarity}
               </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 }}>
-              <span style={{ fontSize: 13, fontWeight: 500, color: "var(--w3-gray-900)" }}>{nft.name}</span>
-              <span style={{ fontSize: 12, color: "var(--w3-gray-600)", fontFamily: monoFont }}>{nft.price} ETH</span>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 6,
+              }}
+            >
+              <span style={{ fontSize: 13, fontWeight: 500, color: "var(--w3-gray-900)" }}>
+                {nft.name}
+              </span>
+              <span style={{ fontSize: 12, color: "var(--w3-gray-600)", fontFamily: monoFont }}>
+                {nft.price} ETH
+              </span>
             </div>
           </div>
         ))}
 
         {filtered.length === 0 && (
-          <div style={{ gridColumn: "1 / -1", padding: 24, textAlign: "center", fontSize: 13, color: "var(--w3-gray-500)" }}>
+          <div
+            style={{
+              gridColumn: "1 / -1",
+              padding: 24,
+              textAlign: "center",
+              fontSize: 13,
+              color: "var(--w3-gray-500)",
+            }}
+          >
             No items match filter
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           {filtered.length} of {ALL_ITEMS.length} items
         </span>

@@ -20,7 +20,9 @@ export function MultisigWalletPreview() {
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
-  const safe = useCallback((fn: () => void, ms: number) => { timers.current.push(setTimeout(fn, ms)); }, []);
+  const safe = useCallback((fn: () => void, ms: number) => {
+    timers.current.push(setTimeout(fn, ms));
+  }, []);
 
   const handleApprove = () => {
     setLoading(true);
@@ -32,9 +34,18 @@ export function MultisigWalletPreview() {
     }, 800);
   };
 
-  const handleReject = () => { setStatus("rejected"); setApprovals(0); };
-  const handleCopy = () => { setCopied(true); safe(() => setCopied(false), 2000); };
-  const handleReset = () => { setApprovals(2); setStatus("pending"); };
+  const handleReject = () => {
+    setStatus("rejected");
+    setApprovals(0);
+  };
+  const handleCopy = () => {
+    setCopied(true);
+    safe(() => setCopied(false), 2000);
+  };
+  const handleReset = () => {
+    setApprovals(2);
+    setStatus("pending");
+  };
 
   const statusStyle: Record<string, { bg: string; color: string }> = {
     pending: { bg: "var(--w3-surface-elevated)", color: "var(--w3-gray-700)" },
@@ -49,14 +60,37 @@ export function MultisigWalletPreview() {
       <div style={{ ...previewHeader }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Shield size={18} style={{ color: "var(--w3-accent)" }} />
-          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Multisig</span>
-          <span style={{ fontSize: 12, fontWeight: 500, padding: "2px 8px", borderRadius: 6, background: "var(--w3-surface-elevated)", color: "var(--w3-gray-600)" }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            Multisig
+          </span>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 500,
+              padding: "2px 8px",
+              borderRadius: 6,
+              background: "var(--w3-surface-elevated)",
+              color: "var(--w3-gray-600)",
+            }}
+          >
             3/3
           </span>
         </div>
         <button
           onClick={handleCopy}
-          style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 8px", borderRadius: 6, border: "none", background: "transparent", cursor: "pointer", fontFamily: monoFont, fontSize: 11, color: "var(--w3-gray-500)" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "4px 8px",
+            borderRadius: 6,
+            border: "none",
+            background: "transparent",
+            cursor: "pointer",
+            fontFamily: monoFont,
+            fontSize: 11,
+            color: "var(--w3-gray-500)",
+          }}
         >
           {truncateAddress(WALLET)}
           {copied ? <Check size={12} style={{ color: "#22c55e" }} /> : <Copy size={12} />}
@@ -64,8 +98,26 @@ export function MultisigWalletPreview() {
       </div>
 
       {/* Signers */}
-      <div style={{ padding: "12px 20px", borderBottom: "1px solid var(--w3-border-subtle)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const }}>Signers</span>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderBottom: "1px solid var(--w3-border-subtle)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <span
+          style={{
+            fontSize: 12,
+            fontWeight: 500,
+            color: "var(--w3-gray-500)",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase" as const,
+          }}
+        >
+          Signers
+        </span>
         <div style={{ display: "flex" }}>
           {SIGNERS.map((signer, i) => (
             <div
@@ -95,7 +147,15 @@ export function MultisigWalletPreview() {
       </div>
 
       {/* Tabs */}
-      <div style={{ padding: "8px 20px", borderBottom: "1px solid var(--w3-border-subtle)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div
+        style={{
+          padding: "8px 20px",
+          borderBottom: "1px solid var(--w3-border-subtle)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <div style={{ display: "flex", gap: 4 }}>
           {(["pending", "executed", "all"] as const).map((t) => (
             <button
@@ -117,39 +177,90 @@ export function MultisigWalletPreview() {
             </button>
           ))}
         </div>
-        <button style={{ padding: 4, border: "none", background: "transparent", cursor: "pointer", color: "var(--w3-gray-500)", display: "flex" }}>
+        <button
+          style={{
+            padding: 4,
+            border: "none",
+            background: "transparent",
+            cursor: "pointer",
+            color: "var(--w3-gray-500)",
+            display: "flex",
+          }}
+        >
           <Plus size={16} />
         </button>
       </div>
 
       {/* Transaction */}
       <div style={{ padding: "16px 20px" }}>
-        {(tab === "all" || tab === status) ? (
+        {tab === "all" || tab === status ? (
           <div style={{ padding: 14, borderRadius: 12, background: "var(--w3-glass-inner-bg)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                marginBottom: 8,
+              }}
+            >
               <div>
-                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)" }}>Transfer to Treasury</span>
+                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)" }}>
+                  Transfer to Treasury
+                </span>
                 <div style={{ fontSize: 13, color: "var(--w3-gray-600)", marginTop: 2 }}>
                   1.5 ETH → {truncateAddress("0xdead000000000000000000000000000000beef")} · 2h ago
                 </div>
               </div>
-              <span style={{ fontSize: 10, fontWeight: 500, padding: "2px 8px", borderRadius: 5, background: s.bg, color: s.color, textTransform: "capitalize" }}>
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 500,
+                  padding: "2px 8px",
+                  borderRadius: 5,
+                  background: s.bg,
+                  color: s.color,
+                  textTransform: "capitalize",
+                }}
+              >
                 {status}
               </span>
             </div>
 
             {/* Progress */}
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-              <div style={{ flex: 1, height: 6, borderRadius: 3, background: "var(--w3-border-subtle)", overflow: "hidden" }}>
-                <div style={{
-                  height: "100%",
+              <div
+                style={{
+                  flex: 1,
+                  height: 6,
                   borderRadius: 3,
-                  background: status === "executed" ? "#22c55e" : status === "rejected" ? "#ef4444" : "var(--w3-accent)",
-                  width: `${Math.min((approvals / 3) * 100, 100)}%`,
-                  transition: "width 0.4s ease",
-                }} />
+                  background: "var(--w3-border-subtle)",
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    borderRadius: 3,
+                    background:
+                      status === "executed"
+                        ? "#22c55e"
+                        : status === "rejected"
+                          ? "#ef4444"
+                          : "var(--w3-accent)",
+                    width: `${Math.min((approvals / 3) * 100, 100)}%`,
+                    transition: "width 0.4s ease",
+                  }}
+                />
               </div>
-              <span style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-600)", fontFamily: monoFont, flexShrink: 0 }}>
+              <span
+                style={{
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: "var(--w3-gray-600)",
+                  fontFamily: monoFont,
+                  flexShrink: 0,
+                }}
+              >
                 {approvals}/3
               </span>
             </div>
@@ -161,22 +272,45 @@ export function MultisigWalletPreview() {
                   onClick={handleApprove}
                   disabled={loading}
                   style={{
-                    flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                    padding: 10, borderRadius: 10, border: "none",
-                    background: "var(--w3-accent)", color: "#fff",
-                    fontSize: 13, fontWeight: 600, cursor: loading ? "wait" : "pointer", opacity: loading ? 0.7 : 1,
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    padding: 10,
+                    borderRadius: 10,
+                    border: "none",
+                    background: "var(--w3-accent)",
+                    color: "#fff",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    cursor: loading ? "wait" : "pointer",
+                    opacity: loading ? 0.7 : 1,
                   }}
                 >
-                  {loading ? <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> : <Check size={14} />}
+                  {loading ? (
+                    <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} />
+                  ) : (
+                    <Check size={14} />
+                  )}
                   Approve
                 </button>
                 <button
                   onClick={handleReject}
                   style={{
-                    flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                    padding: 10, borderRadius: 10, border: "1px solid var(--w3-border-subtle)",
-                    background: "transparent", color: "var(--w3-gray-700)",
-                    fontSize: 13, fontWeight: 500, cursor: "pointer",
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    padding: 10,
+                    borderRadius: 10,
+                    border: "1px solid var(--w3-border-subtle)",
+                    background: "transparent",
+                    color: "var(--w3-gray-700)",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    cursor: "pointer",
                   }}
                 >
                   <X size={14} />
@@ -188,21 +322,39 @@ export function MultisigWalletPreview() {
             {status !== "pending" && (
               <button
                 onClick={handleReset}
-                style={{ width: "100%", padding: 8, borderRadius: 8, border: "1px solid var(--w3-border-subtle)", background: "transparent", fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", cursor: "pointer" }}
+                style={{
+                  width: "100%",
+                  padding: 8,
+                  borderRadius: 8,
+                  border: "1px solid var(--w3-border-subtle)",
+                  background: "transparent",
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: "var(--w3-gray-500)",
+                  cursor: "pointer",
+                }}
               >
                 Reset demo
               </button>
             )}
           </div>
         ) : (
-          <div style={{ padding: 24, textAlign: "center", fontSize: 13, color: "var(--w3-gray-500)" }}>
+          <div
+            style={{ padding: 24, textAlign: "center", fontSize: 13, color: "var(--w3-gray-500)" }}
+          >
             No {tab} transactions
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           1 transaction · 3 of 3 required
         </span>

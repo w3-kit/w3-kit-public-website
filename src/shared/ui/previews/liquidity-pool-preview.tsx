@@ -22,15 +22,7 @@ function fmt(n: number) {
   return `$${n.toFixed(2)}`;
 }
 
-function StatBox({
-  label,
-  value,
-  change,
-}: {
-  label: string;
-  value: string;
-  change?: number;
-}) {
+function StatBox({ label, value, change }: { label: string; value: string; change?: number }) {
   return (
     <div
       style={{
@@ -109,7 +101,11 @@ export function LiquidityPoolPreview() {
               alt="ETH"
               width={28}
               height={28}
-              style={{ borderRadius: "50%", display: "block", border: "2px solid var(--w3-surface-elevated)" }}
+              style={{
+                borderRadius: "50%",
+                display: "block",
+                border: "2px solid var(--w3-surface-elevated)",
+              }}
               loading="lazy"
             />
             <img
@@ -117,7 +113,12 @@ export function LiquidityPoolPreview() {
               alt="USDC"
               width={28}
               height={28}
-              style={{ borderRadius: "50%", display: "block", marginLeft: -8, border: "2px solid var(--w3-surface-elevated)" }}
+              style={{
+                borderRadius: "50%",
+                display: "block",
+                marginLeft: -8,
+                border: "2px solid var(--w3-surface-elevated)",
+              }}
               loading="lazy"
             />
           </div>

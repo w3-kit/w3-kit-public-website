@@ -74,7 +74,8 @@ export function QuickInfo({ component }: QuickInfoProps) {
           Props
         </span>
         <span className="text-xs" style={{ color: "var(--w3-gray-700)" }}>
-          {component.props.length} props ({component.props.filter((p) => p.required).length} required)
+          {component.props.length} props ({component.props.filter((p) => p.required).length}{" "}
+          required)
         </span>
       </div>
     </div>

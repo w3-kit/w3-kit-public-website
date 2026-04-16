@@ -13,11 +13,18 @@ const TOKEN = {
 };
 
 function fmt(n: number) {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export function TokenCardPreview() {
-  useEffect(() => { preloadCryptoLogos([TOKEN.symbol]); }, []);
+  useEffect(() => {
+    preloadCryptoLogos([TOKEN.symbol]);
+  }, []);
 
   const pos = TOKEN.change24h >= 0;
 
@@ -45,8 +52,7 @@ export function TokenCardPreview() {
             color: pos ? "#22c55e" : "#ef4444",
           }}
         >
-          <TrendingUp size={11} />
-          +{TOKEN.change24h.toFixed(2)}%
+          <TrendingUp size={11} />+{TOKEN.change24h.toFixed(2)}%
         </span>
       </div>
 
@@ -62,14 +68,43 @@ export function TokenCardPreview() {
             loading="lazy"
           />
           <div>
-            <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 4 }}>
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 500,
+                color: "var(--w3-gray-500)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase" as const,
+                marginBottom: 4,
+              }}
+            >
               Price
             </div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: "var(--w3-gray-900)", fontFamily: monoFont, fontVariantNumeric: "tabular-nums" }}>
+            <div
+              style={{
+                fontSize: 24,
+                fontWeight: 700,
+                color: "var(--w3-gray-900)",
+                fontFamily: monoFont,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
               {fmt(TOKEN.price)}
             </div>
-            <span style={{ fontSize: 13, fontWeight: 500, color: pos ? "#22c55e" : "#ef4444", marginTop: 2, display: "inline-block" }}>
-              {pos ? "+" : ""}{TOKEN.change24h.toFixed(2)}% <span style={{ color: "var(--w3-gray-500)", fontWeight: 400, fontSize: 12 }}>24h</span>
+            <span
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: pos ? "#22c55e" : "#ef4444",
+                marginTop: 2,
+                display: "inline-block",
+              }}
+            >
+              {pos ? "+" : ""}
+              {TOKEN.change24h.toFixed(2)}%{" "}
+              <span style={{ color: "var(--w3-gray-500)", fontWeight: 400, fontSize: 12 }}>
+                24h
+              </span>
             </span>
           </div>
         </div>
@@ -87,18 +122,52 @@ export function TokenCardPreview() {
           }}
         >
           <div>
-            <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 4 }}>
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 500,
+                color: "var(--w3-gray-500)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase" as const,
+                marginBottom: 4,
+              }}
+            >
               Balance
             </div>
-            <div style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", fontFamily: monoFont, fontVariantNumeric: "tabular-nums" }}>
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 500,
+                color: "var(--w3-gray-900)",
+                fontFamily: monoFont,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
               {TOKEN.balance} {TOKEN.symbol}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 4 }}>
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 500,
+                color: "var(--w3-gray-500)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase" as const,
+                marginBottom: 4,
+              }}
+            >
               Value
             </div>
-            <div style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", fontFamily: monoFont, fontVariantNumeric: "tabular-nums" }}>
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 500,
+                color: "var(--w3-gray-900)",
+                fontFamily: monoFont,
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
               {fmt(TOKEN.value)}
             </div>
           </div>
@@ -106,10 +175,14 @@ export function TokenCardPreview() {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
-        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
-          {TOKEN.name}
-        </span>
+      <div
+        style={{
+          padding: "12px 20px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>{TOKEN.name}</span>
       </div>
     </div>
   );

@@ -54,10 +54,7 @@ export function PropsTable({ props }: PropsTableProps) {
             </thead>
             <tbody>
               {props.map((prop) => (
-                <tr
-                  key={prop.name}
-                  style={{ borderTop: "1px solid var(--w3-border-subtle)" }}
-                >
+                <tr key={prop.name} style={{ borderTop: "1px solid var(--w3-border-subtle)" }}>
                   <td className="px-4 py-3">
                     <code
                       className="text-[13px] font-medium"
@@ -67,9 +64,7 @@ export function PropsTable({ props }: PropsTableProps) {
                       }}
                     >
                       {prop.name}
-                      {prop.required && (
-                        <span style={{ color: "var(--w3-accent)" }}>*</span>
-                      )}
+                      {prop.required && <span style={{ color: "var(--w3-accent)" }}>*</span>}
                     </code>
                   </td>
                   <td className="px-4 py-3">
