@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { PieChart, TrendingUp, TrendingDown } from "lucide-react";
+import { cryptoLogo, preloadCryptoLogos } from "../../lib/logos";
+import { previewCard, previewHeader, monoFont } from "./_shared";
 
 interface Asset {
   symbol: string;
@@ -10,208 +12,132 @@ interface Asset {
   color: string;
 }
 
-const TOTAL_VALUE = 28_742.5;
-const TOTAL_CHANGE = 2.84;
-
 const ASSETS: Asset[] = [
-  { symbol: "ETH", name: "Ethereum", balance: "4.2100", value: 14_112, change24h: 3.12, color: "#627eea" },
-  { symbol: "BTC", name: "Bitcoin", balance: "0.1250", value: 8_437, change24h: 1.87, color: "#f7931a" },
-  { symbol: "USDC", name: "USD Coin", balance: "3,850.00", value: 3_850, change24h: 0.01, color: "#2775ca" },
-  { symbol: "SOL", name: "Solana", balance: "15.8000", value: 2_343.5, change24h: -2.45, color: "#9945ff" },
+  { symbol: "ETH", name: "Ethereum", balance: "4.2100", value: 14_112, change24h: 3.12, color: "#627EEA" },
+  { symbol: "BTC", name: "Bitcoin", balance: "0.1250", value: 8_437, change24h: 1.87, color: "#F7931A" },
+  { symbol: "USDC", name: "USD Coin", balance: "3850.00", value: 3_850, change24h: 0.01, color: "#2775CA" },
+  { symbol: "SOL", name: "Solana", balance: "15.8000", value: 2_343.5, change24h: -2.45, color: "#9945FF" },
 ];
 
-function fmtCurrency(n: number) {
-  return `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
+const TOTAL_VALUE = 28_742.5;
+const weightedChange = ASSETS.reduce((sum, a) => sum + (a.value / TOTAL_VALUE) * a.change24h, 0);
 
-function fmtPct(n: number) {
-  const sign = n >= 0 ? "+" : "";
-  return `${sign}${n.toFixed(2)}%`;
+function fmt(n: number) {
+  return n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 export function AssetPortfolioPreview() {
-  const [hovered, setHovered] = useState<string | null>(null);
-  const isPositive = TOTAL_CHANGE >= 0;
+  useEffect(() => { preloadCryptoLogos(ASSETS.map((a) => a.symbol)); }, []);
+
+  const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <div
-      style={{
-        borderRadius: 12,
-        overflow: "hidden",
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
-      }}
-    >
-      {/* Summary header */}
-      <div
-        style={{
-          padding: "14px 16px 12px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-        }}
-      >
-        <p
-          style={{
-            fontSize: 10,
-            fontWeight: 500,
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            color: "var(--w3-gray-500)",
-            margin: 0,
-          }}
-        >
-          Portfolio Value
-        </p>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: 8,
-            marginTop: 4,
-          }}
-        >
-          <span
-            style={{
-              fontSize: 22,
-              fontWeight: 600,
-              letterSpacing: "-0.02em",
-              color: "var(--w3-gray-900)",
-            }}
-          >
-            {fmtCurrency(TOTAL_VALUE)}
+    <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
+      {/* Header */}
+      <div style={{ ...previewHeader }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <PieChart size={18} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            Portfolio
           </span>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 3,
-              fontSize: 12,
-              fontWeight: 500,
-              color: isPositive ? "#16a34a" : "#dc2626",
-            }}
-          >
-            {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-            {fmtPct(TOTAL_CHANGE)}
-            <span style={{ color: "var(--w3-gray-500)", fontWeight: 400, marginLeft: 2, fontSize: 11 }}>
-              24h
-            </span>
+        </div>
+      </div>
+
+      {/* Total value + allocation */}
+      <div style={{ padding: "16px 20px 12px" }}>
+        <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 6 }}>
+          Total Value
+        </div>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+          <span style={{ fontSize: 24, fontWeight: 700, color: "var(--w3-gray-900)" }}>
+            {fmt(TOTAL_VALUE)}
+          </span>
+          <span style={{ fontSize: 14, fontWeight: 500, color: weightedChange >= 0 ? "#22c55e" : "#ef4444" }}>
+            {weightedChange >= 0 ? "+" : ""}{weightedChange.toFixed(2)}%
           </span>
         </div>
 
         {/* Allocation bar */}
-        <div
-          style={{
-            display: "flex",
-            height: 6,
-            borderRadius: 9999,
-            overflow: "hidden",
-            marginTop: 10,
-            background: "var(--w3-glass-inner-bg)",
-          }}
-        >
-          {ASSETS.map((a) => (
-            <div
-              key={a.symbol}
-              onMouseEnter={() => setHovered(a.symbol)}
-              onMouseLeave={() => setHovered(null)}
-              style={{
-                width: `${(a.value / TOTAL_VALUE) * 100}%`,
-                backgroundColor: a.color,
-                transition: "opacity 0.15s",
-                opacity: hovered && hovered !== a.symbol ? 0.3 : 1,
-              }}
-            />
-          ))}
+        <div style={{ display: "flex", height: 6, borderRadius: 3, overflow: "hidden", marginTop: 14, gap: 3 }}>
+          {ASSETS.map((a, i) => {
+            const pct = (a.value / TOTAL_VALUE) * 100;
+            return (
+              <div
+                key={a.symbol}
+                style={{
+                  flex: pct,
+                  background: a.color,
+                  borderRadius: 3,
+                  opacity: hovered !== null && hovered !== i ? 0.25 : 1,
+                  transition: "opacity 0.2s",
+                }}
+              />
+            );
+          })}
         </div>
       </div>
 
-      {/* Asset rows */}
-      {ASSETS.map((asset, i) => {
-        const pos = asset.change24h >= 0;
-        const pct = ((asset.value / TOTAL_VALUE) * 100).toFixed(1);
-        const isFaded = hovered && hovered !== asset.symbol;
-
-        return (
-          <div
-            key={asset.symbol}
-            onMouseEnter={() => setHovered(asset.symbol)}
-            onMouseLeave={() => setHovered(null)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "10px 16px",
-              borderBottom: i < ASSETS.length - 1 ? "1px solid var(--w3-border-subtle)" : "none",
-              transition: "opacity 0.15s, background 0.15s",
-              opacity: isFaded ? 0.5 : 1,
-              cursor: "pointer",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {/* Color dot */}
-              <div
-                style={{
-                  width: 7,
-                  height: 7,
-                  borderRadius: "50%",
-                  backgroundColor: asset.color,
-                  flexShrink: 0,
-                }}
+      {/* Token list */}
+      <div style={{ padding: "8px 20px 16px", display: "flex", flexDirection: "column", gap: 4 }}>
+        {ASSETS.map((a, i) => {
+          const isHovered = hovered === i;
+          return (
+            <div
+              key={a.symbol}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                padding: "12px 14px",
+                borderRadius: 12,
+                background: isHovered ? "var(--w3-accent-subtle)" : "transparent",
+                opacity: hovered !== null && !isHovered ? 0.5 : 1,
+                transition: "background 0.15s, opacity 0.2s",
+                cursor: "default",
+              }}
+            >
+              <img
+                src={cryptoLogo(a.symbol)}
+                alt={a.symbol}
+                width={32}
+                height={32}
+                style={{ borderRadius: "50%", display: "block", flexShrink: 0 }}
+                loading="lazy"
               />
-              {/* Symbol block */}
-              <div
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 8,
-                  background: "var(--w3-glass-inner-bg)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 10,
-                  fontWeight: 600,
-                  color: "var(--w3-gray-700)",
-                  fontFamily: '"Geist Mono", ui-monospace, monospace',
-                  flexShrink: 0,
-                }}
-              >
-                {asset.symbol.slice(0, 3)}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)" }}>
+                    {a.symbol}
+                  </span>
+                  <span style={{ fontSize: 12, fontWeight: 500, color: a.change24h >= 0 ? "#22c55e" : "#ef4444" }}>
+                    {a.change24h >= 0 ? "+" : ""}{a.change24h.toFixed(1)}%
+                  </span>
+                </div>
+                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                  {a.name} &middot; {a.balance}
+                </span>
               </div>
-              <div>
-                <p style={{ fontSize: 13, fontWeight: 500, color: "var(--w3-gray-900)", margin: 0 }}>
-                  {asset.symbol}
-                </p>
-                <p style={{ fontSize: 11, color: "var(--w3-gray-500)", margin: 0 }}>
-                  {asset.name} &middot; {asset.balance} &middot; {pct}%
-                </p>
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <div style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)" }}>
+                  {fmt(a.value)}
+                </div>
+                <div style={{ fontSize: 13, color: "var(--w3-gray-600)", marginTop: 1, fontFamily: monoFont }}>
+                  {a.change24h >= 0 ? "+" : ""}{a.change24h.toFixed(2)}%
+                </div>
               </div>
             </div>
+          );
+        })}
+      </div>
 
-            <div style={{ textAlign: "right" }}>
-              <p
-                style={{
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: "var(--w3-gray-900)",
-                  margin: 0,
-                  fontVariantNumeric: "tabular-nums",
-                }}
-              >
-                {fmtCurrency(asset.value)}
-              </p>
-              <p
-                style={{
-                  fontSize: 11,
-                  margin: 0,
-                  fontVariantNumeric: "tabular-nums",
-                  color: pos ? "#16a34a" : "#dc2626",
-                }}
-              >
-                {fmtPct(asset.change24h)}
-              </p>
-            </div>
-          </div>
-        );
-      })}
+      {/* Footer */}
+      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
+          {ASSETS.length} assets &middot; {fmt(TOTAL_VALUE)}
+        </span>
+      </div>
     </div>
   );
 }

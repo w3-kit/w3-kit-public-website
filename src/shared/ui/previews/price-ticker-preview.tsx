@@ -1,4 +1,7 @@
+import { useEffect } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { cryptoLogo, preloadCryptoLogos } from "../../lib/logos";
+import { previewCard, previewHeader, monoFont } from "./_shared";
 
 interface Ticker {
   symbol: string;
@@ -26,166 +29,92 @@ function fmtCap(n: number) {
   return `$${(n / 1_000_000).toFixed(1)}M`;
 }
 
-function fmtPct(n: number) {
-  return `${Math.abs(n).toFixed(2)}%`;
-}
-
 export function PriceTickerPreview() {
+  useEffect(() => { preloadCryptoLogos(TICKERS.map((t) => t.symbol)); }, []);
+
   return (
-    <div
-      style={{
-        borderRadius: 12,
-        overflow: "hidden",
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
-      }}
-    >
+    <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "12px 16px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-        }}
-      >
-        <span style={{ fontSize: 13, fontWeight: 600, color: "var(--w3-gray-900)" }}>
-          Market Prices
-        </span>
-        <span style={{ fontSize: 11, color: "var(--w3-gray-500)" }}>
+      <div style={{ ...previewHeader }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <TrendingUp size={18} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            Market
+          </span>
+        </div>
+      </div>
+
+      {/* Token list */}
+      <div style={{ padding: "8px 20px 16px", display: "flex", flexDirection: "column", gap: 4 }}>
+        {TICKERS.map((t) => {
+          const pos = t.change24h >= 0;
+          return (
+            <div
+              key={t.symbol}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                padding: "12px 14px",
+                borderRadius: 12,
+                background: "transparent",
+                transition: "background 0.15s",
+                cursor: "default",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "var(--w3-accent-subtle)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
+            >
+              <img
+                src={cryptoLogo(t.symbol)}
+                alt={t.symbol}
+                width={32}
+                height={32}
+                style={{ borderRadius: "50%", display: "block", flexShrink: 0 }}
+                loading="lazy"
+              />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                  {t.name}
+                </span>
+                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                  {t.symbol} &middot; {fmtCap(t.marketCap)}
+                </span>
+              </div>
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <div style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", fontFamily: monoFont, fontVariantNumeric: "tabular-nums" }}>
+                  {fmtPrice(t.price)}
+                </div>
+                <div style={{ marginTop: 3, display: "flex", justifyContent: "flex-end" }}>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 3,
+                      borderRadius: 9999,
+                      padding: "2px 7px",
+                      fontSize: 12,
+                      fontWeight: 500,
+                      fontVariantNumeric: "tabular-nums",
+                      background: pos ? "rgba(34, 197, 94, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                      color: pos ? "#22c55e" : "#ef4444",
+                    }}
+                  >
+                    {pos ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+                    {Math.abs(t.change24h).toFixed(2)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Footer */}
+      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
           {TICKERS.length} tokens
         </span>
       </div>
-
-      {/* Column headers */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 90px 72px 80px",
-          gap: 8,
-          padding: "6px 16px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-          fontSize: 10,
-          color: "var(--w3-gray-500)",
-        }}
-      >
-        <span>Token</span>
-        <span style={{ textAlign: "right" }}>Price</span>
-        <span style={{ textAlign: "right" }}>24h</span>
-        <span style={{ textAlign: "right" }}>Mkt Cap</span>
-      </div>
-
-      {/* Rows */}
-      {TICKERS.map((t, i) => {
-        const pos = t.change24h >= 0;
-
-        return (
-          <div
-            key={t.symbol}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 90px 72px 80px",
-              gap: 8,
-              alignItems: "center",
-              padding: "10px 16px",
-              borderBottom: i < TICKERS.length - 1 ? "1px solid var(--w3-border-subtle)" : "none",
-              cursor: "pointer",
-              transition: "background 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLDivElement).style.background = "var(--w3-glass-inner-bg)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLDivElement).style.background = "transparent";
-            }}
-          >
-            {/* Token info */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-              <div
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 8,
-                  background: "var(--w3-glass-inner-bg)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 10,
-                  fontWeight: 600,
-                  color: "var(--w3-gray-700)",
-                  fontFamily: '"Geist Mono", ui-monospace, monospace',
-                  flexShrink: 0,
-                }}
-              >
-                {t.symbol.slice(0, 3)}
-              </div>
-              <div style={{ minWidth: 0 }}>
-                <p
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: "var(--w3-gray-900)",
-                    margin: 0,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {t.name}
-                </p>
-                <p style={{ fontSize: 11, color: "var(--w3-gray-500)", margin: 0 }}>{t.symbol}</p>
-              </div>
-            </div>
-
-            {/* Price */}
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 500,
-                color: "var(--w3-gray-900)",
-                textAlign: "right",
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {fmtPrice(t.price)}
-            </span>
-
-            {/* 24h change pill */}
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 3,
-                  borderRadius: 9999,
-                  padding: "2px 7px",
-                  fontSize: 11,
-                  fontWeight: 500,
-                  fontVariantNumeric: "tabular-nums",
-                  background: pos ? "rgba(22, 163, 74, 0.1)" : "rgba(220, 38, 38, 0.1)",
-                  color: pos ? "#16a34a" : "#dc2626",
-                }}
-              >
-                {pos ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
-                {fmtPct(t.change24h)}
-              </span>
-            </div>
-
-            {/* Market cap */}
-            <span
-              style={{
-                fontSize: 12,
-                color: "var(--w3-gray-500)",
-                textAlign: "right",
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {fmtCap(t.marketCap)}
-            </span>
-          </div>
-        );
-      })}
     </div>
   );
 }

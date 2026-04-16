@@ -72,7 +72,7 @@ export function DefiPositionPreview() {
       <div style={{ ...previewHeader }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <BarChart3 size={16} style={{ color: "var(--w3-accent)" }} />
-          <span style={{ fontSize: 14, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
             DeFi Positions
           </span>
         </div>

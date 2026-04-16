@@ -63,7 +63,7 @@ export function LimitOrderPreview() {
       <div style={{ ...previewHeader }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <ListOrdered size={16} style={{ color: "var(--w3-gray-900)" }} />
-          <span style={{ fontSize: 15, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
             Limit Orders
           </span>
           <span

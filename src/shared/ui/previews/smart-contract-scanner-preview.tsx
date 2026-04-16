@@ -1,162 +1,135 @@
-import { useState } from "react";
-import { Shield, ShieldCheck, ShieldAlert, Search } from "lucide-react";
+import { Shield, ShieldCheck, ShieldAlert } from "lucide-react";
+import { previewCard, previewHeader, monoFont } from "./_shared";
+import { truncateAddress } from "../../lib/format";
 
-const checks = [
-  { name: "Ownership Renounced", status: "safe" as const },
-  { name: "No Proxy Contract", status: "safe" as const },
-  { name: "Liquidity Locked", status: "safe" as const },
-  { name: "Mint Function", status: "warning" as const },
-  { name: "Verified Source", status: "safe" as const },
+type CheckStatus = "safe" | "warning";
+
+interface SecurityCheck {
+  name: string;
+  status: CheckStatus;
+}
+
+const CONTRACT_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+const SCORE = 88;
+
+const checks: SecurityCheck[] = [
+  { name: "Ownership Renounced", status: "safe" },
+  { name: "No Proxy Contract", status: "safe" },
+  { name: "Liquidity Locked", status: "safe" },
+  { name: "Mint Function", status: "warning" },
+  { name: "Verified Source", status: "safe" },
 ];
 
-const statusColors = { safe: "#22c55e", warning: "#f59e0b", danger: "#ef4444" };
-const statusIcons = {
-  safe: <ShieldCheck size={12} />,
-  warning: <ShieldAlert size={12} />,
-  danger: <Shield size={12} />,
+const statusConfig: Record<CheckStatus, { label: string; color: string; bg: string; icon: typeof ShieldCheck }> = {
+  safe: { label: "Safe", color: "#22c55e", bg: "rgba(34,197,94,0.1)", icon: ShieldCheck },
+  warning: { label: "Warning", color: "#f59e0b", bg: "rgba(245,158,11,0.1)", icon: ShieldAlert },
 };
 
 export function SmartContractScannerPreview() {
-  const [scanned, setScanned] = useState(true);
-
-  const score = 88;
+  const safeCount = checks.filter((c) => c.status === "safe").length;
 
   return (
-    <div
-      style={{
-        borderRadius: 12,
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
-        overflow: "hidden",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
+    <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "10px 14px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <Shield size={14} style={{ color: "var(--w3-accent)" }} />
-          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--w3-gray-900)" }}>
-            Contract Scanner
+      <div style={{ ...previewHeader }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Shield size={18} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            Scanner
           </span>
         </div>
         <span
           style={{
-            fontSize: 10,
-            color: "var(--w3-gray-400)",
-            fontFamily: '"Geist Mono", ui-monospace, monospace',
+            fontSize: 12,
+            fontFamily: monoFont,
+            color: "var(--w3-gray-600)",
+            padding: "3px 8px",
+            borderRadius: 6,
+            background: "var(--w3-accent-subtle)",
           }}
         >
-          0xA0b8...eB48
+          {truncateAddress(CONTRACT_ADDRESS)}
         </span>
       </div>
 
-      <div style={{ padding: "12px 14px" }}>
-        {scanned ? (
-          <>
-            {/* Score */}
+      {/* Score circle */}
+      <div style={{ padding: "20px 20px 8px", display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            width: 72,
+            height: 72,
+            borderRadius: "50%",
+            border: "4px solid #22c55e",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <span style={{ fontSize: 22, fontWeight: 700, color: "var(--w3-gray-900)", lineHeight: 1 }}>
+            {SCORE}
+          </span>
+          <span style={{ fontSize: 11, color: "var(--w3-gray-500)", marginTop: 2 }}>/100</span>
+        </div>
+      </div>
+
+      {/* Check rows */}
+      <div style={{ padding: "12px 20px 16px", display: "flex", flexDirection: "column", gap: 4 }}>
+        {checks.map((c) => {
+          const { icon: Icon, color, bg, label } = statusConfig[c.status];
+
+          return (
             <div
+              key={c.name}
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 10,
-                marginBottom: 12,
-                padding: "10px 12px",
-                borderRadius: 8,
-                background: "var(--w3-glass-inner-bg)",
+                gap: 14,
+                padding: "12px 14px",
+                borderRadius: 12,
+                transition: "background 0.15s",
+                cursor: "default",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "var(--w3-accent-subtle)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "transparent";
               }}
             >
-              <div
+              {/* Status icon */}
+              <Icon size={18} style={{ color, flexShrink: 0 }} />
+
+              {/* Check name */}
+              <span style={{ flex: 1, fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)" }}>
+                {c.name}
+              </span>
+
+              {/* Status badge */}
+              <span
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: "50%",
-                  border: "3px solid #22c55e",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: "var(--w3-gray-900)",
+                  fontSize: 11,
+                  fontWeight: 500,
+                  padding: "2px 8px",
+                  borderRadius: 6,
+                  background: bg,
+                  color,
+                  textTransform: "capitalize",
+                  flexShrink: 0,
                 }}
               >
-                {score}
-              </div>
-              <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: "var(--w3-gray-900)" }}>
-                  Low Risk
-                </div>
-                <div style={{ fontSize: 10, color: "var(--w3-gray-500)" }}>
-                  {checks.filter((c) => c.status === "safe").length}/{checks.length} checks passed
-                </div>
-              </div>
+                {label}
+              </span>
             </div>
+          );
+        })}
+      </div>
 
-            {/* Checks */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              {checks.map((c) => (
-                <div
-                  key={c.name}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "6px 8px",
-                    borderRadius: 6,
-                    fontSize: 11,
-                  }}
-                >
-                  <span style={{ color: statusColors[c.status], flexShrink: 0 }}>
-                    {statusIcons[c.status]}
-                  </span>
-                  <span style={{ flex: 1, color: "var(--w3-gray-700)" }}>{c.name}</span>
-                  <span
-                    style={{
-                      fontSize: 9,
-                      fontWeight: 500,
-                      padding: "2px 6px",
-                      borderRadius: 4,
-                      background: statusColors[c.status] + "18",
-                      color: statusColors[c.status],
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {c.status}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          <button
-            onClick={() => setScanned(true)}
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 6,
-              padding: "10px",
-              borderRadius: 8,
-              border: "none",
-              background: "var(--w3-accent)",
-              color: "#fff",
-              fontSize: 12,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            <Search size={14} />
-            Scan Contract
-          </button>
-        )}
+      {/* Footer */}
+      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
+          {safeCount} checks passed
+        </span>
       </div>
     </div>
   );

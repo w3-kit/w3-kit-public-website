@@ -1,102 +1,94 @@
-import { useState } from "react";
+import { Image } from "lucide-react";
+import { previewCard, previewHeader, monoFont } from "./_shared";
 
 export function NFTCardPreview() {
-  const [imgLoaded, setImgLoaded] = useState(false);
-
   return (
-    <div
-      style={{
-        borderRadius: 12,
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
-        overflow: "hidden",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      {/* Image */}
-      <div
-        style={{
-          position: "relative",
-          aspectRatio: "1",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          overflow: "hidden",
-        }}
-      >
-        <img
-          src="https://i.seadn.io/gae/Ju9CkWtV-1Okvf45wo8UctR0qKbTVt-OLCGMXSsqvbFGATgtZN-_5TT4UjBVTo6FVaUiVCaZRoNiAN5tA4XVw_Fs4YdVD-mEJA3rag?auto=format&w=384"
-          alt="Bored Ape"
-          onLoad={() => setImgLoaded(true)}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            opacity: imgLoaded ? 1 : 0,
-            transition: "opacity 0.3s",
-          }}
-        />
-        {/* Collection badge */}
-        <div
-          style={{
-            position: "absolute",
-            top: 8,
-            left: 8,
-            padding: "3px 8px",
-            borderRadius: 6,
-            background: "rgba(0,0,0,0.6)",
-            backdropFilter: "blur(8px)",
-            fontSize: 10,
-            fontWeight: 600,
-            color: "#fff",
-          }}
-        >
-          BAYC
+    <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
+      {/* Header */}
+      <div style={{ ...previewHeader }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Image size={18} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            NFT
+          </span>
         </div>
       </div>
 
-      {/* Info */}
-      <div style={{ padding: "10px 14px" }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--w3-gray-900)", marginBottom: 4 }}>
-          Bored Ape #7842
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <div
-              style={{
-                width: 14,
-                height: 14,
-                borderRadius: "50%",
-                background: "#627EEA",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 7,
-                fontWeight: 700,
-                color: "#fff",
-              }}
-            >
-              E
-            </div>
-            <span
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                color: "var(--w3-gray-900)",
-                fontFamily: '"Geist Mono", ui-monospace, monospace',
-              }}
-            >
-              68.5 ETH
-            </span>
-          </div>
-          <span
+      {/* NFT Card */}
+      <div style={{ padding: "16px 20px" }}>
+        <div
+          style={{
+            borderRadius: 12,
+            overflow: "hidden",
+            border: "1px solid var(--w3-border-subtle)",
+            background: "var(--w3-surface-elevated)",
+          }}
+        >
+          {/* Image placeholder */}
+          <div
             style={{
-              fontSize: 10,
-              color: "var(--w3-gray-500)",
-              fontFamily: '"Geist Mono", ui-monospace, monospace',
+              position: "relative",
+              aspectRatio: "1",
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
             }}
           >
-            0xd8dA...6045
-          </span>
+            {/* Collection badge */}
+            <div
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 10,
+                padding: "3px 8px",
+                borderRadius: 6,
+                background: "rgba(0,0,0,0.6)",
+                backdropFilter: "blur(8px)",
+                fontSize: 10,
+                fontWeight: 600,
+                color: "#fff",
+                letterSpacing: "0.04em",
+              }}
+            >
+              BAYC
+            </div>
+          </div>
+
+          {/* Info section */}
+          <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
+            <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)" }}>
+              Bored Ape #7842
+            </span>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span
+                style={{
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: "var(--w3-gray-900)",
+                  fontFamily: monoFont,
+                  fontVariantNumeric: "tabular-nums",
+                }}
+              >
+                68.5 ETH
+              </span>
+              <span
+                style={{
+                  fontSize: 13,
+                  color: "var(--w3-gray-600)",
+                  fontFamily: monoFont,
+                }}
+              >
+                0xd8dA...6045
+              </span>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Footer */}
+      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
+          BAYC Collection
+        </span>
       </div>
     </div>
   );

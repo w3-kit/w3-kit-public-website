@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Search, Copy, Check, User } from "lucide-react";
+import { AtSign, Search, Copy, Check } from "lucide-react";
+import { previewCard, previewHeader, monoFont } from "./_shared";
+import { truncateAddress } from "../../lib/format";
 
 interface ResolvedResult {
   ensName: string;
@@ -16,15 +18,9 @@ export function ENSResolverPreview() {
 
   const handleResolve = () => {
     if (query.endsWith(".eth")) {
-      setResolved({
-        ensName: query,
-        address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
-      });
+      setResolved({ ensName: query, address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" });
     } else if (query.startsWith("0x")) {
-      setResolved({
-        ensName: "vitalik.eth",
-        address: query,
-      });
+      setResolved({ ensName: "vitalik.eth", address: query });
     }
   };
 
@@ -33,42 +29,21 @@ export function ENSResolverPreview() {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const truncateAddress = (addr: string) =>
-    `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-
   return (
-    <div
-      style={{
-        borderRadius: 12,
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
-        overflow: "hidden",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
+    <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
       {/* Header */}
-      <div
-        style={{
-          padding: "10px 14px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-        }}
-      >
-        <span
-          style={{
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-            color: "var(--w3-gray-500)",
-          }}
-        >
-          ENS Resolver
-        </span>
+      <div style={{ ...previewHeader }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <AtSign size={18} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            ENS Resolver
+          </span>
+        </div>
       </div>
 
-      <div style={{ padding: 14 }}>
-        {/* Search input */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+      {/* Search */}
+      <div style={{ padding: "16px 20px" }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -76,25 +51,25 @@ export function ENSResolverPreview() {
             placeholder="vitalik.eth or 0x..."
             style={{
               flex: 1,
-              padding: "7px 10px",
-              borderRadius: 8,
+              padding: "10px 12px",
+              borderRadius: 10,
               border: "1px solid var(--w3-border-subtle)",
-              background: "var(--w3-glass-inner-bg)",
-              fontSize: 12,
-              fontFamily: '"Geist Mono", ui-monospace, monospace',
-              color: "var(--w3-gray-700)",
+              background: "transparent",
+              fontSize: 13,
+              fontFamily: monoFont,
+              color: "var(--w3-gray-900)",
               outline: "none",
             }}
           />
           <button
             onClick={handleResolve}
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: 8,
+              width: 38,
+              height: 38,
+              borderRadius: 10,
               border: "none",
               background: "var(--w3-gray-900)",
-              color: "var(--w3-gray-100)",
+              color: "#fff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -102,74 +77,41 @@ export function ENSResolverPreview() {
               flexShrink: 0,
             }}
           >
-            <Search size={14} />
+            <Search size={15} />
           </button>
         </div>
 
-        {/* Result */}
+        {/* Result card */}
         {resolved ? (
           <div
             style={{
-              borderRadius: 10,
-              background: "var(--w3-glass-inner-bg)",
-              padding: 14,
+              borderRadius: 12,
+              border: "1px solid var(--w3-border-subtle)",
+              background: "var(--w3-accent-subtle)",
+              padding: 16,
               display: "flex",
               flexDirection: "column",
               gap: 14,
             }}
           >
             {/* ENS name row */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-              >
-                {/* Avatar placeholder */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                {/* Avatar circle with gradient */}
                 <div
                   style={{
-                    width: 32,
-                    height: 32,
+                    width: 36,
+                    height: 36,
                     borderRadius: "50%",
-                    background: "var(--w3-accent-subtle)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    background: "linear-gradient(135deg, var(--w3-accent), var(--w3-gray-400))",
                     flexShrink: 0,
                   }}
-                >
-                  <User
-                    size={14}
-                    style={{ color: "var(--w3-accent)" }}
-                  />
-                </div>
+                />
                 <div>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      fontWeight: 600,
-                      letterSpacing: "0.05em",
-                      textTransform: "uppercase",
-                      color: "var(--w3-gray-500)",
-                    }}
-                  >
+                  <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 2 }}>
                     ENS Name
                   </div>
-                  <div
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 500,
-                      color: "var(--w3-gray-900)",
-                    }}
-                  >
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)" }}>
                     {resolved.ensName}
                   </div>
                 </div>
@@ -177,123 +119,64 @@ export function ENSResolverPreview() {
               <button
                 onClick={() => handleCopy("name")}
                 style={{
-                  padding: 5,
+                  padding: 6,
+                  borderRadius: 6,
                   background: "transparent",
                   border: "none",
-                  color:
-                    copied === "name"
-                      ? "#22c55e"
-                      : "var(--w3-gray-400)",
+                  color: copied === "name" ? "#22c55e" : "var(--w3-gray-400)",
                   cursor: "pointer",
-                  borderRadius: 6,
+                  display: "flex",
                 }}
               >
-                {copied === "name" ? (
-                  <Check size={14} />
-                ) : (
-                  <Copy size={14} />
-                )}
+                {copied === "name" ? <Check size={14} /> : <Copy size={14} />}
               </button>
             </div>
 
-            {/* Divider with arrow */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              <div
-                style={{
-                  flex: 1,
-                  height: 1,
-                  background: "var(--w3-border-subtle)",
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 12,
-                  color: "var(--w3-gray-400)",
-                }}
-              >
-                ↕
-              </span>
-              <div
-                style={{
-                  flex: 1,
-                  height: 1,
-                  background: "var(--w3-border-subtle)",
-                }}
-              />
+            {/* Bidirectional arrow divider */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ flex: 1, height: 1, background: "var(--w3-border-subtle)" }} />
+              <span style={{ fontSize: 13, color: "var(--w3-gray-400)" }}>&#8597;</span>
+              <div style={{ flex: 1, height: 1, background: "var(--w3-border-subtle)" }} />
             </div>
 
             {/* Address row */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div>
-                <div
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 600,
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                    color: "var(--w3-gray-500)",
-                  }}
-                >
+                <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 2 }}>
                   Address
                 </div>
-                <div
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 500,
-                    fontFamily:
-                      '"Geist Mono", ui-monospace, monospace',
-                    color: "var(--w3-gray-900)",
-                  }}
-                >
+                <div style={{ fontSize: 13, fontFamily: monoFont, color: "var(--w3-gray-600)" }}>
                   {truncateAddress(resolved.address)}
                 </div>
               </div>
               <button
                 onClick={() => handleCopy("address")}
                 style={{
-                  padding: 5,
+                  padding: 6,
+                  borderRadius: 6,
                   background: "transparent",
                   border: "none",
-                  color:
-                    copied === "address"
-                      ? "#22c55e"
-                      : "var(--w3-gray-400)",
+                  color: copied === "address" ? "#22c55e" : "var(--w3-gray-400)",
                   cursor: "pointer",
-                  borderRadius: 6,
+                  display: "flex",
                 }}
               >
-                {copied === "address" ? (
-                  <Check size={14} />
-                ) : (
-                  <Copy size={14} />
-                )}
+                {copied === "address" ? <Check size={14} /> : <Copy size={14} />}
               </button>
             </div>
           </div>
         ) : (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "16px 0",
-              fontSize: 12,
-              color: "var(--w3-gray-400)",
-            }}
-          >
+          <div style={{ textAlign: "center", padding: "20px 0", fontSize: 13, color: "var(--w3-gray-400)" }}>
             Enter an ENS name or address to resolve
           </div>
         )}
+      </div>
+
+      {/* Footer */}
+      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
+          Resolved
+        </span>
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ export function FlashLoanPreview() {
       <div style={previewHeader}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Zap size={16} style={{ color: "#f59e0b" }} />
-          <span style={{ fontSize: 15, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
             Flash Loan
           </span>
         </div>

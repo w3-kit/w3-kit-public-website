@@ -53,7 +53,7 @@ function StatBox({
       </p>
       <p
         style={{
-          fontSize: 14,
+          fontSize: 15,
           fontWeight: 600,
           color: "var(--w3-gray-900)",
           margin: "4px 0 0",
@@ -123,7 +123,7 @@ export function LiquidityPoolPreview() {
           </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ fontSize: 14, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+              <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
                 {POOL.pair}
               </span>
               <span

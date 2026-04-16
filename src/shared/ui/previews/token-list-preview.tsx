@@ -1,3 +1,8 @@
+import { useEffect } from "react";
+import { List } from "lucide-react";
+import { previewCard, previewHeader, monoFont } from "./_shared";
+import { cryptoLogo, preloadCryptoLogos } from "../../lib/logos";
+
 const TOKENS = [
   { symbol: "ETH", name: "Ethereum", balance: "4.2100", price: 3_355.18 },
   { symbol: "USDC", name: "USD Coin", balance: "2,500.00", price: 1.0 },
@@ -16,122 +21,95 @@ function fmtBalance(b: string) {
 }
 
 export function TokenListPreview() {
+  useEffect(() => {
+    preloadCryptoLogos(TOKENS.map((t) => t.symbol));
+  }, []);
+
   return (
-    <div
-      style={{
-        borderRadius: 12,
-        overflow: "hidden",
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
-      }}
-    >
-      {/* Column headers */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 90px 100px",
-          gap: 8,
-          padding: "8px 16px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-          fontSize: 10,
-          color: "var(--w3-gray-500)",
-        }}
-      >
-        <span>Token</span>
-        <span style={{ textAlign: "right" }}>Balance</span>
-        <span style={{ textAlign: "right" }}>Value</span>
+    <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
+      {/* Header */}
+      <div style={{ ...previewHeader }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <List size={18} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            Tokens
+          </span>
+          <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>{TOKENS.length}</span>
+        </div>
       </div>
 
-      {/* Rows */}
-      {TOKENS.map((t, i) => {
-        const raw = parseFloat(t.balance.replace(/,/g, ""));
-        const value = raw * t.price;
+      {/* Token rows */}
+      <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
+        {TOKENS.map((t) => {
+          const raw = parseFloat(t.balance.replace(/,/g, ""));
+          const value = raw * t.price;
 
-        return (
-          <div
-            key={t.symbol}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 90px 100px",
-              gap: 8,
-              alignItems: "center",
-              padding: "10px 16px",
-              borderBottom: i < TOKENS.length - 1 ? "1px solid var(--w3-border-subtle)" : "none",
-              cursor: "pointer",
-              transition: "background 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLDivElement).style.background = "var(--w3-glass-inner-bg)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLDivElement).style.background = "transparent";
-            }}
-          >
-            {/* Token info */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-              <div
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 8,
-                  background: "var(--w3-glass-inner-bg)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 10,
-                  fontWeight: 600,
-                  color: "var(--w3-gray-700)",
-                  fontFamily: '"Geist Mono", ui-monospace, monospace',
-                  flexShrink: 0,
-                }}
-              >
-                {t.symbol.slice(0, 4)}
+          return (
+            <div
+              key={t.symbol}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                padding: "12px 14px",
+                borderRadius: 12,
+                transition: "background 0.15s",
+                cursor: "default",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "var(--w3-accent-subtle)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "transparent";
+              }}
+            >
+              {/* Logo */}
+              <img
+                src={cryptoLogo(t.symbol)}
+                alt={t.symbol}
+                width={32}
+                height={32}
+                style={{ borderRadius: "50%", flexShrink: 0 }}
+              />
+
+              {/* Symbol + Name */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                  {t.symbol}
+                </span>
+                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                  {t.name}
+                </span>
               </div>
-              <div style={{ minWidth: 0 }}>
-                <p
+
+              {/* Balance + Value */}
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <span
                   style={{
-                    fontSize: 13,
-                    fontWeight: 500,
-                    color: "var(--w3-gray-900)",
-                    margin: 0,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    fontSize: 15,
+                    fontFamily: monoFont,
+                    color: "var(--w3-gray-600)",
+                    fontVariantNumeric: "tabular-nums",
+                    display: "block",
                   }}
                 >
-                  {t.name}
-                </p>
-                <p style={{ fontSize: 11, color: "var(--w3-gray-500)", margin: 0 }}>{t.symbol}</p>
+                  {fmtBalance(t.balance)}
+                </span>
+                <span style={{ fontSize: 13, color: "var(--w3-gray-600)", display: "block", marginTop: 1 }}>
+                  {fmtCurrency(value)}
+                </span>
               </div>
             </div>
+          );
+        })}
+      </div>
 
-            {/* Balance */}
-            <span
-              style={{
-                fontSize: 13,
-                color: "var(--w3-gray-900)",
-                textAlign: "right",
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {fmtBalance(t.balance)}
-            </span>
-
-            {/* Value */}
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 500,
-                color: "var(--w3-gray-900)",
-                textAlign: "right",
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {fmtCurrency(value)}
-            </span>
-          </div>
-        );
-      })}
+      {/* Footer */}
+      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
+          {TOKENS.length} tokens
+        </span>
+      </div>
     </div>
   );
 }

@@ -1,297 +1,139 @@
-import { useState } from "react";
-import { ArrowUpRight, ArrowDownLeft, ArrowLeftRight, Clock } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, ArrowLeftRight, FileCode, History } from "lucide-react";
+import { previewCard, previewHeader, monoFont } from "./_shared";
+import { truncateAddress } from "../../lib/format";
 
-type TxStatus = "success" | "pending" | "failed";
-type TxType = "send" | "receive" | "swap";
+type TxStatus = "success" | "pending";
+type TxType = "send" | "receive" | "swap" | "contract";
 
 interface MockTx {
-  id: string;
   type: TxType;
+  description: string;
   hash: string;
   amount: string;
-  symbol: string;
   status: TxStatus;
-  time: string;
 }
 
 const MOCK_TXS: MockTx[] = [
-  {
-    id: "1",
-    type: "send",
-    hash: "0x8a3f...e4b2",
-    amount: "0.25",
-    symbol: "ETH",
-    status: "success",
-    time: "2 min ago",
-  },
-  {
-    id: "2",
-    type: "receive",
-    hash: "0xb1c7...9f03",
-    amount: "1,200",
-    symbol: "USDC",
-    status: "success",
-    time: "18 min ago",
-  },
-  {
-    id: "3",
-    type: "swap",
-    hash: "0xf29d...7a11",
-    amount: "0.5",
-    symbol: "ETH",
-    status: "pending",
-    time: "34 min ago",
-  },
-  {
-    id: "4",
-    type: "send",
-    hash: "0x3e0a...c8d5",
-    amount: "500",
-    symbol: "DAI",
-    status: "success",
-    time: "1 hr ago",
-  },
+  { type: "send", description: "Sent ETH", hash: "0x8a3f21b7c9e04d6f2a1b8c5d3e7f9a0b4c6d8e4b2", amount: "-0.25 ETH", status: "success" },
+  { type: "receive", description: "Received USDC", hash: "0xb1c7d4e8f2a6b9c3d5e7f0a1b4c6d8e2f4a6b9f03", amount: "+1,200 USDC", status: "success" },
+  { type: "swap", description: "Swap ETH → USDC", hash: "0xf29d6c8a3b5e7d1f4a9c2b6e8d0f3a5c7b9d7a11", amount: "0.5 ETH", status: "pending" },
+  { type: "contract", description: "Contract Call", hash: "0x3e0a7b2c9d4f6a8e1c3b5d7f9a0c2e4b6d8f0c8d5", amount: "0.01 ETH", status: "success" },
 ];
 
-const typeIcon: Record<TxType, typeof ArrowUpRight> = {
-  send: ArrowUpRight,
-  receive: ArrowDownLeft,
-  swap: ArrowLeftRight,
+const typeConfig: Record<TxType, { icon: typeof ArrowUpRight; color: string; bg: string }> = {
+  send: { icon: ArrowUpRight, color: "#ef4444", bg: "rgba(239,68,68,0.1)" },
+  receive: { icon: ArrowDownLeft, color: "#22c55e", bg: "rgba(34,197,94,0.1)" },
+  swap: { icon: ArrowLeftRight, color: "#3b82f6", bg: "rgba(59,130,246,0.1)" },
+  contract: { icon: FileCode, color: "var(--w3-gray-500)", bg: "var(--w3-accent-subtle)" },
 };
 
-const typeLabel: Record<TxType, string> = {
-  send: "Sent",
-  receive: "Received",
-  swap: "Swap",
-};
-
-const statusColor: Record<TxStatus, string> = {
-  success: "#22c55e",
-  pending: "#f59e0b",
-  failed: "#ef4444",
-};
-
-const statusLabel: Record<TxStatus, string> = {
-  success: "Success",
-  pending: "Pending",
-  failed: "Failed",
+const statusConfig: Record<TxStatus, { label: string; color: string; bg: string }> = {
+  success: { label: "Success", color: "#22c55e", bg: "rgba(34,197,94,0.1)" },
+  pending: { label: "Pending", color: "#f59e0b", bg: "rgba(245,158,11,0.1)" },
 };
 
 export function TransactionHistoryPreview() {
-  const [selected, setSelected] = useState<string | null>(null);
-
   return (
-    <div
-      style={{
-        borderRadius: 12,
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
-        overflow: "hidden",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
+    <div style={{ ...previewCard, maxWidth: 400, width: "100%", margin: "0 auto" }}>
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "10px 14px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-        }}
-      >
-        <span
-          style={{
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-            color: "var(--w3-gray-500)",
-          }}
-        >
-          Transactions
-        </span>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              fontSize: 11,
-              fontWeight: 500,
-              color: "#f59e0b",
-            }}
-          >
-            <span
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: "#f59e0b",
-                display: "inline-block",
-              }}
-            />
-            1
-          </span>
-          <span style={{ fontSize: 11, color: "var(--w3-gray-500)" }}>
-            {MOCK_TXS.length} total
+      <div style={{ ...previewHeader }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <History size={18} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+            Transactions
           </span>
         </div>
       </div>
 
-      {/* Transaction list */}
-      <div>
-        {MOCK_TXS.map((tx, i) => {
-          const Icon = typeIcon[tx.type];
-          const isSelected = selected === tx.id;
+      {/* Transaction rows */}
+      <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
+        {MOCK_TXS.map((tx) => {
+          const { icon: Icon, color, bg } = typeConfig[tx.type];
+          const status = statusConfig[tx.status];
+
           return (
             <div
-              key={tx.id}
-              onClick={() => setSelected(isSelected ? null : tx.id)}
+              key={tx.hash}
               style={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
-                padding: "10px 14px",
-                borderBottom:
-                  i < MOCK_TXS.length - 1
-                    ? "1px solid var(--w3-border-subtle)"
-                    : "none",
-                cursor: "pointer",
-                background: isSelected
-                  ? "var(--w3-glass-inner-bg)"
-                  : "transparent",
+                gap: 14,
+                padding: "12px 14px",
+                borderRadius: 12,
                 transition: "background 0.15s",
+                cursor: "default",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "var(--w3-accent-subtle)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "transparent";
               }}
             >
+              {/* Type icon */}
               <div
                 style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: "50%",
+                  background: bg,
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
-                  minWidth: 0,
+                  justifyContent: "center",
+                  flexShrink: 0,
                 }}
               >
-                {/* Icon */}
-                <div
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 8,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background:
-                      tx.type === "receive"
-                        ? "rgba(34,197,94,0.1)"
-                        : "var(--w3-glass-inner-bg)",
-                    flexShrink: 0,
-                  }}
-                >
-                  <Icon
-                    size={14}
-                    style={{
-                      color:
-                        tx.type === "receive"
-                          ? "#22c55e"
-                          : "var(--w3-gray-500)",
-                    }}
-                  />
-                </div>
-
-                {/* Label + Hash */}
-                <div style={{ minWidth: 0 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 500,
-                        color: "var(--w3-gray-900)",
-                      }}
-                    >
-                      {typeLabel[tx.type]}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 10,
-                        fontWeight: 500,
-                        padding: "1px 6px",
-                        borderRadius: 6,
-                        background:
-                          tx.status === "success"
-                            ? "rgba(34,197,94,0.1)"
-                            : tx.status === "pending"
-                              ? "rgba(245,158,11,0.1)"
-                              : "rgba(239,68,68,0.1)",
-                        color: statusColor[tx.status],
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 3,
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: 5,
-                          height: 5,
-                          borderRadius: "50%",
-                          background: statusColor[tx.status],
-                          display: "inline-block",
-                        }}
-                      />
-                      {statusLabel[tx.status]}
-                    </span>
-                  </div>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontFamily: '"Geist Mono", ui-monospace, monospace',
-                      color: "var(--w3-gray-500)",
-                    }}
-                  >
-                    {tx.hash}
-                  </span>
-                </div>
+                <Icon size={16} style={{ color }} />
               </div>
 
-              {/* Amount + Time */}
-              <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 12 }}>
+              {/* Description + Hash */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                  {tx.description}
+                </span>
                 <span
                   style={{
                     fontSize: 13,
-                    fontWeight: 500,
-                    fontVariantNumeric: "tabular-nums",
-                    color:
-                      tx.type === "receive"
-                        ? "#22c55e"
-                        : "var(--w3-gray-900)",
+                    fontFamily: monoFont,
+                    color: "var(--w3-gray-600)",
+                    display: "block",
+                    marginTop: 1,
                   }}
                 >
-                  {tx.type === "receive" ? "+" : tx.type === "send" ? "-" : ""}
-                  {tx.amount} {tx.symbol}
+                  {truncateAddress(tx.hash)}
                 </span>
-                <div
+              </div>
+
+              {/* Amount + Status */}
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <span style={{ fontSize: 15, fontWeight: 500, color: "var(--w3-gray-900)", display: "block" }}>
+                  {tx.amount}
+                </span>
+                <span
                   style={{
+                    display: "inline-block",
+                    marginTop: 3,
                     fontSize: 11,
-                    color: "var(--w3-gray-500)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    gap: 3,
+                    fontWeight: 500,
+                    padding: "2px 8px",
+                    borderRadius: 6,
+                    background: status.bg,
+                    color: status.color,
                   }}
                 >
-                  <Clock size={10} />
-                  {tx.time}
-                </div>
+                  {status.label}
+                </span>
               </div>
             </div>
           );
         })}
+      </div>
+
+      {/* Footer */}
+      <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
+        <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>
+          {MOCK_TXS.length} transactions
+        </span>
       </div>
     </div>
   );
