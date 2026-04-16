@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { TrendingUp, TrendingDown, Droplets } from "lucide-react";
+import { TrendingUp, TrendingDown, Droplets, Plus, Minus } from "lucide-react";
+import { cryptoLogo } from "../../lib/logos";
+import { previewCard, previewHeader, monoFont } from "./_shared";
 
 const POOL = {
   pair: "ETH / USDC",
-  feeTier: "0.30%",
+  fee: "0.30%",
   tvl: 184_520_000,
   tvlChange: 3.21,
   volume24h: 42_870_000,
@@ -11,6 +13,7 @@ const POOL = {
   apr: 18.42,
   fees24h: 128_610,
   txCount: 12_483,
+  holders: 4_821,
 };
 
 function fmt(n: number) {
@@ -50,10 +53,11 @@ function StatBox({
       </p>
       <p
         style={{
-          fontSize: 15,
+          fontSize: 14,
           fontWeight: 600,
           color: "var(--w3-gray-900)",
           margin: "4px 0 0",
+          fontFamily: monoFont,
           fontVariantNumeric: "tabular-nums",
         }}
       >
@@ -88,51 +92,55 @@ export function LiquidityPoolPreview() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        borderRadius: 12,
-        overflow: "hidden",
-        border: "1px solid var(--w3-border-subtle)",
-        background: "var(--w3-surface-elevated)",
+        ...previewCard,
+        maxWidth: 400,
+        width: "100%",
+        margin: "0 auto",
         transition: "box-shadow 0.2s",
         boxShadow: hovered ? "0 4px 20px rgba(0,0,0,0.06)" : "none",
       }}
     >
       {/* Header */}
-      <div
-        style={{
-          padding: "12px 16px",
-          borderBottom: "1px solid var(--w3-border-subtle)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <div style={{ ...previewHeader }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              background: "var(--w3-accent-subtle)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Droplets size={16} style={{ color: "var(--w3-accent)" }} />
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={cryptoLogo("ETH")}
+              alt="ETH"
+              width={28}
+              height={28}
+              style={{ borderRadius: "50%", display: "block", border: "2px solid var(--w3-surface-elevated)" }}
+              loading="lazy"
+            />
+            <img
+              src={cryptoLogo("USDC")}
+              alt="USDC"
+              width={28}
+              height={28}
+              style={{ borderRadius: "50%", display: "block", marginLeft: -8, border: "2px solid var(--w3-surface-elevated)" }}
+              loading="lazy"
+            />
           </div>
           <div>
-            <p
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: "var(--w3-gray-900)",
-                margin: 0,
-              }}
-            >
-              {POOL.pair}
-            </p>
-            <p style={{ fontSize: 11, color: "var(--w3-gray-500)", margin: 0 }}>
-              {POOL.feeTier} fee tier
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ fontSize: 14, fontWeight: 600, color: "var(--w3-gray-900)" }}>
+                {POOL.pair}
+              </span>
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 500,
+                  padding: "2px 6px",
+                  borderRadius: 99,
+                  background: "var(--w3-glass-inner-bg)",
+                  color: "var(--w3-gray-500)",
+                }}
+              >
+                {POOL.fee}
+              </span>
+            </div>
+            <p style={{ fontSize: 11, color: "var(--w3-gray-500)", margin: "2px 0 0" }}>
+              Uniswap V3
             </p>
           </div>
         </div>
@@ -140,9 +148,10 @@ export function LiquidityPoolPreview() {
           <p
             style={{
               fontSize: 18,
-              fontWeight: 600,
+              fontWeight: 700,
               color: "#16a34a",
               margin: 0,
+              fontFamily: monoFont,
               fontVariantNumeric: "tabular-nums",
             }}
           >
@@ -163,19 +172,84 @@ export function LiquidityPoolPreview() {
         </div>
       </div>
 
-      {/* Stat grid */}
+      {/* Stat grid — 2x3 */}
       <div
         style={{
-          padding: 12,
+          padding: 10,
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: 8,
+          gap: 6,
         }}
       >
         <StatBox label="TVL" value={fmt(POOL.tvl)} change={POOL.tvlChange} />
         <StatBox label="Volume (24h)" value={fmt(POOL.volume24h)} change={POOL.volumeChange} />
         <StatBox label="Fees (24h)" value={fmt(POOL.fees24h)} />
         <StatBox label="Transactions" value={POOL.txCount.toLocaleString()} />
+        <StatBox label="Holders" value={POOL.holders.toLocaleString()} />
+        <StatBox label="APR" value={`${POOL.apr}%`} />
+      </div>
+
+      {/* Action buttons */}
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          padding: "0 10px 10px",
+        }}
+      >
+        <button
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            padding: "8px 0",
+            borderRadius: 8,
+            border: "none",
+            background: "var(--w3-accent)",
+            color: "#fff",
+            fontSize: 13,
+            fontWeight: 500,
+            cursor: "pointer",
+          }}
+        >
+          <Plus size={14} />
+          Add Liquidity
+        </button>
+        <button
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            padding: "8px 0",
+            borderRadius: 8,
+            border: "1px solid var(--w3-border-subtle)",
+            background: "transparent",
+            color: "var(--w3-gray-700)",
+            fontSize: 13,
+            fontWeight: 500,
+            cursor: "pointer",
+          }}
+        >
+          <Minus size={14} />
+          Remove
+        </button>
+      </div>
+
+      {/* Footer */}
+      <div
+        style={{
+          padding: "10px 16px",
+          borderTop: "1px solid var(--w3-border-subtle)",
+          textAlign: "center",
+        }}
+      >
+        <span style={{ fontSize: 12, color: "var(--w3-gray-500)" }}>
+          Props-driven pool stats card with action buttons
+        </span>
       </div>
     </div>
   );
