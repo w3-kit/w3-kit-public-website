@@ -4,13 +4,21 @@
 //
 // IMPORTANT: no files were moved.  This module only re-exports.
 
-// ── Components ──────────────────────────────────────────────────────────
+// ── Landing page components (used only on the landing page) ──────────────
 export { ConnectWalletButton } from "../../../pages/landing/ui/connect-wallet/connect-wallet";
 export { NetworkSwitcher } from "../../../pages/landing/ui/network-switcher/network-switcher";
 export { WalletBalance } from "../../../pages/landing/ui/wallet-balance/wallet-balance";
 export { TokenSwapWidget } from "../../../pages/landing/ui/token-swap/token-swap";
 export { SmartContractScanner } from "../../../pages/landing/ui/smart-contract-scanner/smart-contract-scanner";
 export { NFTCard } from "../../../pages/landing/ui/nft-card/nft-card";
+
+// ── Self-contained preview components (for grid + detail pages) ──────────
+export { ConnectWalletPreview } from "./connect-wallet-preview";
+export { NetworkSwitcherPreview } from "./network-switcher-preview";
+export { WalletBalancePreview } from "./wallet-balance-preview";
+export { TokenSwapPreview } from "./token-swap-preview";
+export { SmartContractScannerPreview } from "./smart-contract-scanner-preview";
+export { NFTCardPreview } from "./nft-card-preview";
 
 // ── Preview components (self-contained with mock data) ──────────────────
 export { LiquidityPoolPreview } from "./liquidity-pool-preview";

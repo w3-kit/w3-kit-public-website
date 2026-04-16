@@ -7,12 +7,12 @@ import {
   type ComponentCategory,
 } from "../../../entities/component";
 import {
-  ConnectWalletButton,
-  NetworkSwitcher,
-  WalletBalance,
-  TokenSwapWidget,
-  SmartContractScanner,
-  NFTCard,
+  ConnectWalletPreview,
+  NetworkSwitcherPreview,
+  WalletBalancePreview,
+  TokenSwapPreview,
+  SmartContractScannerPreview,
+  NFTCardPreview,
   AddressBookPreview,
   MultisigWalletPreview,
   StakingInterfacePreview,
@@ -35,11 +35,6 @@ import {
   TokenAirdropPreview,
   TokenVestingPreview,
 } from "../../../shared/ui/previews";
-import {
-  DEMO_NETWORKS,
-  DEMO_BALANCE_TOKENS,
-  DEMO_NFT,
-} from "../../../shared/ui/previews/demo-data";
 import { ComponentHeader } from "./component-header";
 import { ComponentPreview } from "./component-preview";
 import { PropsTable } from "./props-table";
@@ -71,18 +66,18 @@ function getPreviewContent(id: string): React.ReactNode | null {
   switch (id) {
     // Wallet
     case "connect-wallet":
-      return <ConnectWalletButton className="w-full" />;
+      return <ConnectWalletPreview />;
     case "network-switcher":
-      return <NetworkSwitcher networks={DEMO_NETWORKS} testNetworks={[]} onSwitch={() => {}} />;
+      return <NetworkSwitcherPreview />;
     case "wallet-balance":
-      return <WalletBalance tokens={DEMO_BALANCE_TOKENS} variant="compact" />;
+      return <WalletBalancePreview />;
     case "address-book":
       return <AddressBookPreview />;
     case "multisig-wallet":
       return <MultisigWalletPreview />;
     // DeFi
     case "token-swap":
-      return <TokenSwapWidget onSwap={async () => {}} />;
+      return <TokenSwapPreview />;
     case "staking-interface":
       return <StakingInterfacePreview />;
     case "bridge":
@@ -97,7 +92,7 @@ function getPreviewContent(id: string): React.ReactNode | null {
       return <LiquidityPoolPreview />;
     // NFT
     case "nft-card":
-      return <NFTCard nft={DEMO_NFT} variant="default" />;
+      return <NFTCardPreview />;
     case "nft-collection-grid":
       return <NFTCollectionPreview />;
     case "nft-marketplace-aggregator":
@@ -115,7 +110,7 @@ function getPreviewContent(id: string): React.ReactNode | null {
       return <TransactionHistoryPreview />;
     // Utility
     case "smart-contract-scanner":
-      return <SmartContractScanner variant="compact" />;
+      return <SmartContractScannerPreview />;
     case "contract-interaction":
       return <ContractInteractionPreview />;
     case "ens-resolver":

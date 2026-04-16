@@ -6,12 +6,12 @@ import { Badge } from "../../../shared/ui/badge";
 import { componentRegistry } from "../../../entities/component";
 import type { ComponentCategory } from "../../../entities/component";
 import {
-  ConnectWalletButton,
-  NetworkSwitcher,
-  WalletBalance,
-  TokenSwapWidget,
-  SmartContractScanner,
-  NFTCard,
+  ConnectWalletPreview,
+  NetworkSwitcherPreview,
+  WalletBalancePreview,
+  TokenSwapPreview,
+  SmartContractScannerPreview,
+  NFTCardPreview,
   AddressBookPreview,
   MultisigWalletPreview,
   StakingInterfacePreview,
@@ -34,11 +34,6 @@ import {
   TokenAirdropPreview,
   TokenVestingPreview,
 } from "../../../shared/ui/previews";
-import {
-  DEMO_NETWORKS,
-  DEMO_BALANCE_TOKENS,
-  DEMO_NFT,
-} from "../../../shared/ui/previews/demo-data";
 
 const categories: { label: string; value: ComponentCategory | "all" }[] = [
   { label: "All", value: "all" },
@@ -60,17 +55,17 @@ const categoryLabels: Record<ComponentCategory, string> = {
 function getPreview(id: string): React.ReactNode {
   switch (id) {
     case "connect-wallet":
-      return <ConnectWalletButton className="w-full" />;
+      return <ConnectWalletPreview />;
     case "network-switcher":
-      return <NetworkSwitcher networks={DEMO_NETWORKS} testNetworks={[]} onSwitch={() => {}} />;
+      return <NetworkSwitcherPreview />;
     case "wallet-balance":
-      return <WalletBalance tokens={DEMO_BALANCE_TOKENS} variant="compact" />;
+      return <WalletBalancePreview />;
     case "address-book":
       return <AddressBookPreview />;
     case "multisig-wallet":
       return <MultisigWalletPreview />;
     case "token-swap":
-      return <TokenSwapWidget onSwap={async () => {}} />;
+      return <TokenSwapPreview />;
     case "staking-interface":
       return <StakingInterfacePreview />;
     case "bridge":
@@ -84,7 +79,7 @@ function getPreview(id: string): React.ReactNode {
     case "liquidity-pool-stats":
       return <LiquidityPoolPreview />;
     case "nft-card":
-      return <NFTCard nft={DEMO_NFT} variant="default" />;
+      return <NFTCardPreview />;
     case "nft-collection-grid":
       return <NFTCollectionPreview />;
     case "nft-marketplace-aggregator":
@@ -100,7 +95,7 @@ function getPreview(id: string): React.ReactNode {
     case "transaction-history":
       return <TransactionHistoryPreview />;
     case "smart-contract-scanner":
-      return <SmartContractScanner variant="compact" />;
+      return <SmartContractScannerPreview />;
     case "contract-interaction":
       return <ContractInteractionPreview />;
     case "ens-resolver":
@@ -164,29 +159,29 @@ export function UiComponentGrid() {
           ))}
         </div>
 
-        {/* Live preview grid */}
+        {/* Masonry preview grid */}
         <div
           ref={gridRef}
-          className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="columns-1 gap-5 sm:columns-2 lg:columns-3"
         >
           {filtered.map((component) => (
             <a
               key={component.id}
               href={`${getSectionUrl("ui")}/${component.id}`}
               data-reveal
-              className="group flex flex-col overflow-hidden rounded-xl transition-all hover:translate-y-[-2px]"
+              className="group mb-5 flex break-inside-avoid flex-col overflow-hidden rounded-xl transition-all hover:translate-y-[-2px]"
               style={{
                 background: "var(--w3-glass-bg)",
                 border: "1px solid var(--w3-glass-border)",
                 boxShadow: "var(--w3-glass-shadow)",
               }}
             >
-              {/* Live preview area */}
+              {/* Live preview area — natural height, centered */}
               <div
-                className="pointer-events-none max-h-[260px] overflow-hidden p-3"
+                className="pointer-events-none flex items-center justify-center overflow-hidden p-4"
                 style={{ background: "var(--w3-glass-inner-bg)" }}
               >
-                <div className="origin-top-left scale-[0.85]">
+                <div className="w-full">
                   {getPreview(component.id)}
                 </div>
               </div>
