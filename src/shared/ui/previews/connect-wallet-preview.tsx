@@ -31,7 +31,10 @@ function Logo({ domain, size = 32 }: { domain: string; size?: number }) {
   );
 }
 
-export function ConnectWalletPreview() {
+type Variant = "default" | "compact";
+
+export function ConnectWalletPreview({ variant: initialVariant = "default" }: { variant?: Variant } = {}) {
+  const [variant, setVariant] = useState<Variant>(initialVariant);
   useEffect(() => { preloadDomainLogos(WALLETS.map((w) => w.domain)); }, []);
 
   const [state, setState] = useState<State>("idle");
@@ -83,13 +86,104 @@ export function ConnectWalletPreview() {
     marginBottom: 6,
   };
 
+  const variantBar = (
+    <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+      {(["default", "compact"] as Variant[]).map((v) => (
+        <button
+          key={v}
+          onClick={() => { setVariant(v); setState("idle"); setWalletId(null); setChainsOpen(false); }}
+          style={{
+            padding: "4px 12px",
+            borderRadius: 6,
+            border: "1px solid var(--w3-border-subtle)",
+            background: variant === v ? "var(--w3-accent)" : "transparent",
+            color: variant === v ? "#fff" : "var(--w3-gray-600)",
+            fontSize: 12,
+            fontWeight: 500,
+            cursor: "pointer",
+            textTransform: "capitalize",
+          }}
+        >
+          {v}
+        </button>
+      ))}
+    </div>
+  );
+
+  /* ── COMPACT VARIANT — single button that shows wallet info ────── */
+  if (variant === "compact") {
+    if (state === "connected" && wallet) {
+      return (
+        <div>
+          {variantBar}
+          <button
+            onClick={disconnect}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "10px 16px",
+              borderRadius: 10,
+              border: "1px solid var(--w3-border-subtle)",
+              background: "var(--w3-surface-elevated)",
+              cursor: "pointer",
+              fontFamily: '"Geist Sans", system-ui, sans-serif',
+            }}
+          >
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
+            <Logo domain={wallet.domain} size={20} />
+            <span style={{ fontSize: 13, fontWeight: 500, color: "var(--w3-gray-900)", fontFamily: monoFont }}>{truncateAddress(MOCK_ADDRESS)}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "2px 8px", borderRadius: 5, background: chain.color + "12", fontSize: 11, fontWeight: 500, color: chain.color }}>
+              <div style={{ width: 6, height: 6, borderRadius: "50%", background: chain.color }} />
+              {chain.name}
+            </div>
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        {variantBar}
+        <button
+          onClick={() => connect("metamask")}
+          disabled={state === "connecting"}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "10px 20px",
+            borderRadius: 10,
+            border: "none",
+            background: "var(--w3-accent)",
+            color: "#fff",
+            fontSize: 14,
+            fontWeight: 600,
+            cursor: state === "connecting" ? "wait" : "pointer",
+            fontFamily: '"Geist Sans", system-ui, sans-serif',
+          }}
+        >
+          {state === "connecting" ? (
+            <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} />
+          ) : (
+            <Wallet size={16} />
+          )}
+          {state === "connecting" ? "Connecting..." : "Connect Wallet"}
+        </button>
+      </div>
+    );
+  }
+
+  /* ── DEFAULT VARIANT — full picker ────────────────────────────── */
   if (state === "connected" && wallet) {
     return (
-      <div style={previewCard}>
-        <div style={{ ...previewHeader }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
-            <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Connected</span>
+      <div>
+        {variantBar}
+        <div style={previewCard}>
+          <div style={{ ...previewHeader }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
+              <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Connected</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", borderRadius: 8, background: chain.color + "12", fontSize: 12, fontWeight: 500, color: chain.color }}>
             <div style={{ width: 8, height: 8, borderRadius: "50%", background: chain.color }} />
@@ -153,16 +247,19 @@ export function ConnectWalletPreview() {
             Disconnect
           </button>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={previewCard}>
-      <div style={{ ...previewHeader, justifyContent: "flex-start", gap: 10 }}>
-        <Wallet size={18} style={{ color: "var(--w3-accent)" }} />
-        <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Connect Wallet</span>
-      </div>
+    <div>
+      {variantBar}
+      <div style={previewCard}>
+        <div style={{ ...previewHeader, justifyContent: "flex-start", gap: 10 }}>
+          <Wallet size={18} style={{ color: "var(--w3-accent)" }} />
+          <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Connect Wallet</span>
+        </div>
 
       <div style={{ padding: "16px 20px", display: "flex", flexDirection: "column", gap: 4 }}>
         {recentWallet && state === "idle" && (
@@ -229,6 +326,7 @@ export function ConnectWalletPreview() {
 
       <div style={{ padding: "12px 20px", borderTop: "1px solid var(--w3-border-subtle)", textAlign: "center" }}>
         <span style={{ fontSize: 13, color: "var(--w3-gray-500)" }}>{WALLETS.length} wallets supported</span>
+      </div>
       </div>
     </div>
   );
