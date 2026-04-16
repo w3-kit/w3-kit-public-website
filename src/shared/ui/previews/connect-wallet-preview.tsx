@@ -237,7 +237,7 @@ export function ConnectWalletPreview({ variant: initialVariant = "default" }: { 
     return (
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         {variantBar}
-        <div style={{ ...previewCard, maxWidth: 380, width: "100%" }}>
+        <div style={{ ...previewCard, maxWidth: 400, width: "100%" }}>
           <div style={{ ...previewHeader }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#22c55e" }} />
@@ -313,7 +313,7 @@ export function ConnectWalletPreview({ variant: initialVariant = "default" }: { 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       {variantBar}
-      <div style={{ ...previewCard, maxWidth: 380, width: "100%" }}>
+      <div style={{ ...previewCard, maxWidth: 400, width: "100%" }}>
         <div style={{ ...previewHeader, justifyContent: "flex-start", gap: 10 }}>
           <Wallet size={18} style={{ color: "var(--w3-accent)" }} />
           <span style={{ fontSize: 16, fontWeight: 600, color: "var(--w3-gray-900)" }}>Connect Wallet</span>
