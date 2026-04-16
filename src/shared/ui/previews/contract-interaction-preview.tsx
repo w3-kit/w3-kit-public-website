@@ -58,7 +58,7 @@ const ACTIONS: Action[] = [
   },
 ];
 
-const CATEGORY_LABELS = { view: "📖 View", action: "✏️ Actions", admin: "🔒 Admin" };
+const CATEGORY_LABELS = { view: "View", action: "Actions", admin: "Admin" };
 
 export function ContractInteractionPreview() {
   const [step, setStep] = useState<Step>("actions");
@@ -124,7 +124,7 @@ export function ContractInteractionPreview() {
             if (catActions.length === 0) return null;
             return (
               <div key={cat} style={{ marginBottom: 8 }}>
-                <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", padding: "4px 14px", marginBottom: 4 }}>
+                <div style={{ fontSize: 12, fontWeight: 500, color: "var(--w3-gray-500)", letterSpacing: "0.04em", textTransform: "uppercase" as const, padding: "4px 14px", marginBottom: 4 }}>
                   {CATEGORY_LABELS[cat]}
                 </div>
                 {catActions.map((action) => {
