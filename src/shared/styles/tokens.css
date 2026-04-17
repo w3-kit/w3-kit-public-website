@@ -195,6 +195,35 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* w3 design tokens */
+  --color-w3-gray-100: var(--w3-gray-100);
+  --color-w3-gray-200: var(--w3-gray-200);
+  --color-w3-gray-300: var(--w3-gray-300);
+  --color-w3-gray-400: var(--w3-gray-400);
+  --color-w3-gray-500: var(--w3-gray-500);
+  --color-w3-gray-600: var(--w3-gray-600);
+  --color-w3-gray-700: var(--w3-gray-700);
+  --color-w3-gray-800: var(--w3-gray-800);
+  --color-w3-gray-900: var(--w3-gray-900);
+  --color-w3-accent: var(--w3-accent);
+  --color-w3-accent-subtle: var(--w3-accent-subtle);
+  --color-w3-surface-translucent: var(--w3-surface-translucent);
+  --color-w3-surface-elevated: var(--w3-surface-elevated);
+  --color-w3-border-subtle: var(--w3-border-subtle);
+  --color-w3-border-standard: var(--w3-border-standard);
+  --color-w3-glow-accent: var(--w3-glow-accent);
+  --color-w3-chain-evm: #627eea;
+  --color-w3-chain-evm-subtle: rgba(98, 126, 234, 0.1);
+  --color-w3-chain-solana: #9945ff;
+  --color-w3-chain-solana-subtle: rgba(153, 69, 255, 0.1);
+}
+
+@utility glass-bg {
+  background: var(--w3-glass-bg);
+  border: 1px solid var(--w3-glass-border);
+  box-shadow: var(--w3-glass-shadow);
+  backdrop-filter: blur(20px);
 }
 
 .dark {

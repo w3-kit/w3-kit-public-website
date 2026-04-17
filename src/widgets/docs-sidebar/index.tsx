@@ -1,0 +1,84 @@
+import { useState } from "react";
+import { ChevronRight } from "lucide-react";
+import { getDocItemHref } from "../../shared/lib/urls";
+import { cn } from "../../shared/lib/utils";
+import { type DocNavItem, type DocNavSection } from "../../entities/guide/model/docs-nav.gen";
+
+function SidebarLink({ item, active }: { item: DocNavItem; active: boolean }) {
+  return (
+    <a
+      href={getDocItemHref(item)}
+      className={cn(
+        "flex items-center gap-2 rounded-md px-3 py-1.5 text-[13px] transition-all",
+        active ? "bg-w3-surface-elevated font-medium text-w3-gray-900" : "text-w3-gray-600",
+      )}
+    >
+      <span
+        className={cn(
+          "h-4 w-0.5 shrink-0 rounded-full transition-all",
+          active ? "bg-w3-accent" : "bg-transparent",
+        )}
+      />
+      {item.label}
+    </a>
+  );
+}
+
+function CollapsibleSection({
+  section,
+  activeSlug,
+  defaultOpen,
+}: {
+  section: DocNavSection;
+  activeSlug: string;
+  defaultOpen: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <div className="flex flex-col gap-0.5">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-w3-gray-500 transition-colors hover:bg-w3-surface-translucent"
+      >
+        <ChevronRight
+          size={11}
+          className={cn("shrink-0 text-w3-gray-400 transition-transform", open && "rotate-90")}
+        />
+        {section.title}
+      </button>
+      {open && (
+        <div className="ml-1 flex flex-col gap-0.5">
+          {section.items.map((item) => (
+            <SidebarLink key={item.slug} item={item} active={activeSlug === item.slug} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface DocsSidebarProps {
+  sections: DocNavSection[];
+  activeSlug: string;
+}
+
+export function DocsSidebar({ sections, activeSlug }: DocsSidebarProps) {
+  return (
+    <aside className="hidden w-60 shrink-0 overflow-y-auto border-r border-w3-border-subtle md:block">
+      <div className="flex flex-col gap-1 py-6 pr-3">
+        {sections.map((section) => {
+          const hasActive = section.items.some((item) => item.slug === activeSlug);
+          return (
+            <CollapsibleSection
+              key={section.title}
+              section={section}
+              activeSlug={activeSlug}
+              defaultOpen={hasActive}
+            />
+          );
+        })}
+      </div>
+    </aside>
+  );
+}

@@ -7,7 +7,8 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@learn/*": ["../learn/*"]
     }
   },
   "include": ["src"]
