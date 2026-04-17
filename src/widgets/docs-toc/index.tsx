@@ -59,9 +59,7 @@ export function DocsToc({ headings }: DocsTocProps) {
                   paddingLeft: heading.level === 3 ? 16 : heading.level >= 4 ? 28 : 8,
                   color: isActive ? "var(--w3-accent)" : "var(--w3-gray-500)",
                   fontWeight: isActive ? 500 : 400,
-                  borderLeft: isActive
-                    ? "2px solid var(--w3-accent)"
-                    : "2px solid transparent",
+                  borderLeft: isActive ? "2px solid var(--w3-accent)" : "2px solid transparent",
                 }}
               >
                 {heading.text}

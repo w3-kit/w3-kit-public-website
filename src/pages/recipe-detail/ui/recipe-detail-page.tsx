@@ -24,10 +24,7 @@ export function RecipeDetailPage() {
       <DocsShell>
         <div className="flex min-h-[60vh] items-center justify-center">
           <div className="text-center">
-            <h1
-              className="mb-2 text-2xl font-semibold"
-              style={{ color: "var(--w3-gray-900)" }}
-            >
+            <h1 className="mb-2 text-2xl font-semibold" style={{ color: "var(--w3-gray-900)" }}>
               Recipe Not Found
             </h1>
             <p className="mb-6 text-sm" style={{ color: "var(--w3-gray-600)" }}>
@@ -52,7 +49,10 @@ export function RecipeDetailPage() {
   const defaultTab = hasEvm ? "evm" : "solana";
 
   // Extract headings from learn content for TOC
-  const headings = useMemo(() => recipe.learnContent ? extractHeadings(recipe.learnContent) : [], [recipe?.learnContent]);
+  const headings = useMemo(
+    () => (recipe.learnContent ? extractHeadings(recipe.learnContent) : []),
+    [recipe?.learnContent],
+  );
 
   return (
     <DocsShell>
@@ -81,10 +81,7 @@ export function RecipeDetailPage() {
           >
             {recipe.name}
           </h1>
-          <p
-            className="mb-6 text-base"
-            style={{ color: "var(--w3-gray-600)", lineHeight: 1.6 }}
-          >
+          <p className="mb-6 text-base" style={{ color: "var(--w3-gray-600)", lineHeight: 1.6 }}>
             {recipe.description}
           </p>
 
@@ -110,10 +107,7 @@ export function RecipeDetailPage() {
           {/* Dependencies */}
           {Object.keys(recipe.dependencies).length > 0 && (
             <div className="mb-8">
-              <h3
-                className="mb-3 text-sm font-semibold"
-                style={{ color: "var(--w3-gray-900)" }}
-              >
+              <h3 className="mb-3 text-sm font-semibold" style={{ color: "var(--w3-gray-900)" }}>
                 Dependencies
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -164,10 +158,7 @@ export function RecipeDetailPage() {
 
           {/* Learn content — narrative explanation from .learn.md */}
           {recipe.learnContent && (
-            <div
-              className="mt-12 pt-10"
-              style={{ borderTop: "1px solid var(--w3-border-subtle)" }}
-            >
+            <div className="mt-12 pt-10" style={{ borderTop: "1px solid var(--w3-border-subtle)" }}>
               <MarkdownRenderer content={recipe.learnContent} />
             </div>
           )}

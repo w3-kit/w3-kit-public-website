@@ -63,7 +63,8 @@ export function MobileSidebar({ sections, activeSlug }: MobileSidebarProps) {
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm"
                       style={{
-                        color: activeSlug === item.slug ? "var(--w3-gray-900)" : "var(--w3-gray-600)",
+                        color:
+                          activeSlug === item.slug ? "var(--w3-gray-900)" : "var(--w3-gray-600)",
                         background:
                           activeSlug === item.slug ? "var(--w3-surface-elevated)" : "transparent",
                         fontWeight: activeSlug === item.slug ? 500 : 400,
@@ -72,8 +73,7 @@ export function MobileSidebar({ sections, activeSlug }: MobileSidebarProps) {
                       <span
                         className="h-4 w-0.5 shrink-0 rounded-full"
                         style={{
-                          background:
-                            activeSlug === item.slug ? "var(--w3-accent)" : "transparent",
+                          background: activeSlug === item.slug ? "var(--w3-accent)" : "transparent",
                         }}
                       />
                       {item.label}

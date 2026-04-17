@@ -57,8 +57,7 @@ function FooterSection({
               ? link.href()
               : link.href
             : getDocItemHref({ slug: link.slug!, type: link.type! });
-          const isExternal =
-            typeof resolvedHref === "string" && resolvedHref.startsWith("http");
+          const isExternal = typeof resolvedHref === "string" && resolvedHref.startsWith("http");
 
           return (
             <li key={link.label}>

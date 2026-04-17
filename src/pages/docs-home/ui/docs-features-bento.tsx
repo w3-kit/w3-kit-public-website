@@ -13,26 +13,22 @@ const features: FeatureCard[] = [
   {
     icon: <Globe size={20} />,
     title: "Framework Agnostic",
-    description:
-      "Works with any React framework. Next.js, Remix, Vite — just install and use.",
+    description: "Works with any React framework. Next.js, Remix, Vite — just install and use.",
   },
   {
     icon: <Zap size={20} />,
     title: "Lightweight",
-    description:
-      "Zero runtime dependencies. Tree-shakable exports. Only pay for what you use.",
+    description: "Zero runtime dependencies. Tree-shakable exports. Only pay for what you use.",
   },
   {
     icon: <Eye size={20} />,
     title: "Accessible",
-    description:
-      "WCAG 2.1 AA compliant. Full keyboard navigation. Screen reader tested.",
+    description: "WCAG 2.1 AA compliant. Full keyboard navigation. Screen reader tested.",
   },
   {
     icon: <Code size={20} />,
     title: "TypeScript-First",
-    description:
-      "End-to-end type safety. IntelliSense everywhere. No @types packages needed.",
+    description: "End-to-end type safety. IntelliSense everywhere. No @types packages needed.",
   },
   {
     icon: <Moon size={20} />,
@@ -66,10 +62,7 @@ function FeatureCardItem({ icon, title, description }: FeatureCard) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <h3
-          className="text-lg font-semibold"
-          style={{ color: "var(--w3-gray-900)" }}
-        >
+        <h3 className="text-lg font-semibold" style={{ color: "var(--w3-gray-900)" }}>
           {title}
         </h3>
         <p className="text-sm leading-relaxed" style={{ color: "var(--w3-gray-600)" }}>

@@ -99,11 +99,7 @@ const components: Components = {
   ),
 
   a: ({ children, ...props }: React.ComponentPropsWithoutRef<"a">) => (
-    <a
-      {...props}
-      className="hover:underline"
-      style={{ color: "var(--w3-accent)" }}
-    >
+    <a {...props} className="hover:underline" style={{ color: "var(--w3-accent)" }}>
       {children}
     </a>
   ),
@@ -258,18 +254,18 @@ const components: Components = {
   ),
 
   img: (props: React.ComponentPropsWithoutRef<"img">) => (
-    <img
-      {...props}
-      alt={props.alt ?? ""}
-      style={{ maxWidth: "100%", borderRadius: 8 }}
-    />
+    <img {...props} alt={props.alt ?? ""} style={{ maxWidth: "100%", borderRadius: 8 }} />
   ),
 };
 
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   return (
     <div className="docs-content">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSlug]} components={components}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeSlug]}
+        components={components}
+      >
         {content}
       </ReactMarkdown>
     </div>

@@ -29,7 +29,10 @@ export function DocsCtaSection() {
             Start Building Today
           </h2>
 
-          <p className="max-w-md text-base" style={{ color: "var(--w3-gray-600)", lineHeight: 1.6 }}>
+          <p
+            className="max-w-md text-base"
+            style={{ color: "var(--w3-gray-600)", lineHeight: 1.6 }}
+          >
             Open source and free forever. Get started in minutes.
           </p>
 

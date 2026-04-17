@@ -136,10 +136,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span
-                      className="text-sm font-medium"
-                      style={{ color: "var(--w3-gray-900)" }}
-                    >
+                    <span className="text-sm font-medium" style={{ color: "var(--w3-gray-900)" }}>
                       {item.title}
                     </span>
                     <span
@@ -152,10 +149,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
                       {typeLabels[item.type]}
                     </span>
                   </div>
-                  <p
-                    className="mt-0.5 truncate text-xs"
-                    style={{ color: "var(--w3-gray-500)" }}
-                  >
+                  <p className="mt-0.5 truncate text-xs" style={{ color: "var(--w3-gray-500)" }}>
                     {item.description}
                   </p>
                 </div>

@@ -61,10 +61,7 @@ function CollapsibleMobileSection({ section }: { section: DocNavSection }) {
         style={{ color: "var(--w3-gray-500)" }}
       >
         {section.title}
-        <ChevronDown
-          size={12}
-          className={cn("transition-transform", open && "rotate-180")}
-        />
+        <ChevronDown size={12} className={cn("transition-transform", open && "rotate-180")} />
       </button>
       {open &&
         section.items.map((item) => (
@@ -158,9 +155,24 @@ export function DocsHeader() {
         </a>
 
         <nav className="hidden items-center gap-0 md:flex" ref={navRef}>
-          <NavDropdown label="Docs" id="docs" active={activeDropdown} onToggle={setActiveDropdown} />
-          <NavDropdown label="Guides" id="guides" active={activeDropdown} onToggle={setActiveDropdown} />
-          <NavDropdown label="Recipes" id="recipes" active={activeDropdown} onToggle={setActiveDropdown} />
+          <NavDropdown
+            label="Docs"
+            id="docs"
+            active={activeDropdown}
+            onToggle={setActiveDropdown}
+          />
+          <NavDropdown
+            label="Guides"
+            id="guides"
+            active={activeDropdown}
+            onToggle={setActiveDropdown}
+          />
+          <NavDropdown
+            label="Recipes"
+            id="recipes"
+            active={activeDropdown}
+            onToggle={setActiveDropdown}
+          />
 
           <button
             onClick={() => {
@@ -255,9 +267,7 @@ function DropdownPanel({ children }: { children: React.ReactNode }) {
         borderColor: "var(--w3-border-subtle)",
       }}
     >
-      <div className="mx-auto max-w-[1200px] px-6 py-6 lg:px-16">
-        {children}
-      </div>
+      <div className="mx-auto max-w-[1200px] px-6 py-6 lg:px-16">{children}</div>
     </div>
   );
 }

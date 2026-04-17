@@ -54,11 +54,7 @@ function CollapsibleSection({
       {open && (
         <div className="ml-1 flex flex-col gap-0.5">
           {section.items.map((item) => (
-            <SidebarLink
-              key={item.slug}
-              item={item}
-              active={activeSlug === item.slug}
-            />
+            <SidebarLink key={item.slug} item={item} active={activeSlug === item.slug} />
           ))}
         </div>
       )}

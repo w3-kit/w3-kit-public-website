@@ -10,7 +10,7 @@ async function getHighlighter(): Promise<any> {
       shiki.createHighlighter({
         themes: ["github-light", "github-dark"],
         langs: ["tsx", "typescript", "solidity", "bash", "json", "markdown"],
-      })
+      }),
     );
   }
   return highlighterPromise;

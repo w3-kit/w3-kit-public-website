@@ -22,10 +22,7 @@ export function GuideDetailPage() {
       <DocsShell>
         <div className="flex min-h-[60vh] items-center justify-center">
           <div className="text-center">
-            <h1
-              className="mb-2 text-2xl font-semibold"
-              style={{ color: "var(--w3-gray-900)" }}
-            >
+            <h1 className="mb-2 text-2xl font-semibold" style={{ color: "var(--w3-gray-900)" }}>
               Guide Not Found
             </h1>
             <p className="mb-6 text-sm" style={{ color: "var(--w3-gray-600)" }}>
