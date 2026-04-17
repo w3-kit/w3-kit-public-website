@@ -1,12 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Search, FileText, BookOpen, Code, X } from "lucide-react";
-import { searchDocs, type SearchItem } from "../model/search-index";
+import { searchDocs } from "../model/search-index";
 import { getSectionUrl } from "../../../shared/lib/urls";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "../../../shared/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "../../../shared/ui/dialog";
 
 const typeIcons: Record<string, React.ReactNode> = {
   doc: <FileText size={14} />,
@@ -27,22 +23,20 @@ interface SearchDialogProps {
 
 export function SearchDialog({ open, onClose }: SearchDialogProps) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchItem[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const results = useMemo(() => searchDocs(query).slice(0, 10), [query]);
 
   useEffect(() => {
     if (open) {
       setQuery("");
-      setResults([]);
       setSelectedIndex(0);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open]);
 
   useEffect(() => {
-    const items = searchDocs(query);
-    setResults(items.slice(0, 10));
     setSelectedIndex(0);
   }, [query]);
 
@@ -92,9 +86,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
         <div className="max-h-[400px] overflow-y-auto p-2">
           {query && results.length === 0 && (
             <div className="px-4 py-8 text-center">
-              <p className="text-sm text-w3-gray-500">
-                No results for &ldquo;{query}&rdquo;
-              </p>
+              <p className="text-sm text-w3-gray-500">No results for &ldquo;{query}&rdquo;</p>
             </div>
           )}
 

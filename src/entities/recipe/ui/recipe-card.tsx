@@ -1,53 +1,39 @@
 import { ArrowRight } from "lucide-react";
 import type { RecipeMeta } from "../model/types";
-import { getSectionUrl } from "../../../shared/lib/urls";
+import { getDocItemHref } from "../../../shared/lib/urls";
+import { cn } from "../../../shared/lib/utils";
 
-const chainColors: Record<string, { bg: string; color: string }> = {
-  evm: { bg: "#627EEA15", color: "#627EEA" },
-  solana: { bg: "#9945FF15", color: "#9945FF" },
+const chainStyles: Record<string, string> = {
+  evm: "bg-w3-chain-evm-subtle text-w3-chain-evm",
+  solana: "bg-w3-chain-solana-subtle text-w3-chain-solana",
 };
+
+const defaultChainStyle = "bg-w3-surface-elevated text-w3-gray-600";
 
 export function RecipeCard({ recipe }: { recipe: RecipeMeta }) {
   return (
     <a
-      href={`${getSectionUrl("docs")}/recipe/${recipe.slug}`}
-      className="group flex flex-col gap-3 rounded-xl p-5 transition-all hover:scale-[1.01]"
-      style={{
-        background: "var(--w3-glass-bg)",
-        border: "1px solid var(--w3-glass-border)",
-        boxShadow: "var(--w3-glass-shadow)",
-      }}
+      href={getDocItemHref({ slug: recipe.slug, type: "recipe" })}
+      className="glass-bg group flex flex-col gap-3 rounded-xl p-5 transition-all hover:scale-[1.01]"
     >
-      {/* Chain badges */}
       <div className="flex flex-wrap gap-1.5">
-        {recipe.chains.map((chain) => {
-          const colors = chainColors[chain] ?? {
-            bg: "var(--w3-surface-elevated)",
-            color: "var(--w3-gray-600)",
-          };
-          return (
-            <span
-              key={chain}
-              className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
-              style={{ background: colors.bg, color: colors.color }}
-            >
-              {chain}
-            </span>
-          );
-        })}
+        {recipe.chains.map((chain) => (
+          <span
+            key={chain}
+            className={cn(
+              "rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+              chainStyles[chain] ?? defaultChainStyle,
+            )}
+          >
+            {chain}
+          </span>
+        ))}
       </div>
 
-      {/* Name */}
-      <h3 className="text-base font-semibold" style={{ color: "var(--w3-gray-900)" }}>
-        {recipe.name}
-      </h3>
+      <h3 className="text-base font-semibold text-w3-gray-900">{recipe.name}</h3>
 
-      {/* Description */}
-      <p className="text-sm" style={{ color: "var(--w3-gray-600)", lineHeight: 1.6 }}>
-        {recipe.description}
-      </p>
+      <p className="text-sm leading-relaxed text-w3-gray-600">{recipe.description}</p>
 
-      {/* Dependencies preview */}
       {Object.keys(recipe.dependencies).length > 0 && (
         <div className="flex flex-wrap gap-1 pt-0.5">
           {Object.values(recipe.dependencies)
@@ -56,11 +42,7 @@ export function RecipeCard({ recipe }: { recipe: RecipeMeta }) {
             .map((dep) => (
               <span
                 key={dep}
-                className="rounded-md px-1.5 py-0.5 font-mono text-[10px]"
-                style={{
-                  background: "var(--w3-surface-elevated)",
-                  color: "var(--w3-gray-600)",
-                }}
+                className="rounded-md bg-w3-surface-elevated px-1.5 py-0.5 font-mono text-[10px] text-w3-gray-600"
               >
                 {dep}
               </span>
@@ -68,10 +50,7 @@ export function RecipeCard({ recipe }: { recipe: RecipeMeta }) {
         </div>
       )}
 
-      <span
-        className="mt-auto inline-flex items-center gap-1 text-sm font-medium transition-all group-hover:gap-2"
-        style={{ color: "var(--w3-accent)" }}
-      >
+      <span className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-w3-accent transition-all group-hover:gap-2">
         View recipe <ArrowRight size={14} />
       </span>
     </a>

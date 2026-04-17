@@ -15,10 +15,10 @@ export function DocPage() {
   const currentSlug = slug ?? "introduction";
 
   const content = docContentMap[currentSlug];
-  const navItem = allDocNavItems.find((item) => item.slug === currentSlug);
   const headings = useMemo(() => (content ? extractHeadings(content) : []), [content]);
 
   const currentIndex = allDocNavItems.findIndex((item) => item.slug === currentSlug);
+  const navItem = currentIndex >= 0 ? allDocNavItems[currentIndex] : undefined;
   const prev = currentIndex > 0 ? allDocNavItems[currentIndex - 1] : undefined;
   const next =
     currentIndex < allDocNavItems.length - 1 ? allDocNavItems[currentIndex + 1] : undefined;

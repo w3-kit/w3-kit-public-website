@@ -1,11 +1,4 @@
-export type GuideCategory =
-  | "concepts"
-  | "evm"
-  | "solana"
-  | "security"
-  | "glossary"
-  | "cheatsheets"
-  | string;
+export type GuideCategory = "concepts" | "evm" | "solana" | "security" | "glossary" | "cheatsheets";
 
 export interface GuideMeta {
   id: string;

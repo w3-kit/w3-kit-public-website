@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { DOCS_CONTENT_SELECTOR } from "../../shared/lib/constants";
 
 export function useActiveHeading(headingIds: string[]): string {
-  const [activeId, setActiveId] = useState<string>(headingIds[0] ?? "");
+  const stableIds = useMemo(() => headingIds, [headingIds.join(",")]);
+  const [activeId, setActiveId] = useState<string>(stableIds[0] ?? "");
   const containerRef = useRef<Element | null>(null);
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    if (!headingIds.length) return;
+    if (!stableIds.length) return;
 
     const scrollContainer = document.querySelector(DOCS_CONTENT_SELECTOR);
     if (!scrollContainer) return;
@@ -19,9 +20,9 @@ export function useActiveHeading(headingIds: string[]): string {
 
       const containerRect = container.getBoundingClientRect();
       const offset = 120;
-      let current = headingIds[0] ?? "";
+      let current = stableIds[0] ?? "";
 
-      for (const id of headingIds) {
+      for (const id of stableIds) {
         const el = document.getElementById(id);
         if (!el) continue;
         const relativeTop = el.getBoundingClientRect().top - containerRect.top;
@@ -46,7 +47,7 @@ export function useActiveHeading(headingIds: string[]): string {
       scrollContainer.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [headingIds]);
+  }, [stableIds]);
 
   return activeId;
 }

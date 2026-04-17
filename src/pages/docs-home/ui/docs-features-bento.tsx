@@ -63,9 +63,7 @@ export function DocsFeaturesBento() {
     <SectionContainer className="py-20 md:py-32">
       <div ref={containerRef} className="flex flex-col gap-10">
         <div data-reveal className="flex flex-col gap-3">
-          <p className="text-sm font-medium uppercase tracking-wider text-w3-accent">
-            WHY W3 KIT
-          </p>
+          <p className="text-sm font-medium uppercase tracking-wider text-w3-accent">WHY W3 KIT</p>
           <h2 className="text-3xl font-semibold tracking-tight text-w3-gray-900 sm:text-4xl">
             Built for Web3 Developers
           </h2>

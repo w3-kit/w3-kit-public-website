@@ -32,19 +32,13 @@ const components: Components = {
   ),
 
   h3: ({ children, ...props }: React.ComponentPropsWithoutRef<"h3">) => (
-    <h3
-      {...props}
-      className="font-sans text-[22px] font-semibold text-w3-gray-900 mt-8 mb-2"
-    >
+    <h3 {...props} className="font-sans text-[22px] font-semibold text-w3-gray-900 mt-8 mb-2">
       {children}
     </h3>
   ),
 
   h4: ({ children, ...props }: React.ComponentPropsWithoutRef<"h4">) => (
-    <h4
-      {...props}
-      className="font-sans text-lg font-semibold text-w3-gray-900 mt-6 mb-2"
-    >
+    <h4 {...props} className="font-sans text-lg font-semibold text-w3-gray-900 mt-6 mb-2">
       {children}
     </h4>
   ),

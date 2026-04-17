@@ -43,9 +43,7 @@ export function RecipeDetailPage() {
       ]}
       headings={headings}
     >
-      <h1 className="mb-2 text-3xl font-semibold tracking-tight text-w3-gray-900">
-        {recipe.name}
-      </h1>
+      <h1 className="mb-2 text-3xl font-semibold tracking-tight text-w3-gray-900">{recipe.name}</h1>
       <p className="mb-6 text-base leading-relaxed text-w3-gray-600">{recipe.description}</p>
 
       <AuthorBadge author={recipe.author} prefix="by" className="mb-4" />

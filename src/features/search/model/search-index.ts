@@ -54,20 +54,31 @@ function buildSearchItems(): SearchItem[] {
   return items;
 }
 
-const searchItems = buildSearchItems();
+let searchItems: SearchItem[] | null = null;
+let fuse: Fuse<SearchItem> | null = null;
 
-const fuse = new Fuse(searchItems, {
-  keys: [
-    { name: "title", weight: 2 },
-    { name: "description", weight: 1 },
-  ],
-  threshold: 0.3,
-  includeScore: true,
-});
+function getIndex() {
+  if (!fuse) {
+    searchItems = buildSearchItems();
+    fuse = new Fuse(searchItems, {
+      keys: [
+        { name: "title", weight: 2 },
+        { name: "description", weight: 1 },
+      ],
+      threshold: 0.3,
+      includeScore: true,
+    });
+  }
+  return { fuse, searchItems: searchItems! };
+}
 
 export function searchDocs(query: string): SearchItem[] {
   if (!query.trim()) return [];
-  return fuse.search(query).map((result) => result.item);
+  return getIndex()
+    .fuse.search(query)
+    .map((result) => result.item);
 }
 
-export { searchItems };
+export function getSearchItems(): SearchItem[] {
+  return getIndex().searchItems;
+}

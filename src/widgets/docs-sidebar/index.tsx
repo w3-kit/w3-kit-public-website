@@ -10,9 +10,7 @@ function SidebarLink({ item, active }: { item: DocNavItem; active: boolean }) {
       href={getDocItemHref(item)}
       className={cn(
         "flex items-center gap-2 rounded-md px-3 py-1.5 text-[13px] transition-all",
-        active
-          ? "bg-w3-surface-elevated font-medium text-w3-gray-900"
-          : "text-w3-gray-600",
+        active ? "bg-w3-surface-elevated font-medium text-w3-gray-900" : "text-w3-gray-600",
       )}
     >
       <span

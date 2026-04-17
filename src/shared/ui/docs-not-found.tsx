@@ -9,9 +9,7 @@ export function DocsNotFound({ entityType, slug }: DocsNotFoundProps) {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
       <div className="text-center">
-        <h1 className="mb-2 text-2xl font-semibold text-w3-gray-900">
-          {entityType} Not Found
-        </h1>
+        <h1 className="mb-2 text-2xl font-semibold text-w3-gray-900">{entityType} Not Found</h1>
         <p className="mb-6 text-sm text-w3-gray-600">
           The {entityType.toLowerCase()} &ldquo;{slug}&rdquo; doesn&apos;t exist.
         </p>

@@ -29,10 +29,7 @@ export function DocsHeroSection() {
             W3 Kit Documentation
           </h1>
 
-          <p
-            data-entrance
-            className="max-w-lg text-lg leading-relaxed text-w3-gray-600 md:text-xl"
-          >
+          <p data-entrance className="max-w-lg text-lg leading-relaxed text-w3-gray-600 md:text-xl">
             Everything you need to build Web3 apps. Guides, API reference, and code examples.
           </p>
 

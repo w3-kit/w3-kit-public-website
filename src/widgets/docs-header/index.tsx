@@ -6,6 +6,7 @@ import { cn } from "../../shared/lib/utils";
 import { getSectionUrl, getDocItemHref } from "../../shared/lib/urls";
 import { docsNavSections, type DocNavSection } from "../../entities/guide/model/docs-nav.gen";
 import { GitHubIcon } from "../../shared/ui/github-icon";
+import { useSearch } from "../../features/search";
 
 const docsSections = docsNavSections.filter(
   (s) => !s.title.startsWith("Recipes:") && !s.title.startsWith("Guides"),
@@ -106,6 +107,7 @@ export function DocsHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<ActiveDropdown>(null);
   const navRef = useRef<HTMLDivElement>(null);
+  const { openSearch } = useSearch();
 
   useEffect(() => {
     const onResize = () => {
@@ -163,9 +165,7 @@ export function DocsHeader() {
           />
 
           <button
-            onClick={() => {
-              document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
-            }}
+            onClick={openSearch}
             className="ml-3 rounded-md p-1.5 text-muted-foreground transition-colors hover:text-foreground"
             aria-label="Search"
           >
