@@ -1,30 +1,13 @@
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { getSectionUrl } from "../../shared/lib/urls";
+import { getDocItemHref } from "../../shared/lib/urls";
 import { cn } from "../../shared/lib/utils";
-
-interface DocNavItem {
-  label: string;
-  slug: string;
-  type: "markdown" | "guide" | "recipe";
-}
-
-interface DocNavSection {
-  title: string;
-  items: DocNavItem[];
-}
-
-function getItemHref(item: DocNavItem): string {
-  const base = getSectionUrl("docs");
-  if (item.type === "guide") return `${base}/guide/${item.slug}`;
-  if (item.type === "recipe") return `${base}/recipe/${item.slug}`;
-  return `${base}/${item.slug}`;
-}
+import { type DocNavItem, type DocNavSection } from "../../entities/guide/model/docs-nav.gen";
 
 function SidebarLink({ item, active }: { item: DocNavItem; active: boolean }) {
   return (
     <a
-      href={getItemHref(item)}
+      href={getDocItemHref(item)}
       className="flex items-center gap-2 rounded-md px-3 py-1.5 text-[13px] transition-all"
       style={{
         color: active ? "var(--w3-gray-900)" : "var(--w3-gray-600)",

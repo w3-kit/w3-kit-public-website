@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams } from "@tanstack/react-router";
 import { DocsShell } from "../../../widgets/docs-shell";
 import { DocsSidebar } from "../../../widgets/docs-sidebar";
@@ -9,14 +10,7 @@ import { Breadcrumbs } from "../../../shared/ui/breadcrumbs";
 import { DocsPrevNext } from "../../../widgets/docs-prev-next";
 import { docsNavSections, allDocNavItems } from "../../../entities/guide/model/docs-nav.gen";
 import { docContentMap } from "../../../entities/guide/model/doc-content.gen";
-import { getSectionUrl } from "../../../shared/lib/urls";
-
-function getItemHref(item: { slug: string; type: string }): string {
-  const base = getSectionUrl("docs");
-  if (item.type === "guide") return `${base}/guide/${item.slug}`;
-  if (item.type === "recipe") return `${base}/recipe/${item.slug}`;
-  return `${base}/${item.slug}`;
-}
+import { getSectionUrl, getDocItemHref } from "../../../shared/lib/urls";
 
 export function DocPage() {
   const { slug } = useParams({ strict: false });
@@ -24,7 +18,7 @@ export function DocPage() {
 
   const content = docContentMap[currentSlug];
   const navItem = allDocNavItems.find((item) => item.slug === currentSlug);
-  const headings = content ? extractHeadings(content) : [];
+  const headings = useMemo(() => content ? extractHeadings(content) : [], [content]);
 
   // Compute prev/next
   const currentIndex = allDocNavItems.findIndex((item) => item.slug === currentSlug);
@@ -88,8 +82,8 @@ export function DocPage() {
           <MarkdownRenderer content={content} />
 
           <DocsPrevNext
-            prev={prev ? { label: prev.label, href: getItemHref(prev) } : undefined}
-            next={next ? { label: next.label, href: getItemHref(next) } : undefined}
+            prev={prev ? { label: prev.label, href: getDocItemHref(prev) } : undefined}
+            next={next ? { label: next.label, href: getDocItemHref(next) } : undefined}
           />
         </div>
 

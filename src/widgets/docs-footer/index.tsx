@@ -1,15 +1,8 @@
 import { Separator } from "../../shared/ui/separator";
 import { Logo } from "../../shared/ui/logo";
-import { getSectionUrl } from "../../shared/lib/urls";
+import { getSectionUrl, getDocItemHref } from "../../shared/lib/urls";
 import { GitHubIcon } from "../../shared/ui/github-icon";
 import { ThemeToggle } from "../site-footer/theme-toggle";
-
-function getItemHref(slug: string, type: string): string {
-  const base = getSectionUrl("docs");
-  if (type === "guide") return `${base}/guide/${slug}`;
-  if (type === "recipe") return `${base}/recipe/${slug}`;
-  return `${base}/${slug}`;
-}
 
 const gettingStartedLinks = [
   { label: "Introduction", slug: "introduction", type: "markdown" },
@@ -32,6 +25,13 @@ const recipesLinks = [
   { label: "Stake Tokens", slug: "stake-tokens", type: "recipe" },
 ];
 
+const ecosystemLinks = [
+  { label: "w3-kit.com", href: () => `https://w3-kit.com` },
+  { label: "UI Components", href: () => getSectionUrl("ui") },
+  { label: "Registry", href: () => getSectionUrl("registry") },
+  { label: "Learn", href: () => getSectionUrl("learn") },
+];
+
 const communityLinks = [
   { label: "GitHub", href: "https://github.com/w3-kit" },
   { label: "Contributing", href: "https://github.com/w3-kit/website/blob/main/CONTRIBUTING.md" },
@@ -43,7 +43,7 @@ function FooterSection({
   links,
 }: {
   title: string;
-  links: { label: string; slug?: string; type?: string; href?: string }[];
+  links: { label: string; slug?: string; type?: string; href?: string | (() => string) }[];
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -51,20 +51,28 @@ function FooterSection({
         {title}
       </h4>
       <ul className="flex flex-col gap-2">
-        {links.map((link) => (
-          <li key={link.label}>
-            <a
-              href={link.href ?? getItemHref(link.slug!, link.type!)}
-              className="text-sm transition-colors hover:text-foreground"
-              style={{ color: "var(--w3-gray-600)" }}
-              {...(link.href?.startsWith("http")
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
+        {links.map((link) => {
+          const resolvedHref = link.href
+            ? typeof link.href === "function"
+              ? link.href()
+              : link.href
+            : getDocItemHref({ slug: link.slug!, type: link.type! });
+          const isExternal =
+            typeof resolvedHref === "string" && resolvedHref.startsWith("http");
+
+          return (
+            <li key={link.label}>
+              <a
+                href={resolvedHref}
+                className="text-sm transition-colors hover:text-foreground"
+                style={{ color: "var(--w3-gray-600)" }}
+                {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                {link.label}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -73,8 +81,8 @@ function FooterSection({
 export function DocsFooter() {
   return (
     <footer className="mt-auto" style={{ borderTop: "1px solid var(--w3-border-subtle)" }}>
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-6 py-12 sm:grid-cols-2 md:grid-cols-5 md:px-8 lg:px-16">
-        {/* Brand column */}
+      <div className="mx-auto grid max-w-[1200px] gap-10 px-6 py-12 sm:grid-cols-2 md:grid-cols-6 md:px-8 lg:px-16">
+        {/* Brand */}
         <div className="flex flex-col gap-4 sm:col-span-2 md:col-span-1">
           <a href={getSectionUrl("docs")} className="flex items-center gap-2">
             <Logo size={28} className="text-[var(--w3-accent)]" />
@@ -100,6 +108,7 @@ export function DocsFooter() {
         <FooterSection title="Getting Started" links={gettingStartedLinks} />
         <FooterSection title="Guides" links={guidesLinks} />
         <FooterSection title="Recipes" links={recipesLinks} />
+        <FooterSection title="Ecosystem" links={ecosystemLinks} />
 
         {/* Community + Theme */}
         <div className="flex flex-col gap-6">

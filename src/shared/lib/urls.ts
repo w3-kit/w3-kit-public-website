@@ -32,6 +32,14 @@ export function getSectionUrl(section: string): string {
   return `/${section}`;
 }
 
+/** Resolves a doc nav item to its full URL path */
+export function getDocItemHref(item: { slug: string; type: string }): string {
+  const base = getSectionUrl("docs");
+  if (item.type === "guide") return `${base}/guide/${item.slug}`;
+  if (item.type === "recipe") return `${base}/recipe/${item.slug}`;
+  return `${base}/${item.slug}`;
+}
+
 export function getLandingUrl(): string {
   if (typeof window === "undefined") return "/";
   const host = window.location.host;

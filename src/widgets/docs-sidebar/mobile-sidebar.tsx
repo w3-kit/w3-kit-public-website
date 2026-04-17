@@ -1,24 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { getSectionUrl } from "../../shared/lib/urls";
-
-interface DocNavItem {
-  label: string;
-  slug: string;
-  type: "markdown" | "guide" | "recipe";
-}
-
-interface DocNavSection {
-  title: string;
-  items: DocNavItem[];
-}
-
-function getItemHref(item: DocNavItem): string {
-  const base = getSectionUrl("docs");
-  if (item.type === "guide") return `${base}/guide/${item.slug}`;
-  if (item.type === "recipe") return `${base}/recipe/${item.slug}`;
-  return `${base}/${item.slug}`;
-}
+import { getDocItemHref } from "../../shared/lib/urls";
+import { type DocNavItem, type DocNavSection } from "../../entities/guide/model/docs-nav.gen";
 
 interface MobileSidebarProps {
   sections: DocNavSection[];
@@ -76,7 +59,7 @@ export function MobileSidebar({ sections, activeSlug }: MobileSidebarProps) {
                   {section.items.map((item) => (
                     <a
                       key={item.slug}
-                      href={getItemHref(item)}
+                      href={getDocItemHref(item)}
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm"
                       style={{

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams } from "@tanstack/react-router";
 import { DocsShell } from "../../../widgets/docs-shell";
 import { DocsSidebar } from "../../../widgets/docs-sidebar";
@@ -11,6 +12,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../../shared/ui/tab
 import { docsNavSections } from "../../../entities/guide/model/docs-nav.gen";
 import { useRecipe } from "../../../entities/recipe";
 import { getSectionUrl } from "../../../shared/lib/urls";
+import { AuthorBadge } from "../../../shared/ui/author-badge";
 
 export function RecipeDetailPage() {
   const { recipeSlug } = useParams({ strict: false });
@@ -50,7 +52,7 @@ export function RecipeDetailPage() {
   const defaultTab = hasEvm ? "evm" : "solana";
 
   // Extract headings from learn content for TOC
-  const headings = recipe.learnContent ? extractHeadings(recipe.learnContent) : [];
+  const headings = useMemo(() => recipe.learnContent ? extractHeadings(recipe.learnContent) : [], [recipe?.learnContent]);
 
   return (
     <DocsShell>
@@ -86,22 +88,7 @@ export function RecipeDetailPage() {
             {recipe.description}
           </p>
 
-          {recipe.author && (
-            <a
-              href={`https://github.com/${recipe.author}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mb-4 inline-flex items-center gap-1.5 text-xs transition-colors hover:underline"
-              style={{ color: "var(--w3-gray-500)" }}
-            >
-              <img
-                src={`https://github.com/${recipe.author}.png?size=40`}
-                alt={recipe.author}
-                className="h-4 w-4 rounded-full"
-              />
-              by {recipe.author}
-            </a>
-          )}
+          <AuthorBadge author={recipe.author} prefix="by" className="mb-4" />
 
           {/* Chain badges */}
           <div className="mb-6 flex items-center gap-2">

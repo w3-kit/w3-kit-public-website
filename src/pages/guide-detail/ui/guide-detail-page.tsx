@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams } from "@tanstack/react-router";
 import { DocsShell } from "../../../widgets/docs-shell";
 import { DocsSidebar } from "../../../widgets/docs-sidebar";
@@ -10,6 +11,7 @@ import { DocsPrevNext } from "../../../widgets/docs-prev-next";
 import { docsNavSections } from "../../../entities/guide/model/docs-nav.gen";
 import { useGuide } from "../../../entities/guide";
 import { getSectionUrl } from "../../../shared/lib/urls";
+import { AuthorBadge } from "../../../shared/ui/author-badge";
 
 export function GuideDetailPage() {
   const { guideSlug } = useParams({ strict: false });
@@ -43,7 +45,7 @@ export function GuideDetailPage() {
     );
   }
 
-  const headings = extractHeadings(guide.content);
+  const headings = useMemo(() => extractHeadings(guide.content), [guide?.content]);
   const readTime = Math.max(1, Math.ceil(guide.content.split(/\s+/).length / 200));
 
   return (
@@ -80,22 +82,7 @@ export function GuideDetailPage() {
             <span className="text-xs" style={{ color: "var(--w3-gray-500)" }}>
               {readTime} min read
             </span>
-            {guide.author && (
-              <a
-                href={`https://github.com/${guide.author}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs transition-colors hover:underline"
-                style={{ color: "var(--w3-gray-500)" }}
-              >
-                <img
-                  src={`https://github.com/${guide.author}.png?size=40`}
-                  alt={guide.author}
-                  className="h-4 w-4 rounded-full"
-                />
-                {guide.author}
-              </a>
-            )}
+            <AuthorBadge author={guide.author} />
           </div>
 
           <MarkdownRenderer content={guide.content} />

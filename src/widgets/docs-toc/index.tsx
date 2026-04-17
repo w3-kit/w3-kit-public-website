@@ -1,5 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import { useActiveHeading } from "./use-active-heading";
+import { DOCS_CONTENT_SELECTOR } from "../../shared/lib/constants";
 
 interface Heading {
   id: string;
@@ -13,11 +14,16 @@ interface DocsTocProps {
 
 export function DocsToc({ headings }: DocsTocProps) {
   const activeId = useActiveHeading(headings.map((h) => h.id));
+  const containerRef = useRef<Element | null>(null);
+
+  useEffect(() => {
+    containerRef.current = document.querySelector(DOCS_CONTENT_SELECTOR);
+  }, []);
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const el = document.getElementById(id);
-    const scrollContainer = document.querySelector("[data-docs-content]");
+    const scrollContainer = containerRef.current;
     if (el && scrollContainer) {
       const containerRect = scrollContainer.getBoundingClientRect();
       const elRect = el.getBoundingClientRect();

@@ -1,56 +1,52 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
+import { DOCS_CONTENT_SELECTOR } from "../../shared/lib/constants";
 
-/**
- * Tracks which heading is currently visible in a scrollable container.
- * Works with overflow-y-auto containers (not just the viewport).
- */
 export function useActiveHeading(headingIds: string[]): string {
   const [activeId, setActiveId] = useState<string>(headingIds[0] ?? "");
-
-  const handleScroll = useCallback(() => {
-    if (!headingIds.length) return;
-
-    // Find the scrollable content container
-    const scrollContainer = document.querySelector("[data-docs-content]");
-    if (!scrollContainer) return;
-
-    const scrollTop = scrollContainer.scrollTop;
-    const offset = 120; // header + some padding
-
-    let current = headingIds[0] ?? "";
-
-    for (const id of headingIds) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-
-      // Get element position relative to the scroll container
-      const elTop = el.offsetTop - scrollContainer.getBoundingClientRect().top - scrollContainer.scrollTop + scrollContainer.scrollTop;
-
-      // Actually simpler: just use el.offsetTop relative to container
-      const rect = el.getBoundingClientRect();
-      const containerRect = scrollContainer.getBoundingClientRect();
-      const relativeTop = rect.top - containerRect.top;
-
-      if (relativeTop <= offset) {
-        current = id;
-      }
-    }
-
-    setActiveId(current);
-  }, [headingIds]);
+  const containerRef = useRef<Element | null>(null);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
     if (!headingIds.length) return;
 
-    const scrollContainer = document.querySelector("[data-docs-content]");
+    const scrollContainer = document.querySelector(DOCS_CONTENT_SELECTOR);
     if (!scrollContainer) return;
+    containerRef.current = scrollContainer;
 
-    // Initial check
+    const handleScroll = () => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const offset = 120;
+      let current = headingIds[0] ?? "";
+
+      for (const id of headingIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const relativeTop = el.getBoundingClientRect().top - containerRect.top;
+        if (relativeTop <= offset) {
+          current = id;
+        }
+      }
+
+      setActiveId((prev) => (prev === current ? prev : current));
+    };
+
+    // Throttle with requestAnimationFrame
+    const onScroll = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(handleScroll);
+    };
+
     handleScroll();
+    scrollContainer.addEventListener("scroll", onScroll, { passive: true });
 
-    scrollContainer.addEventListener("scroll", handleScroll, { passive: true });
-    return () => scrollContainer.removeEventListener("scroll", handleScroll);
-  }, [headingIds, handleScroll]);
+    return () => {
+      scrollContainer.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [headingIds]);
 
   return activeId;
 }
