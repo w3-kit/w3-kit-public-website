@@ -7,31 +7,19 @@ interface PrevNextProps {
 
 export function DocsPrevNext({ prev, next }: PrevNextProps) {
   return (
-    <div
-      className="mt-16 flex items-stretch gap-4 pt-8"
-      style={{ borderTop: "1px solid var(--w3-border-subtle)" }}
-    >
+    <div className="mt-16 flex items-stretch gap-4 border-t border-w3-border-subtle pt-8">
       {prev ? (
         <a
           href={prev.href}
-          className="group flex flex-1 items-center gap-3 rounded-xl p-4 transition-all hover:scale-[1.01]"
-          style={{
-            background: "var(--w3-glass-bg)",
-            border: "1px solid var(--w3-glass-border)",
-          }}
+          className="glass-bg group flex flex-1 items-center gap-3 rounded-xl p-4 transition-all hover:scale-[1.01]"
         >
           <ArrowLeft
             size={16}
-            className="transition-transform group-hover:-translate-x-0.5"
-            style={{ color: "var(--w3-gray-500)" }}
+            className="text-w3-gray-500 transition-transform group-hover:-translate-x-0.5"
           />
           <div className="flex flex-col">
-            <span className="text-xs" style={{ color: "var(--w3-gray-500)" }}>
-              Previous
-            </span>
-            <span className="text-sm font-medium" style={{ color: "var(--w3-gray-900)" }}>
-              {prev.label}
-            </span>
+            <span className="text-xs text-w3-gray-500">Previous</span>
+            <span className="text-sm font-medium text-w3-gray-900">{prev.label}</span>
           </div>
         </a>
       ) : (
@@ -40,24 +28,15 @@ export function DocsPrevNext({ prev, next }: PrevNextProps) {
       {next ? (
         <a
           href={next.href}
-          className="group flex flex-1 items-center justify-end gap-3 rounded-xl p-4 text-right transition-all hover:scale-[1.01]"
-          style={{
-            background: "var(--w3-glass-bg)",
-            border: "1px solid var(--w3-glass-border)",
-          }}
+          className="glass-bg group flex flex-1 items-center justify-end gap-3 rounded-xl p-4 text-right transition-all hover:scale-[1.01]"
         >
           <div className="flex flex-col">
-            <span className="text-xs" style={{ color: "var(--w3-gray-500)" }}>
-              Next
-            </span>
-            <span className="text-sm font-medium" style={{ color: "var(--w3-gray-900)" }}>
-              {next.label}
-            </span>
+            <span className="text-xs text-w3-gray-500">Next</span>
+            <span className="text-sm font-medium text-w3-gray-900">{next.label}</span>
           </div>
           <ArrowRight
             size={16}
-            className="transition-transform group-hover:translate-x-0.5"
-            style={{ color: "var(--w3-gray-500)" }}
+            className="text-w3-gray-500 transition-transform group-hover:translate-x-0.5"
           />
         </a>
       ) : (

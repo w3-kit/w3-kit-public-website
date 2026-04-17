@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import type { createHighlighter } from "shiki";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let highlighterPromise: Promise<any> | null = null;
+type Highlighter = Awaited<ReturnType<typeof createHighlighter>>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function getHighlighter(): Promise<any> {
+let highlighterPromise: Promise<Highlighter> | null = null;
+
+async function getHighlighter(): Promise<Highlighter> {
   if (!highlighterPromise) {
     highlighterPromise = import("shiki").then((shiki) =>
       shiki.createHighlighter({

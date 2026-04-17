@@ -35,15 +35,9 @@ export function DocsToc({ headings }: DocsTocProps) {
   if (!headings.length) return null;
 
   return (
-    <aside
-      className="hidden w-52 shrink-0 overflow-y-auto xl:block"
-      style={{ borderLeft: "1px solid var(--w3-border-subtle)" }}
-    >
+    <aside className="hidden w-52 shrink-0 overflow-y-auto border-l border-w3-border-subtle xl:block">
       <div className="py-6 pl-5">
-        <span
-          className="mb-4 block text-[11px] font-semibold uppercase tracking-wider"
-          style={{ color: "var(--w3-gray-500)" }}
-        >
+        <span className="mb-4 block text-[11px] font-semibold uppercase tracking-wider text-w3-gray-500">
           On this page
         </span>
         <nav className="flex flex-col gap-0.5">
@@ -54,12 +48,13 @@ export function DocsToc({ headings }: DocsTocProps) {
                 key={heading.id}
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
-                className="block rounded-sm py-1 text-[12.5px] leading-snug transition-colors"
+                className={`block py-1 text-[12.5px] leading-snug transition-colors ${
+                  isActive
+                    ? "border-l-2 border-w3-accent font-medium text-w3-accent"
+                    : "border-l-2 border-transparent text-w3-gray-500"
+                }`}
                 style={{
                   paddingLeft: heading.level === 3 ? 16 : heading.level >= 4 ? 28 : 8,
-                  color: isActive ? "var(--w3-accent)" : "var(--w3-gray-500)",
-                  fontWeight: isActive ? 500 : 400,
-                  borderLeft: isActive ? "2px solid var(--w3-accent)" : "2px solid transparent",
                 }}
               >
                 {heading.text}

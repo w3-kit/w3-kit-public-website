@@ -8,27 +8,15 @@ interface MarkdownRendererProps {
   content: string;
 }
 
-// Helper to extract plain text from ReactNode for the pre/code child check
-function isInsidePre(node: React.ComponentPropsWithoutRef<"code">): boolean {
-  // react-markdown passes a `node` prop with the hast node; the parent context
-  // is inferred by whether className contains "language-*" (block code fences).
-  const className = (node as { className?: string }).className ?? "";
-  return className.startsWith("language-");
+function isBlockCode(props: Record<string, unknown>): boolean {
+  return typeof props.className === "string" && props.className.startsWith("language-");
 }
 
 const components: Components = {
   h1: ({ children, ...props }: React.ComponentPropsWithoutRef<"h1">) => (
     <h1
       {...props}
-      style={{
-        fontFamily: '"Geist Sans", sans-serif',
-        fontSize: 36,
-        fontWeight: 700,
-        color: "var(--w3-gray-900)",
-        marginTop: 48,
-        marginBottom: 16,
-        letterSpacing: "-0.02em",
-      }}
+      className="font-sans text-4xl font-bold tracking-tight text-w3-gray-900 mt-12 mb-4"
     >
       {children}
     </h1>
@@ -37,17 +25,7 @@ const components: Components = {
   h2: ({ children, ...props }: React.ComponentPropsWithoutRef<"h2">) => (
     <h2
       {...props}
-      style={{
-        fontFamily: '"Geist Sans", sans-serif',
-        fontSize: 28,
-        fontWeight: 600,
-        color: "var(--w3-gray-900)",
-        marginTop: 40,
-        marginBottom: 12,
-        letterSpacing: "-0.02em",
-        paddingBottom: 8,
-        borderBottom: "1px solid var(--w3-border-subtle)",
-      }}
+      className="font-sans text-[28px] font-semibold tracking-tight text-w3-gray-900 mt-10 mb-3 pb-2 border-b border-w3-border-subtle"
     >
       {children}
     </h2>
@@ -56,14 +34,7 @@ const components: Components = {
   h3: ({ children, ...props }: React.ComponentPropsWithoutRef<"h3">) => (
     <h3
       {...props}
-      style={{
-        fontFamily: '"Geist Sans", sans-serif',
-        fontSize: 22,
-        fontWeight: 600,
-        color: "var(--w3-gray-900)",
-        marginTop: 32,
-        marginBottom: 8,
-      }}
+      className="font-sans text-[22px] font-semibold text-w3-gray-900 mt-8 mb-2"
     >
       {children}
     </h3>
@@ -72,73 +43,38 @@ const components: Components = {
   h4: ({ children, ...props }: React.ComponentPropsWithoutRef<"h4">) => (
     <h4
       {...props}
-      style={{
-        fontFamily: '"Geist Sans", sans-serif',
-        fontSize: 18,
-        fontWeight: 600,
-        color: "var(--w3-gray-900)",
-        marginTop: 24,
-        marginBottom: 8,
-      }}
+      className="font-sans text-lg font-semibold text-w3-gray-900 mt-6 mb-2"
     >
       {children}
     </h4>
   ),
 
   p: ({ children, ...props }: React.ComponentPropsWithoutRef<"p">) => (
-    <p
-      {...props}
-      style={{
-        lineHeight: 1.7,
-        color: "var(--w3-gray-700)",
-        marginBottom: 16,
-      }}
-    >
+    <p {...props} className="leading-[1.7] text-w3-gray-700 mb-4">
       {children}
     </p>
   ),
 
   a: ({ children, ...props }: React.ComponentPropsWithoutRef<"a">) => (
-    <a {...props} className="hover:underline" style={{ color: "var(--w3-accent)" }}>
+    <a {...props} className="text-w3-accent hover:underline">
       {children}
     </a>
   ),
 
   ul: ({ children, ...props }: React.ComponentPropsWithoutRef<"ul">) => (
-    <ul
-      {...props}
-      style={{
-        marginBottom: 16,
-        paddingLeft: 24,
-        listStyleType: "disc",
-      }}
-    >
+    <ul {...props} className="mb-4 pl-6 list-disc">
       {children}
     </ul>
   ),
 
   ol: ({ children, ...props }: React.ComponentPropsWithoutRef<"ol">) => (
-    <ol
-      {...props}
-      style={{
-        marginBottom: 16,
-        paddingLeft: 24,
-        listStyleType: "decimal",
-      }}
-    >
+    <ol {...props} className="mb-4 pl-6 list-decimal">
       {children}
     </ol>
   ),
 
   li: ({ children, ...props }: React.ComponentPropsWithoutRef<"li">) => (
-    <li
-      {...props}
-      style={{
-        marginBottom: 4,
-        color: "var(--w3-gray-700)",
-        lineHeight: 1.7,
-      }}
-    >
+    <li {...props} className="mb-1 text-w3-gray-700 leading-[1.7]">
       {children}
     </li>
   ),
@@ -146,37 +82,20 @@ const components: Components = {
   blockquote: ({ children, ...props }: React.ComponentPropsWithoutRef<"blockquote">) => (
     <blockquote
       {...props}
-      style={{
-        borderLeft: "3px solid var(--w3-accent)",
-        background: "var(--w3-accent-subtle)",
-        padding: 16,
-        borderRadius: 8,
-        marginBottom: 16,
-        color: "var(--w3-gray-800)",
-      }}
+      className="border-l-[3px] border-w3-accent bg-w3-accent-subtle p-4 rounded-lg mb-4 text-w3-gray-800"
     >
       {children}
     </blockquote>
   ),
 
-  // Inline code — only applied when NOT inside a fenced code block.
-  // react-markdown gives block code a "language-*" className; inline code has none.
   code: ({ children, ...props }: React.ComponentPropsWithoutRef<"code">) => {
-    if (isInsidePre(props)) {
-      // Block code child — no inline styling; parent <pre> handles the container
+    if (isBlockCode(props)) {
       return <code {...props}>{children}</code>;
     }
     return (
       <code
         {...props}
-        style={{
-          fontFamily: '"Geist Mono", monospace',
-          background: "var(--w3-surface-elevated)",
-          padding: "2px 6px",
-          borderRadius: 4,
-          fontSize: "0.875em",
-          color: "var(--w3-gray-800)",
-        }}
+        className="font-mono bg-w3-surface-elevated px-1.5 py-0.5 rounded text-[0.875em] text-w3-gray-800"
       >
         {children}
       </code>
@@ -184,30 +103,16 @@ const components: Components = {
   },
 
   pre: ({ children, ...props }: React.ComponentPropsWithoutRef<"pre">) => (
-    <pre
-      {...props}
-      style={{
-        background: "var(--w3-gray-200)",
-        borderRadius: 12,
-        padding: "16px 20px",
-        overflowX: "auto",
-        marginBottom: 16,
-      }}
-    >
+    <pre {...props} className="bg-w3-gray-200 rounded-xl px-5 py-4 overflow-x-auto mb-4">
       {children}
     </pre>
   ),
 
   table: ({ children, ...props }: React.ComponentPropsWithoutRef<"table">) => (
-    <div style={{ overflowX: "auto", marginBottom: 16 }}>
+    <div className="overflow-x-auto mb-4">
       <table
         {...props}
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          border: "1px solid var(--w3-border-subtle)",
-          borderRadius: 8,
-        }}
+        className="w-full border-collapse border border-w3-border-subtle rounded-lg"
       >
         {children}
       </table>
@@ -217,44 +122,24 @@ const components: Components = {
   th: ({ children, ...props }: React.ComponentPropsWithoutRef<"th">) => (
     <th
       {...props}
-      style={{
-        textAlign: "left",
-        padding: "8px 12px",
-        fontWeight: 600,
-        background: "var(--w3-surface-elevated)",
-        color: "var(--w3-gray-900)",
-        borderBottom: "1px solid var(--w3-border-subtle)",
-      }}
+      className="text-left px-3 py-2 font-semibold bg-w3-surface-elevated text-w3-gray-900 border-b border-w3-border-subtle"
     >
       {children}
     </th>
   ),
 
   td: ({ children, ...props }: React.ComponentPropsWithoutRef<"td">) => (
-    <td
-      {...props}
-      style={{
-        padding: "8px 12px",
-        borderBottom: "1px solid var(--w3-border-subtle)",
-        color: "var(--w3-gray-700)",
-      }}
-    >
+    <td {...props} className="px-3 py-2 border-b border-w3-border-subtle text-w3-gray-700">
       {children}
     </td>
   ),
 
   hr: (props: React.ComponentPropsWithoutRef<"hr">) => (
-    <hr
-      {...props}
-      style={{
-        borderColor: "var(--w3-border-subtle)",
-        margin: "32px 0",
-      }}
-    />
+    <hr {...props} className="border-w3-border-subtle my-8" />
   ),
 
   img: (props: React.ComponentPropsWithoutRef<"img">) => (
-    <img {...props} alt={props.alt ?? ""} style={{ maxWidth: "100%", borderRadius: 8 }} />
+    <img {...props} alt={props.alt ?? ""} className="max-w-full rounded-lg" />
   ),
 };
 

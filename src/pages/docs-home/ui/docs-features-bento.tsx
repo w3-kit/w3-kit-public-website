@@ -40,34 +40,17 @@ const features: FeatureCard[] = [
 
 function FeatureCardItem({ icon, title, description }: FeatureCard) {
   return (
-    <div
-      className="flex h-full flex-col gap-4 rounded-xl p-8"
-      style={{
-        background: "var(--w3-glass-bg)",
-        border: "1px solid var(--w3-glass-border)",
-        boxShadow: "var(--w3-glass-shadow)",
-        backdropFilter: "blur(20px)",
-      }}
-    >
-      {/* Icon box */}
+    <div className="glass-bg flex h-full flex-col gap-4 rounded-xl p-8">
       <div
-        className="flex h-11 w-11 items-center justify-center rounded-xl"
-        style={{
-          background: "var(--w3-accent-subtle)",
-          color: "var(--w3-accent)",
-        }}
+        className="flex h-11 w-11 items-center justify-center rounded-xl bg-w3-accent-subtle text-w3-accent"
         aria-hidden="true"
       >
         {icon}
       </div>
 
       <div className="flex flex-col gap-2">
-        <h3 className="text-lg font-semibold" style={{ color: "var(--w3-gray-900)" }}>
-          {title}
-        </h3>
-        <p className="text-sm leading-relaxed" style={{ color: "var(--w3-gray-600)" }}>
-          {description}
-        </p>
+        <h3 className="text-lg font-semibold text-w3-gray-900">{title}</h3>
+        <p className="text-sm leading-relaxed text-w3-gray-600">{description}</p>
       </div>
     </div>
   );
@@ -79,33 +62,22 @@ export function DocsFeaturesBento() {
   return (
     <SectionContainer className="py-20 md:py-32">
       <div ref={containerRef} className="flex flex-col gap-10">
-        {/* Section header */}
         <div data-reveal className="flex flex-col gap-3">
-          <p
-            className="text-sm font-medium uppercase tracking-wider"
-            style={{ color: "var(--w3-accent)" }}
-          >
+          <p className="text-sm font-medium uppercase tracking-wider text-w3-accent">
             WHY W3 KIT
           </p>
-          <h2
-            className="text-3xl font-semibold sm:text-4xl"
-            style={{ color: "var(--w3-gray-900)", letterSpacing: "-0.02em" }}
-          >
+          <h2 className="text-3xl font-semibold tracking-tight text-w3-gray-900 sm:text-4xl">
             Built for Web3 Developers
           </h2>
         </div>
 
-        {/* Bento grid */}
         <div className="grid gap-4 md:grid-cols-3">
-          {/* Row 1: 2-col card + 1-col card */}
           <div data-reveal className="md:col-span-2">
             <FeatureCardItem {...features[0]} />
           </div>
           <div data-reveal>
             <FeatureCardItem {...features[1]} />
           </div>
-
-          {/* Row 2: 3 equal cards */}
           <div data-reveal>
             <FeatureCardItem {...features[2]} />
           </div>

@@ -1,13 +1,10 @@
 import { useMemo } from "react";
 import { useParams } from "@tanstack/react-router";
+import { DocsContentLayout } from "../../../widgets/docs-content-layout";
+import { DocsNotFound } from "../../../shared/ui/docs-not-found";
 import { DocsShell } from "../../../widgets/docs-shell";
-import { DocsSidebar } from "../../../widgets/docs-sidebar";
-import { MobileSidebar } from "../../../widgets/docs-sidebar/mobile-sidebar";
-import { DocsToc } from "../../../widgets/docs-toc";
 import { MarkdownRenderer } from "../../../widgets/markdown-renderer";
 import { extractHeadings } from "../../../widgets/markdown-renderer/extract-headings";
-import { Breadcrumbs } from "../../../shared/ui/breadcrumbs";
-import { docsNavSections } from "../../../entities/guide/model/docs-nav.gen";
 import { useGuide } from "../../../entities/guide";
 import { getSectionUrl } from "../../../shared/lib/urls";
 import { AuthorBadge } from "../../../shared/ui/author-badge";
@@ -20,72 +17,33 @@ export function GuideDetailPage() {
   if (!guide) {
     return (
       <DocsShell>
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <div className="text-center">
-            <h1 className="mb-2 text-2xl font-semibold" style={{ color: "var(--w3-gray-900)" }}>
-              Guide Not Found
-            </h1>
-            <p className="mb-6 text-sm" style={{ color: "var(--w3-gray-600)" }}>
-              The guide &ldquo;{slug}&rdquo; doesn&apos;t exist.
-            </p>
-            <a
-              href={getSectionUrl("docs")}
-              className="text-sm font-medium hover:underline"
-              style={{ color: "var(--w3-accent)" }}
-            >
-              Back to docs
-            </a>
-          </div>
-        </div>
+        <DocsNotFound entityType="Guide" slug={slug} />
       </DocsShell>
     );
   }
 
-  const headings = useMemo(() => extractHeadings(guide.content), [guide?.content]);
+  const headings = useMemo(() => extractHeadings(guide.content), [guide.content]);
   const readTime = Math.max(1, Math.ceil(guide.content.split(/\s+/).length / 200));
 
   return (
-    <DocsShell>
-      <div className="mx-auto flex h-[calc(100vh-57px)] max-w-[1440px] gap-0 px-6 md:px-8 lg:px-12">
-        <DocsSidebar sections={docsNavSections} activeSlug={slug} />
-
-        <div
-          data-docs-content
-          className="min-w-0 flex-1 overflow-y-auto py-8 md:border-l md:px-10"
-          style={{ borderColor: "var(--w3-border-subtle)" }}
-        >
-          <MobileSidebar sections={docsNavSections} activeSlug={slug} />
-
-          <Breadcrumbs
-            items={[
-              { label: "Docs", href: getSectionUrl("docs") },
-              { label: "Guides" },
-              { label: guide.title },
-            ]}
-          />
-
-          {/* Guide header */}
-          <div className="mb-8 flex items-center gap-3">
-            <span
-              className="rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
-              style={{
-                background: "var(--w3-accent-subtle)",
-                color: "var(--w3-accent)",
-              }}
-            >
-              {guide.category}
-            </span>
-            <span className="text-xs" style={{ color: "var(--w3-gray-500)" }}>
-              {readTime} min read
-            </span>
-            <AuthorBadge author={guide.author} />
-          </div>
-
-          <MarkdownRenderer content={guide.content} />
-        </div>
-
-        <DocsToc headings={headings} />
+    <DocsContentLayout
+      activeSlug={slug}
+      breadcrumbs={[
+        { label: "Docs", href: getSectionUrl("docs") },
+        { label: "Guides" },
+        { label: guide.title },
+      ]}
+      headings={headings}
+    >
+      <div className="mb-8 flex items-center gap-3">
+        <span className="rounded-full bg-w3-accent-subtle px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-w3-accent">
+          {guide.category}
+        </span>
+        <span className="text-xs text-w3-gray-500">{readTime} min read</span>
+        <AuthorBadge author={guide.author} />
       </div>
-    </DocsShell>
+
+      <MarkdownRenderer content={guide.content} />
+    </DocsContentLayout>
   );
 }

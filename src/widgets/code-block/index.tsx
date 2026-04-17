@@ -13,54 +13,32 @@ export function CodeBlock({ code, language = "tsx", filename }: CodeBlockProps) 
   const [copied, handleCopy] = useCopyToClipboard(code.trim());
 
   return (
-    <div
-      className="group relative overflow-hidden rounded-xl"
-      style={{
-        background: "var(--w3-gray-200)",
-        border: "1px solid var(--w3-border-subtle)",
-      }}
-    >
-      {/* Header */}
+    <div className="group relative overflow-hidden rounded-xl border border-w3-border-subtle bg-w3-gray-200">
       {filename && (
-        <div
-          className="flex items-center gap-2 px-4 py-2 text-xs"
-          style={{
-            borderBottom: "1px solid var(--w3-border-subtle)",
-            color: "var(--w3-gray-600)",
-          }}
-        >
+        <div className="flex items-center gap-2 border-b border-w3-border-subtle px-4 py-2 font-mono text-xs text-w3-gray-600">
           <FileCode size={14} />
-          <span style={{ fontFamily: '"Geist Mono", monospace' }}>{filename}</span>
+          <span>{filename}</span>
         </div>
       )}
 
-      {/* Code */}
       <div className="relative overflow-x-auto p-4">
         {html ? (
           <div
-            className="text-sm [&_pre]:!bg-transparent [&_pre]:!p-0 [&_code]:!bg-transparent"
-            style={{ fontFamily: '"Geist Mono", monospace' }}
+            className="font-mono text-sm [&_pre]:!bg-transparent [&_pre]:!p-0 [&_code]:!bg-transparent"
             dangerouslySetInnerHTML={{ __html: html }}
           />
         ) : (
-          <pre
-            className="text-sm"
-            style={{ fontFamily: '"Geist Mono", monospace', color: "var(--w3-gray-700)" }}
-          >
+          <pre className="font-mono text-sm text-w3-gray-700">
             <code>{code.trim()}</code>
           </pre>
         )}
       </div>
 
-      {/* Copy button */}
       <button
         onClick={handleCopy}
-        className="absolute right-3 top-3 rounded-lg p-1.5 opacity-0 transition-all group-hover:opacity-100"
-        style={{
-          background: "var(--w3-surface-elevated)",
-          border: "1px solid var(--w3-border-subtle)",
-          color: copied ? "var(--w3-accent)" : "var(--w3-gray-600)",
-        }}
+        className={`absolute right-3 top-3 rounded-lg border border-w3-border-subtle bg-w3-surface-elevated p-1.5 opacity-0 transition-all group-hover:opacity-100 ${
+          copied ? "text-w3-accent" : "text-w3-gray-600"
+        }`}
       >
         {copied ? <Check size={14} /> : <Copy size={14} />}
       </button>

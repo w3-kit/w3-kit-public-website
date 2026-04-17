@@ -12,8 +12,7 @@ export function AuthorBadge({ author, prefix, className }: AuthorBadgeProps) {
       href={`https://github.com/${author}`}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center gap-1.5 text-xs transition-colors hover:underline ${className ?? ""}`}
-      style={{ color: "var(--w3-gray-500)" }}
+      className={`inline-flex items-center gap-1.5 text-xs text-w3-gray-500 transition-colors hover:underline ${className ?? ""}`}
     >
       <img
         src={`https://github.com/${author}.png?size=40`}

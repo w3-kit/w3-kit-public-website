@@ -1,7 +1,13 @@
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { getDocItemHref } from "../../shared/lib/urls";
 import { type DocNavSection } from "../../entities/guide/model/docs-nav.gen";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "../../shared/ui/sheet";
 
 interface MobileSidebarProps {
   sections: DocNavSection[];
@@ -9,82 +15,51 @@ interface MobileSidebarProps {
 }
 
 export function MobileSidebar({ sections, activeSlug }: MobileSidebarProps) {
-  const [open, setOpen] = useState(false);
-
   return (
     <div className="md:hidden">
-      <button
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium"
-        style={{
-          background: "var(--w3-surface-elevated)",
-          border: "1px solid var(--w3-border-subtle)",
-          color: "var(--w3-gray-700)",
-        }}
-      >
-        <Menu size={16} />
-        Menu
-      </button>
-
-      {open && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40"
-            style={{ background: "rgba(0,0,0,0.4)" }}
-            onClick={() => setOpen(false)}
-          />
-          {/* Drawer */}
-          <div
-            className="fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto p-6"
-            style={{ background: "var(--w3-gray-100)" }}
-          >
-            <div className="mb-6 flex items-center justify-between">
-              <span className="text-sm font-semibold" style={{ color: "var(--w3-gray-900)" }}>
-                Documentation
-              </span>
-              <button onClick={() => setOpen(false)}>
-                <X size={20} style={{ color: "var(--w3-gray-600)" }} />
-              </button>
-            </div>
-            <div className="flex flex-col gap-5">
-              {sections.map((section) => (
-                <div key={section.title} className="flex flex-col gap-1">
-                  <span
-                    className="px-3 text-[10px] font-semibold uppercase tracking-wider"
-                    style={{ color: "var(--w3-gray-500)" }}
-                  >
-                    {section.title}
-                  </span>
-                  {section.items.map((item) => (
+      <Sheet>
+        <SheetTrigger className="flex items-center gap-2 rounded-lg border border-w3-border-subtle bg-w3-surface-elevated px-3 py-2 text-sm font-medium text-w3-gray-700">
+          <Menu size={16} />
+          Menu
+        </SheetTrigger>
+        <SheetContent side="left" className="w-72 bg-w3-gray-100 p-6">
+          <SheetHeader className="p-0">
+            <SheetTitle className="text-sm font-semibold text-w3-gray-900">
+              Documentation
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-5">
+            {sections.map((section) => (
+              <div key={section.title} className="flex flex-col gap-1">
+                <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-w3-gray-500">
+                  {section.title}
+                </span>
+                {section.items.map((item) => {
+                  const isActive = activeSlug === item.slug;
+                  return (
                     <a
                       key={item.slug}
                       href={getDocItemHref(item)}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm"
-                      style={{
-                        color:
-                          activeSlug === item.slug ? "var(--w3-gray-900)" : "var(--w3-gray-600)",
-                        background:
-                          activeSlug === item.slug ? "var(--w3-surface-elevated)" : "transparent",
-                        fontWeight: activeSlug === item.slug ? 500 : 400,
-                      }}
+                      className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm ${
+                        isActive
+                          ? "bg-w3-surface-elevated font-medium text-w3-gray-900"
+                          : "text-w3-gray-600"
+                      }`}
                     >
                       <span
-                        className="h-4 w-0.5 shrink-0 rounded-full"
-                        style={{
-                          background: activeSlug === item.slug ? "var(--w3-accent)" : "transparent",
-                        }}
+                        className={`h-4 w-0.5 shrink-0 rounded-full ${
+                          isActive ? "bg-w3-accent" : "bg-transparent"
+                        }`}
                       />
                       {item.label}
                     </a>
-                  ))}
-                </div>
-              ))}
-            </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
-        </>
-      )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

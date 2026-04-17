@@ -7,7 +7,6 @@ import { getSectionUrl, getDocItemHref } from "../../shared/lib/urls";
 import { docsNavSections, type DocNavSection } from "../../entities/guide/model/docs-nav.gen";
 import { GitHubIcon } from "../../shared/ui/github-icon";
 
-// Group nav sections for the 3 dropdowns
 const docsSections = docsNavSections.filter(
   (s) => !s.title.startsWith("Recipes:") && !s.title.startsWith("Guides"),
 );
@@ -22,13 +21,11 @@ function DropdownSection({ section }: { section: DocNavSection }) {
     <div className="flex flex-col gap-1">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 px-1 text-[11px] font-medium uppercase tracking-wider transition-colors"
-        style={{ color: "var(--w3-gray-500)" }}
+        className="flex items-center gap-1 px-1 text-[11px] font-medium uppercase tracking-wider text-w3-gray-500 transition-colors"
       >
         <ChevronRight
           size={10}
-          className={cn("shrink-0 transition-transform", open && "rotate-90")}
-          style={{ color: "var(--w3-gray-400)" }}
+          className={cn("shrink-0 text-w3-gray-400 transition-transform", open && "rotate-90")}
         />
         {displayTitle}
       </button>
@@ -38,8 +35,7 @@ function DropdownSection({ section }: { section: DocNavSection }) {
             <a
               key={item.slug}
               href={getDocItemHref(item)}
-              className="rounded-md px-2 py-1 text-[13px] transition-colors hover:bg-[var(--w3-surface-elevated)]"
-              style={{ color: "var(--w3-gray-600)" }}
+              className="rounded-md px-2 py-1 text-[13px] text-w3-gray-600 transition-colors hover:bg-w3-surface-elevated"
             >
               {item.label}
             </a>
@@ -57,8 +53,7 @@ function CollapsibleMobileSection({ section }: { section: DocNavSection }) {
     <div className="flex flex-col gap-1">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between px-4 text-[10px] font-semibold uppercase tracking-wider"
-        style={{ color: "var(--w3-gray-500)" }}
+        className="flex items-center justify-between px-4 text-[10px] font-semibold uppercase tracking-wider text-w3-gray-500"
       >
         {section.title}
         <ChevronDown size={12} className={cn("transition-transform", open && "rotate-180")} />
@@ -68,8 +63,7 @@ function CollapsibleMobileSection({ section }: { section: DocNavSection }) {
           <a
             key={item.slug}
             href={getDocItemHref(item)}
-            className="rounded-lg px-4 py-2 text-sm transition-colors"
-            style={{ color: "var(--w3-gray-700)" }}
+            className="rounded-lg px-4 py-2 text-sm text-w3-gray-700 transition-colors"
           >
             {item.label}
           </a>
@@ -135,21 +129,15 @@ export function DocsHeader() {
   return (
     <>
       <header
-        className="sticky top-0 z-50 flex shrink-0 items-center justify-between border-b px-6 py-3 backdrop-blur-xl"
+        className="sticky top-0 z-50 flex shrink-0 items-center justify-between border-b border-w3-border-subtle px-6 py-3 backdrop-blur-xl"
         style={{
-          borderColor: "var(--w3-border-subtle)",
           background: "color-mix(in srgb, var(--w3-gray-100) 80%, transparent)",
         }}
       >
         <a href={getSectionUrl("docs")} className="flex items-center gap-2">
           <Logo size={24} className="text-[var(--w3-accent)]" />
-          <span className="text-sm font-semibold" style={{ color: "var(--w3-gray-900)" }}>
-            w3-kit
-          </span>
-          <span
-            className="rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
-            style={{ background: "var(--w3-accent-subtle)", color: "var(--w3-accent)" }}
-          >
+          <span className="text-sm font-semibold text-w3-gray-900">w3-kit</span>
+          <span className="rounded-md bg-w3-accent-subtle px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-w3-accent">
             docs
           </span>
         </a>
@@ -194,7 +182,6 @@ export function DocsHeader() {
             <GitHubIcon size={16} />
           </a>
 
-          {/* Documentation dropdown */}
           {activeDropdown === "docs" && (
             <DropdownPanel>
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -205,7 +192,6 @@ export function DocsHeader() {
             </DropdownPanel>
           )}
 
-          {/* Guides dropdown */}
           {activeDropdown === "guides" && (
             <DropdownPanel>
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -216,7 +202,6 @@ export function DocsHeader() {
             </DropdownPanel>
           )}
 
-          {/* Recipes dropdown */}
           {activeDropdown === "recipes" && (
             <DropdownPanel>
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -261,10 +246,9 @@ export function DocsHeader() {
 function DropdownPanel({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="absolute inset-x-0 top-full z-50 max-h-[70vh] overflow-y-auto border-b backdrop-blur-xl"
+      className="absolute inset-x-0 top-full z-50 max-h-[70vh] overflow-y-auto border-b border-w3-border-subtle backdrop-blur-xl"
       style={{
         background: "color-mix(in srgb, var(--w3-gray-100) 95%, transparent)",
-        borderColor: "var(--w3-border-subtle)",
       }}
     >
       <div className="mx-auto max-w-[1200px] px-6 py-6 lg:px-16">{children}</div>
