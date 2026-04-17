@@ -17,19 +17,19 @@ import themingDoc from "@learn/docs/theming.md?raw";
 import uiLibraryDoc from "@learn/docs/ui-library.md?raw";
 
 export const docContentMap: Record<string, string> = {
-  "accessibility": accessibilityDoc,
+  accessibility: accessibilityDoc,
   "cli-commands": cliCommandsDoc,
-  "cli": cliDoc,
+  cli: cliDoc,
   "components-api": componentsApiDoc,
-  "components": componentsDoc,
-  "configuration": configurationDoc,
-  "contracts": contractsDoc,
+  components: componentsDoc,
+  configuration: configurationDoc,
+  contracts: contractsDoc,
   "design-tokens": designTokensDoc,
   "hooks-utilities": hooksUtilitiesDoc,
-  "installation": installationDoc,
-  "introduction": introductionDoc,
+  installation: installationDoc,
+  introduction: introductionDoc,
   "project-structure": projectStructureDoc,
-  "registry": registryDoc,
-  "theming": themingDoc,
+  registry: registryDoc,
+  theming: themingDoc,
   "ui-library": uiLibraryDoc,
 };

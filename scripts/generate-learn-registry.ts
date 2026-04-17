@@ -491,6 +491,8 @@ const docs = discoverDocs();
 console.log(`  Found ${docs.length} doc pages`);
 
 // Write files
+const outFiles = [GUIDE_OUT, RECIPE_OUT, NAV_OUT, DOC_CONTENT_OUT];
+
 fs.writeFileSync(GUIDE_OUT, generateGuideRegistry(guides));
 console.log(`  Wrote ${path.relative(process.cwd(), GUIDE_OUT)}`);
 
@@ -502,5 +504,10 @@ console.log(`  Wrote ${path.relative(process.cwd(), NAV_OUT)}`);
 
 fs.writeFileSync(DOC_CONTENT_OUT, generateDocContent(docs));
 console.log(`  Wrote ${path.relative(process.cwd(), DOC_CONTENT_OUT)}`);
+
+// Format generated files so format:check passes in CI
+execSync(`npx prettier --write ${outFiles.map((f) => JSON.stringify(f)).join(" ")}`, {
+  stdio: "ignore",
+});
 
 console.log("Done!");
