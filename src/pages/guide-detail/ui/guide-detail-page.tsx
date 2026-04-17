@@ -7,7 +7,6 @@ import { DocsToc } from "../../../widgets/docs-toc";
 import { MarkdownRenderer } from "../../../widgets/markdown-renderer";
 import { extractHeadings } from "../../../widgets/markdown-renderer/extract-headings";
 import { Breadcrumbs } from "../../../shared/ui/breadcrumbs";
-import { DocsPrevNext } from "../../../widgets/docs-prev-next";
 import { docsNavSections } from "../../../entities/guide/model/docs-nav.gen";
 import { useGuide } from "../../../entities/guide";
 import { getSectionUrl } from "../../../shared/lib/urls";

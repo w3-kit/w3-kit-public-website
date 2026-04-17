@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { getDocItemHref } from "../../shared/lib/urls";
-import { type DocNavItem, type DocNavSection } from "../../entities/guide/model/docs-nav.gen";
+import { type DocNavSection } from "../../entities/guide/model/docs-nav.gen";
 
 interface MobileSidebarProps {
   sections: DocNavSection[];

@@ -258,7 +258,6 @@ const components: Components = {
   ),
 
   img: (props: React.ComponentPropsWithoutRef<"img">) => (
-    // eslint-disable-next-line jsx-a11y/alt-text
     <img
       {...props}
       alt={props.alt ?? ""}
