@@ -16,10 +16,38 @@ import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
 
-const LEARN_DIR = path.resolve(import.meta.dirname, "../../learn");
-const GUIDES_DIR = path.join(LEARN_DIR, "guides");
-const RECIPES_DIR = path.join(LEARN_DIR, "recipes");
-const DOCS_DIR = path.join(LEARN_DIR, "docs");
+const REPO_ROOT = path.resolve(import.meta.dirname, "..");
+
+const WORKSPACE_ROOTS = Array.from(
+  new Set(
+    [
+      process.env.W3_KIT_WORKSPACE_ROOT,
+      REPO_ROOT,
+      path.resolve(REPO_ROOT, ".."),
+      path.resolve(REPO_ROOT, "../.."),
+      path.resolve(REPO_ROOT, "../../.."),
+    ]
+      .filter((root): root is string => Boolean(root))
+      .map((root) => path.resolve(root)),
+  ),
+);
+
+function findExistingDirectory(relativePaths: string[]): string | null {
+  for (const relativePath of relativePaths) {
+    for (const root of WORKSPACE_ROOTS) {
+      const candidate = path.join(root, relativePath);
+      if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
+        return candidate;
+      }
+    }
+  }
+  return null;
+}
+
+const LEARN_DIR = findExistingDirectory(["learn", "w3-kit-learn/mirror"]);
+const GUIDES_DIR = LEARN_DIR ? path.join(LEARN_DIR, "guides") : "";
+const RECIPES_DIR = LEARN_DIR ? path.join(LEARN_DIR, "recipes") : "";
+const DOCS_DIR = LEARN_DIR ? path.join(LEARN_DIR, "docs") : "";
 
 const GUIDE_OUT = path.resolve(
   import.meta.dirname,
@@ -62,6 +90,7 @@ const GIT_NAME_TO_GITHUB: Record<string, string> = {
 };
 
 function getGitAuthor(filePath: string): string {
+  if (!LEARN_DIR) return "PetarStoev02";
   try {
     const result = execSync(
       `git -C ${JSON.stringify(LEARN_DIR)} log --diff-filter=A --format=%an -- ${JSON.stringify(filePath)}`,
@@ -80,9 +109,9 @@ function getGitAuthor(filePath: string): string {
 interface GuideInfo {
   slug: string;
   category: string;
-  filePath: string; // relative to learn repo for @learn alias
   title: string;
   author: string;
+  content: string;
 }
 
 function discoverGuides(): GuideInfo[] {
@@ -116,9 +145,9 @@ function discoverGuides(): GuideInfo[] {
       guides.push({
         slug,
         category,
-        filePath: `@learn/guides/${category}/${file}`,
         title,
         author,
+        content,
       });
     }
   }
@@ -130,13 +159,17 @@ function discoverGuides(): GuideInfo[] {
 
 interface RecipeInfo {
   slug: string;
-  metaPath: string;
-  hasEvm: boolean;
-  hasSolana: boolean;
-  hasLearn: boolean;
-  learnFilename: string;
   category: string; // derived from meta.json chains or manual grouping
-  author: string;
+  meta: {
+    name: string;
+    description: string;
+    chains: string[];
+    dependencies: Record<string, string[]>;
+    author?: string;
+  };
+  evmCode: string;
+  solanaCode: string;
+  learnContent: string;
 }
 
 // Recipe category grouping based on the recipe name patterns
@@ -182,21 +215,21 @@ function discoverRecipes(): RecipeInfo[] {
     if (!fs.existsSync(metaPath)) continue;
 
     const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
-    const hasEvm = fs.existsSync(path.join(recipeDir, "evm.tsx"));
-    const hasSolana = fs.existsSync(path.join(recipeDir, "solana.tsx"));
+    const evmPath = path.join(recipeDir, "evm.tsx");
+    const solanaPath = path.join(recipeDir, "solana.tsx");
     const learnFile = fs
       .readdirSync(recipeDir)
       .find((f) => f.endsWith(".learn.md"));
 
     recipes.push({
       slug: dir,
-      metaPath: `@learn/recipes/${dir}/meta.json`,
-      hasEvm,
-      hasSolana,
-      hasLearn: !!learnFile,
-      learnFilename: learnFile || "",
       category: getRecipeCategory(dir, meta),
-      author: meta.author ?? "",
+      meta,
+      evmCode: fs.existsSync(evmPath) ? fs.readFileSync(evmPath, "utf-8") : "",
+      solanaCode: fs.existsSync(solanaPath) ? fs.readFileSync(solanaPath, "utf-8") : "",
+      learnContent: learnFile
+        ? fs.readFileSync(path.join(recipeDir, learnFile), "utf-8")
+        : "",
     });
   }
 
@@ -207,12 +240,18 @@ function discoverRecipes(): RecipeInfo[] {
 
 interface DocInfo {
   slug: string;
-  filename: string; // e.g. "introduction.md"
+  content: string;
 }
 
 function discoverDocs(): DocInfo[] {
+  if (!fs.existsSync(DOCS_DIR)) {
+    return Object.keys(DOC_SECTION_MAP).map((slug) => ({
+      slug,
+      content: `# ${slugToTitle(slug)}\n\nDocumentation for this page is being migrated into the website build.\n`,
+    }));
+  }
+
   const docs: DocInfo[] = [];
-  if (!fs.existsSync(DOCS_DIR)) return docs;
 
   const files = fs
     .readdirSync(DOCS_DIR)
@@ -222,7 +261,7 @@ function discoverDocs(): DocInfo[] {
   for (const file of files) {
     docs.push({
       slug: file.replace(/\.md$/, ""),
-      filename: file,
+      content: fs.readFileSync(path.join(DOCS_DIR, file), "utf-8"),
     });
   }
 
@@ -237,18 +276,9 @@ function generateGuideRegistry(guides: GuideInfo[]): string {
     'import type { GuideMeta } from "./types";',
     "",
   ];
-
-  // Imports
-  for (const g of guides) {
-    const varName = toCamelCase(g.slug) + "Content";
-    lines.push(`import ${varName} from "${g.filePath}?raw";`);
-  }
-
-  lines.push("");
   lines.push("export const guideRegistry: GuideMeta[] = [");
 
   for (const g of guides) {
-    const varName = toCamelCase(g.slug) + "Content";
     lines.push("  {");
     lines.push(`    id: ${JSON.stringify(g.slug)},`);
     lines.push(`    title: ${JSON.stringify(g.title)},`);
@@ -257,7 +287,7 @@ function generateGuideRegistry(guides: GuideInfo[]): string {
     );
     lines.push(`    category: ${JSON.stringify(g.category)} as GuideMeta["category"],`);
     lines.push(`    slug: ${JSON.stringify(g.slug)},`);
-    lines.push(`    content: ${varName},`);
+    lines.push(`    content: ${JSON.stringify(g.content)},`);
     lines.push(`    author: ${JSON.stringify(g.author)},`);
     lines.push("  },");
   }
@@ -275,42 +305,20 @@ function generateRecipeRegistry(recipes: RecipeInfo[]): string {
     'import type { RecipeMeta } from "./types";',
     "",
   ];
-
-  // Imports
-  for (const r of recipes) {
-    const prefix = toCamelCase(r.slug);
-    lines.push(`import ${prefix}Meta from "@learn/recipes/${r.slug}/meta.json";`);
-    if (r.hasEvm) {
-      lines.push(`import ${prefix}Evm from "@learn/recipes/${r.slug}/evm.tsx?raw";`);
-    }
-    if (r.hasSolana) {
-      lines.push(
-        `import ${prefix}Solana from "@learn/recipes/${r.slug}/solana.tsx?raw";`,
-      );
-    }
-    if (r.hasLearn) {
-      lines.push(
-        `import ${prefix}Learn from "@learn/recipes/${r.slug}/${r.learnFilename}?raw";`,
-      );
-    }
-  }
-
-  lines.push("");
   lines.push("export const recipeRegistry: RecipeMeta[] = [");
 
   for (const r of recipes) {
-    const prefix = toCamelCase(r.slug);
     lines.push("  {");
-    lines.push(`    id: ${prefix}Meta.name,`);
-    lines.push(`    name: ${prefix}Meta.name,`);
-    lines.push(`    description: ${prefix}Meta.description,`);
-    lines.push(`    slug: ${prefix}Meta.name,`);
-    lines.push(`    chains: ${prefix}Meta.chains,`);
-    lines.push(`    dependencies: ${prefix}Meta.dependencies,`);
-    lines.push(`    evmCode: ${r.hasEvm ? `${prefix}Evm` : '""'},`);
-    lines.push(`    solanaCode: ${r.hasSolana ? `${prefix}Solana` : '""'},`);
-    lines.push(`    learnContent: ${r.hasLearn ? `${prefix}Learn` : '""'},`);
-    lines.push(`    author: ${prefix}Meta.author ?? "",`);
+    lines.push(`    id: ${JSON.stringify(r.meta.name)},`);
+    lines.push(`    name: ${JSON.stringify(r.meta.name)},`);
+    lines.push(`    description: ${JSON.stringify(r.meta.description)},`);
+    lines.push(`    slug: ${JSON.stringify(r.meta.name)},`);
+    lines.push(`    chains: ${JSON.stringify(r.meta.chains)},`);
+    lines.push(`    dependencies: ${JSON.stringify(r.meta.dependencies)},`);
+    lines.push(`    evmCode: ${JSON.stringify(r.evmCode)},`);
+    lines.push(`    solanaCode: ${JSON.stringify(r.solanaCode)},`);
+    lines.push(`    learnContent: ${JSON.stringify(r.learnContent)},`);
+    lines.push(`    author: ${JSON.stringify(r.meta.author ?? "")},`);
     lines.push("  },");
   }
 
@@ -326,18 +334,10 @@ function generateDocContent(docs: DocInfo[]): string {
     '// AUTO-GENERATED by scripts/generate-learn-registry.ts — do not edit manually',
     "",
   ];
-
-  for (const doc of docs) {
-    const varName = toCamelCase(doc.slug) + "Doc";
-    lines.push(`import ${varName} from "@learn/docs/${doc.filename}?raw";`);
-  }
-
-  lines.push("");
   lines.push("export const docContentMap: Record<string, string> = {");
 
   for (const doc of docs) {
-    const varName = toCamelCase(doc.slug) + "Doc";
-    lines.push(`  ${JSON.stringify(doc.slug)}: ${varName},`);
+    lines.push(`  ${JSON.stringify(doc.slug)}: ${JSON.stringify(doc.content)},`);
   }
 
   lines.push("};");
@@ -480,6 +480,15 @@ function generateDocsNav(
 // ── Main ────────────────────────────────────────────────────────────────────
 
 console.log("Scanning learn repo...");
+const outFiles = [GUIDE_OUT, RECIPE_OUT, NAV_OUT, DOC_CONTENT_OUT];
+
+if (!LEARN_DIR) {
+  if (outFiles.every((file) => fs.existsSync(file))) {
+    console.warn("  learn repo not found, reusing committed generated registries");
+    process.exit(0);
+  }
+  console.warn("  learn repo not found, generating empty registries");
+}
 
 const guides = discoverGuides();
 console.log(`  Found ${guides.length} guides`);
@@ -491,8 +500,6 @@ const docs = discoverDocs();
 console.log(`  Found ${docs.length} doc pages`);
 
 // Write files
-const outFiles = [GUIDE_OUT, RECIPE_OUT, NAV_OUT, DOC_CONTENT_OUT];
-
 fs.writeFileSync(GUIDE_OUT, generateGuideRegistry(guides));
 console.log(`  Wrote ${path.relative(process.cwd(), GUIDE_OUT)}`);
 

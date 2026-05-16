@@ -18,13 +18,38 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const ROOT = path.resolve(import.meta.dirname, "../..");
-const SRC_DIR = path.join(ROOT, "ui/registry/w3-kit");
-const OUT_DIR = path.resolve(import.meta.dirname, "../src/shared/ui/w3-kit");
+const REPO_ROOT = path.resolve(import.meta.dirname, "..");
+const OUT_DIR = path.join(REPO_ROOT, "src/shared/ui/w3-kit");
 const INDEX_FILE = path.join(OUT_DIR, "index.gen.ts");
 
 const BANNER =
   "/* AUTO-GENERATED — mirrored from ui/registry/w3-kit/. Edit the source there. */\n";
+
+const WORKSPACE_ROOTS = Array.from(
+  new Set(
+    [
+      process.env.W3_KIT_WORKSPACE_ROOT,
+      REPO_ROOT,
+      path.resolve(REPO_ROOT, ".."),
+      path.resolve(REPO_ROOT, "../.."),
+      path.resolve(REPO_ROOT, "../../.."),
+    ]
+      .filter((root): root is string => Boolean(root))
+      .map((root) => path.resolve(root)),
+  ),
+);
+
+function findExistingDirectory(relativePaths: string[]): string | null {
+  for (const relativePath of relativePaths) {
+    for (const root of WORKSPACE_ROOTS) {
+      const candidate = path.join(root, relativePath);
+      if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
+        return candidate;
+      }
+    }
+  }
+  return null;
+}
 
 function slugToPascal(slug: string): string {
   return slug
@@ -62,18 +87,27 @@ function transform(source: string): string {
   return out;
 }
 
-function copyDir(slug: string) {
-  const src = path.join(SRC_DIR, slug);
-  const dst = path.join(OUT_DIR, slug);
-  if (!fs.existsSync(src) || !fs.statSync(src).isDirectory()) return;
-  fs.mkdirSync(dst, { recursive: true });
+function copyTree(srcDir: string, dstDir: string) {
+  fs.mkdirSync(dstDir, { recursive: true });
 
-  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+  for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+    const src = path.join(srcDir, entry.name);
+    const dst = path.join(dstDir, entry.name);
+
+    if (entry.isDirectory()) {
+      copyTree(src, dst);
+      continue;
+    }
+
     if (!entry.isFile()) continue;
-    if (!/\.(ts|tsx)$/.test(entry.name)) continue;
-    const content = fs.readFileSync(path.join(src, entry.name), "utf-8");
-    const transformed = BANNER + transform(content);
-    fs.writeFileSync(path.join(dst, entry.name), transformed);
+
+    if (/\.(ts|tsx)$/.test(entry.name)) {
+      const content = fs.readFileSync(src, "utf-8");
+      fs.writeFileSync(dst, BANNER + transform(content));
+      continue;
+    }
+
+    fs.copyFileSync(src, dst);
   }
 }
 
@@ -112,8 +146,16 @@ function writeIndex(slugs: string[]) {
 
 function main() {
   console.log("Mirroring ui components into website...");
-  if (!fs.existsSync(SRC_DIR)) {
-    console.warn(`  ui registry not found at ${SRC_DIR}, skipping`);
+  const srcDir = findExistingDirectory([
+    "ui/registry/w3-kit",
+    "w3-kit-ui/mirror/registry/w3-kit",
+  ]);
+  if (!srcDir) {
+    if (fs.existsSync(INDEX_FILE)) {
+      console.warn("  ui registry not found, reusing committed mirror output");
+      return;
+    }
+    console.error("  ui registry not found and no committed mirror output exists");
     return;
   }
 
@@ -126,16 +168,18 @@ function main() {
   writeLocalUtils();
 
   const slugs = fs
-    .readdirSync(SRC_DIR, { withFileTypes: true })
+    .readdirSync(srcDir, { withFileTypes: true })
     .filter((e) => e.isDirectory())
     .map((e) => e.name)
     .sort();
 
-  for (const slug of slugs) copyDir(slug);
+  for (const slug of slugs) {
+    copyTree(path.join(srcDir, slug), path.join(OUT_DIR, slug));
+  }
 
   writeIndex(slugs);
 
-  console.log(`  Mirrored ${slugs.length} components to ${path.relative(ROOT, OUT_DIR)}`);
+  console.log(`  Mirrored ${slugs.length} components to ${path.relative(REPO_ROOT, OUT_DIR)}`);
   console.log("Done!");
 }
 
